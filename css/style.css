@@ -259,23 +259,43 @@ svg.fill { fill: currentColor; stroke: none; }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 36px; }
 .hero__socials { display: flex; gap: 10px; margin-left: 4px; }
 
-.hero__visual { position: relative; justify-self: end; width: 100%; max-width: 360px; }
-.portrait { transform: translate(-4px, -4px); }
-.portrait {
-  position: relative; z-index: 1; border-radius: 24px; overflow: hidden;
-  transition: transform .7s var(--ease);
-  border: 1px solid var(--border-strong);
+.hero__visual { position: relative; justify-self: end; width: 100%; max-width: 360px; margin-right: 40px; }
+
+/* Visionneuse de photos : une pile de fenêtres, la carte de devant passe au fond au clic */
+.deck__stage { position: relative; display: grid; cursor: pointer; }
+.deck__card {
+  grid-area: 1 / 1; position: relative; margin: 0; border-radius: 18px; overflow: hidden;
+  background: #000; border: 1px solid var(--border-strong);
   box-shadow: 0 30px 60px -35px var(--shadow);
-  background: #000;
+  transform-origin: 50% 90%;
+  transition: transform .6s var(--ease), opacity .5s, filter .6s;
 }
-.portrait__bar {
+.deck__card[data-pos="0"] { z-index: 4; }
+.deck__card[data-pos="1"] { z-index: 3; transform: rotate(4deg) translate(20px, 4px); filter: brightness(.7); }
+.deck__card[data-pos="2"] { z-index: 2; transform: rotate(8deg) translate(40px, 10px); filter: brightness(.5); }
+.deck__card[data-pos="3"] { z-index: 1; transform: rotate(8deg) translate(40px, 10px); filter: brightness(.4); opacity: 0; }
+.deck__card[data-pos="out"] { z-index: 5; transform: rotate(-9deg) translate(-70%, 6%); opacity: 0; }
+.deck__stage:hover .deck__card[data-pos="1"] { transform: rotate(6deg) translate(30px, 2px); }
+.deck__stage:hover .deck__card[data-pos="2"] { transform: rotate(11deg) translate(58px, 8px); }
+
+.deck__bar {
   display: flex; align-items: center; gap: 7px; padding: 10px 14px;
   background: #121218; border-bottom: 1px solid #24242C; color: #8C8C99; font-size: 12px;
 }
-.portrait__bar i { width: 10px; height: 10px; border-radius: 50%; background: #3A3A46; }
-.portrait__bar i:first-child { background: var(--violet); }
-.portrait__bar span { margin-left: 8px; }
-.portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.deck__bar i { width: 10px; height: 10px; border-radius: 50%; background: #3A3A46; }
+.deck__bar i:first-child { background: var(--violet); }
+.deck__bar span { margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deck__card img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; user-select: none; -webkit-user-drag: none; }
+
+.deck__controls { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
+.deck__btn {
+  flex-shrink: 0; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border-radius: 50%;
+  border: 1px solid var(--border-strong); background: transparent; color: var(--text-soft); font-size: 16px;
+  transition: border-color .2s, color .2s;
+}
+.deck__btn:hover { border-color: var(--text-soft); color: var(--text); }
+.deck__caption { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; font-size: 13.5px; color: var(--text-soft); line-height: 1.4; }
+.deck__count { flex-shrink: 0; font-size: 12px; color: var(--violet-soft); }
 /* ---------- Sections ---------- */
 .section { position: relative; padding: 120px 0; }
 .section--alt { background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -581,7 +601,7 @@ kbd {
 @media (max-width: 900px) {
   .hero { padding-top: calc(var(--nav-h) + 48px); min-height: 0; }
   .hero__inner { grid-template-columns: 1fr; gap: 56px; }
-  .hero__visual { justify-self: center; max-width: 340px; }
+  .hero__visual { justify-self: center; max-width: 320px; margin-right: 32px; }
   .about { grid-template-columns: 1fr; gap: 36px; }
   .principles { grid-template-columns: 1fr; gap: 28px; margin-top: 56px; }
 

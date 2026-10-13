@@ -16,7 +16,7 @@
   <meta property="og:description"
     content="Je conçois, automatise et sécurise des infrastructures.">
   <meta property="og:url" content="https://firas-bouricha.github.io/firas_bouricha/">
-  <meta property="og:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/firas-bouricha.jpg">
+  <meta property="og:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/photos/portrait.jpg">
   <meta property="og:locale" content="fr_FR">
 
   <link rel="icon"
@@ -141,10 +141,35 @@
         </div>
 
         <div class="hero__visual reveal">
-          <figure class="portrait">
-            <div class="portrait__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/firas.jpg</span></div>
-            <img src="assets/firas-bouricha.jpg" alt="Portrait de Firas Bouricha" width="640" height="800">
-          </figure>
+          <div class="deck" id="deck" role="region" aria-roledescription="carrousel" aria-label="Photos de Firas Bouricha">
+            <div class="deck__stage">
+              <figure class="deck__card" data-pos="0" data-caption="Portrait professionnel">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/portrait.jpg</span></div>
+                <img src="assets/photos/portrait.jpg" alt="Portrait de Firas Bouricha" width="640" height="800">
+              </figure>
+              <figure class="deck__card" data-pos="1" data-caption="Mentorat : j'accompagne un étudiant sur son projet à Ynov">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/mentorat.jpg</span></div>
+                <img src="assets/photos/mentorat.jpg" alt="Firas accompagne un étudiant devant son ordinateur" width="640" height="800" loading="lazy">
+              </figure>
+              <figure class="deck__card" data-pos="2" data-caption="Ydays : 11 projets étudiants hébergés sur notre infrastructure">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/ydays.jpg</span></div>
+                <img src="assets/photos/ydays.jpg" alt="Firas et son équipe devant l'écran « 11 projets Ydays hébergés »" width="640" height="800" loading="lazy">
+              </figure>
+              <figure class="deck__card" data-pos="3" data-caption="Sur le terrain, lors d'un événement">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/evenement.jpg</span></div>
+                <img src="assets/photos/evenement.jpg" alt="Firas lors d'un événement, téléphone en main" width="640" height="800" loading="lazy">
+              </figure>
+            </div>
+            <div class="deck__controls">
+              <button type="button" class="deck__btn" data-deck="prev" aria-label="Photo précédente">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+              </button>
+              <p class="deck__caption" aria-live="polite"><span class="deck__count mono">1/4</span><span class="deck__text">Portrait professionnel</span></p>
+              <button type="button" class="deck__btn" data-deck="next" aria-label="Photo suivante">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
