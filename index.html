@@ -27,7 +27,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261013-7">
+  <link rel="stylesheet" href="css/style.css?v=20261013-10">
   <script>
     // Thème appliqué avant l'affichage pour éviter un flash
     (function () {
@@ -391,50 +391,94 @@ jobs:
         <header class="section__head reveal">
           <p class="section__kicker mono"><span class="section__num">04</span>parcours</p>
           <h2 class="section__title">Mon parcours</h2>
+          <p class="section__sub">De Gabès à Sophia Antipolis, en passant par l'Allemagne&nbsp;: treize ans d'informatique, de langues et de terrain.</p>
         </header>
+      </div>
 
-        <div class="gitlog reveal" id="gitlog">
-          <div class="gitlog__track" role="tablist" aria-label="Étapes du parcours" style="--n: 4">
-            <button type="button" role="tab" class="gitlog__commit" aria-selected="false" aria-controls="gitlog-panel"
-              data-hash="a1f3c2e" data-date="Diplômé en 2016" data-title="Licence MIAGE"
-              data-org="Institut Supérieur de Gestion · Tunisie"
-              data-text="Méthodes informatiques appliquées à la gestion des entreprises : les bases du développement, des bases de données et des systèmes d'information.">
-              <span class="gitlog__year mono">2016</span><span class="gitlog__dot" style="--c: var(--blue)"></span><span class="gitlog__label">Licence MIAGE</span>
-            </button>
-            <button type="button" role="tab" class="gitlog__commit" aria-selected="false" aria-controls="gitlog-panel"
-              data-hash="7c9e04b" data-date="2025 – 2027 · alternance" data-title="Mastère Expert Cloud, Sécurité &amp; Infrastructure · Mentor IT"
-              data-org="Ynov Campus · Sophia Antipolis"
-              data-text="Mastère en alternance : virtualisation, cloud public, Infrastructure as Code, DevSecOps, pilotage et maintenance du SI. En parallèle, mentor IT : j'accompagne les étudiants dans leurs projets techniques et je conçois des supports de cours et de TP, comme le module « Git avancé » pour les Bachelor 1.">
-              <span class="gitlog__year mono">2025</span><span class="gitlog__dot" style="--c: var(--violet)"></span><span class="gitlog__label">Mastère &amp; Mentor IT</span>
-            </button>
-            <button type="button" role="tab" class="gitlog__commit" aria-selected="true" aria-controls="gitlog-panel"
-              data-hash="e52a9f7" data-date="En continu" data-title="Home Lab"
-              data-org="Projet personnel"
-              data-text="Serveur Dell PowerEdge sous Proxmox avec iDRAC, switch Cisco SG300 : un terrain d'expérimentation pour tester, casser et documenter.">
-              <span class="gitlog__year mono">2026</span><span class="gitlog__dot" style="--c: var(--emerald)"></span><span class="gitlog__label">Home Lab</span>
-            </button>
-            <button type="button" role="tab" class="gitlog__commit gitlog__commit--next" aria-selected="false" aria-controls="gitlog-panel"
-              data-hash="HEAD" data-date="Prochaine étape" data-title="Ingénieur Cloud &amp; Infrastructure"
-              data-org="Votre équipe ?"
-              data-text="Mettre mes compétences en virtualisation, automatisation et sécurité au service d'une équipe, et continuer à progresser à ses côtés.">
-              <span class="gitlog__year mono">next</span><span class="gitlog__dot" style="--c: var(--amber)"></span><span class="gitlog__label">Prochaine étape</span>
-            </button>
+      <div class="journey" id="journey-timeline">
+        <div class="journey__sticky">
+          <div class="journey__viewport" tabindex="0" role="region" aria-label="Frise du parcours, de 2013 à aujourd'hui">
+            <div class="journey__track">
+              <span class="journey__rail" aria-hidden="true"><span class="journey__fill"></span></span>
+              <ol class="journey__list">
+                <li class="journey__item">
+                  <p class="journey__year">2013</p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">Gabès, Tunisie</p>
+                    <h3 class="journey__title">Baccalauréat et entrée en études supérieures d'informatique</h3>
+                    <p class="journey__text">Baccalauréat en poche, je commence mes études supérieures en informatique avec une Licence MIAGE à l'Institut Supérieur de Gestion de Gabès.</p>
+                  </div>
+                </li>
+                <li class="journey__item">
+                  <p class="journey__year">2016</p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">Gabès, Tunisie</p>
+                    <h3 class="journey__title">Licence MIAGE — Institut Supérieur de Gestion de Gabès</h3>
+                    <p class="journey__text">Diplôme obtenu en méthodes informatiques appliquées à la gestion des entreprises : développement, bases de données et systèmes d'information.</p>
+                  </div>
+                </li>
+                <li class="journey__item">
+                  <p class="journey__year">2017</p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">Allemagne</p>
+                    <h3 class="journey__title">Formation intensive en langue allemande</h3>
+                    <p class="journey__text">Je m'installe en Allemagne et je consacre une année entière à l'apprentissage de l'allemand.</p>
+                  </div>
+                </li>
+                <li class="journey__item">
+                  <p class="journey__year">2018</p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">Coblence, Allemagne</p>
+                    <h3 class="journey__title">Bachelor en informatique — Universität Koblenz</h3>
+                    <p class="journey__text">J'intègre l'Université de Coblence pour poursuivre mes études d'informatique dans un environnement international et exigeant.</p>
+                  </div>
+                </li>
+                <li class="journey__item">
+                  <p class="journey__year">2021</p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">France</p>
+                    <h3 class="journey__title">Installation en France et cursus à l'École 42</h3>
+                    <p class="journey__text">Je déménage en France. Fin 2021, je rejoins l'École 42 et sa pédagogie par projets, fondée sur l'autonomie et l'apprentissage entre pairs.</p>
+                  </div>
+                </li>
+                <li class="journey__item">
+                  <p class="journey__year">2022</p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">Nice</p>
+                    <h3 class="journey__title">Retail Sales Specialist — IKEA</h3>
+                    <p class="journey__text">Optimisation des ventes et de la gestion informatique des stocks, analyse des performances et accompagnement des nouvelles recrues.</p>
+                  </div>
+                </li>
+                <li class="journey__item">
+                  <p class="journey__year">2024</p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">Montreuil · Octobre 2024</p>
+                    <h3 class="journey__title">Immersion professionnelle Cloud &amp; DevOps — KLESIA</h3>
+                    <p class="journey__text">Une semaine au cœur d'une équipe cloud : déploiement d'une container app sur Microsoft Azure, prise en main d'Azure CLI, de Docker et de WSL, et découverte des workflows DevOps.</p>
+                  </div>
+                </li>
+                <li class="journey__item journey__item--now">
+                  <p class="journey__year">2025<span class="journey__now">aujourd'hui</span></p>
+                  <span class="journey__dot" aria-hidden="true"></span>
+                  <div class="journey__body">
+                    <p class="journey__place mono">Sophia Antipolis</p>
+                    <h3 class="journey__title">Mastère Expert Cloud, Sécurité &amp; Infrastructure — Mentor IT en alternance, Ynov Campus</h3>
+                    <p class="journey__text">À Ynov Campus, je me spécialise dans l'automatisation et la démarche DevSecOps. En alternance,
+                      j'accompagne plus de 20 étudiants en mentorat (taux de complétion des livrables en hausse de 20&nbsp;%) et j'anime
+                      des ateliers hebdomadaires sur Git, les bases de données, le réseau et l'infrastructure.</p>
+                  </div>
+                </li>
+              </ol>
+            </div>
           </div>
-
-          <div class="gitlog__panel" id="gitlog-panel" role="tabpanel" aria-live="polite">
-            <p class="gitlog__meta mono"><span class="gitlog__hash"></span> <span class="gitlog__date muted"></span></p>
-            <h3 class="gitlog__title"></h3>
-            <p class="gitlog__org mono"></p>
-            <p class="gitlog__text"></p>
-          </div>
-
-          <noscript>
-            <ul class="gitlog__fallback">
-              <li><strong>2016 · Licence MIAGE</strong> — Institut Supérieur de Gestion, Tunisie</li>
-              <li><strong>2025 – 2027 · Mastère Expert Cloud, Sécurité &amp; Infrastructure et Mentor IT (alternance)</strong> — Ynov Sophia Antipolis</li>
-              <li><strong>En continu · Home Lab</strong> — Proxmox, iDRAC, Cisco SG300</li>
-            </ul>
-          </noscript>
+          <p class="journey__hint mono" aria-hidden="true"><span class="journey__hint-text">défiler</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></p>
         </div>
       </div>
     </section>
@@ -482,7 +526,7 @@ jobs:
   <footer class="footer">
     <div class="container">
       <div class="statusbar mono">
-        <span class="statusbar__mode">NORMAL</span>
+        <span class="statusbar__mode"><span class="statusbar__dot" aria-hidden="true"></span>DISPONIBLE</span>
         <span class="statusbar__seg">firas@infra</span>
         <span class="statusbar__seg statusbar__seg--path">~/portfolio</span>
         <span class="statusbar__spacer" aria-hidden="true"></span>
@@ -510,9 +554,9 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/projects.js?v=20261013-7"></script>
-  <script src="js/icons.js?v=20261013-7"></script>
-  <script src="js/main.js?v=20261013-7"></script>
+  <script src="data/projects.js?v=20261013-10"></script>
+  <script src="js/icons.js?v=20261013-10"></script>
+  <script src="js/main.js?v=20261013-10"></script>
 </body>
 
 </html>

@@ -421,43 +421,72 @@
     });
   }
 
-  /* ---------- Parcours façon « git log » ---------- */
-  function setupGitLog() {
-    const root = document.getElementById("gitlog");
+  /* ---------- Parcours : frise horizontale animée ----------
+     Grand écran : la section reste fixée et le défilement vertical fait glisser la frise.
+     Mobile / mouvement réduit : défilement horizontal natif (au doigt ou au trackpad). */
+  function setupJourney() {
+    const root = document.getElementById("journey-timeline");
     if (!root) return;
-    const commits = [...root.querySelectorAll(".gitlog__commit")];
-    const panel = root.querySelector(".gitlog__panel");
-    const field = (name) => panel.querySelector(`.gitlog__${name}`);
+    const viewport = root.querySelector(".journey__viewport");
+    const track = root.querySelector(".journey__track");
+    const rail = root.querySelector(".journey__rail");
+    const fill = root.querySelector(".journey__fill");
+    const sticky = root.querySelector(".journey__sticky");
+    const items = [...root.querySelectorAll(".journey__item")];
+    const pinQuery = window.matchMedia("(min-width: 901px) and (prefers-reduced-motion: no-preference)");
+    let distance = 0; // distance horizontale à parcourir en mode épinglé
+    let ticking = false;
 
-    const select = (commit, focus) => {
-      commits.forEach((c) => {
-        const on = c === commit;
-        c.setAttribute("aria-selected", String(on));
-        c.tabIndex = on ? 0 : -1;
-      });
-      const d = commit.dataset;
-      field("hash").textContent = d.hash === "HEAD" ? "HEAD →" : `commit ${d.hash}`;
-      field("date").textContent = d.date;
-      field("title").textContent = d.title;
-      field("org").textContent = d.org;
-      field("text").textContent = d.text;
-      panel.style.setProperty("--c", commit.querySelector(".gitlog__dot").style.getPropertyValue("--c"));
-      panel.classList.remove("is-swap");
-      void panel.offsetWidth; // relance l'animation
-      panel.classList.add("is-swap");
-      if (focus) commit.focus();
+    const measure = () => {
+      const pinned = pinQuery.matches;
+      root.classList.toggle("is-pinned", pinned);
+      if (!pinned) {
+        root.style.height = "";
+        track.style.removeProperty("--x");
+        return;
+      }
+      distance = Math.max(0, track.scrollWidth - window.innerWidth);
+      root.style.height = `${sticky.offsetHeight + distance}px`;
     };
 
-    commits.forEach((commit, i) => {
-      commit.addEventListener("click", () => select(commit));
-      commit.addEventListener("keydown", (e) => {
-        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-        e.preventDefault();
-        const next = commits[Math.min(commits.length - 1, Math.max(0, i + (e.key === "ArrowRight" ? 1 : -1)))];
-        select(next, true);
+    const update = () => {
+      ticking = false;
+      let p = 0;
+      if (root.classList.contains("is-pinned")) {
+        const top = root.getBoundingClientRect().top;
+        const scrollable = root.offsetHeight - sticky.offsetHeight;
+        const navH = parseFloat(getComputedStyle(sticky).top) || 0;
+        p = scrollable > 0 ? Math.min(1, Math.max(0, (navH - top) / scrollable)) : 0;
+        track.style.setProperty("--x", `${(-p * distance).toFixed(1)}px`);
+      }
+      // La ligne se remplit jusqu'au repère, les étapes à gauche du repère s'allument
+      // (en mode épinglé, le repère glisse vers la droite pour allumer les dernières étapes en fin de course)
+      const anchor = window.innerWidth * (root.classList.contains("is-pinned") ? 0.62 + 0.3 * p : 0.72);
+      const r = rail.getBoundingClientRect();
+      const visible = root.getBoundingClientRect();
+      const inView = visible.top < window.innerHeight * 0.75 && visible.bottom > 0;
+      const progress = inView ? Math.min(1, Math.max(0, (anchor - r.left) / r.width)) : 0;
+      fill.style.setProperty("--progress", progress.toFixed(4));
+      items.forEach((item) => {
+        const dot = item.querySelector(".journey__dot").getBoundingClientRect();
+        item.classList.toggle("is-lit", inView && dot.left < anchor);
       });
-    });
-    select(commits.find((c) => c.getAttribute("aria-selected") === "true") || commits[0]);
+      root.classList.toggle("is-started", progress > 0.08);
+    };
+    const schedule = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    measure();
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    viewport.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", () => { measure(); schedule(); });
+    if (pinQuery.addEventListener) pinQuery.addEventListener("change", () => { measure(); schedule(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); schedule(); });
   }
 
   /* ---------- Visionneuse de photos (hero) ---------- */
@@ -593,7 +622,7 @@
     safely("navigation", setupNav);
     safely("photos", setupDeck);
     safely("éditeur", setupEditor);
-    safely("parcours", setupGitLog);
+    safely("parcours", setupJourney);
     safely("palette", () => setupCommandPalette(toggleTheme));
     safely("e-mail", setupCopyEmail);
 
