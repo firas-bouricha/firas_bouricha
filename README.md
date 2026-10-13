@@ -22,7 +22,7 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 │   ├── main.js         # Cartes projets, filtres, menu, thème, palette ⌘K, animations
 │   └── icons.js        # Logos des technologies (Simple Icons, CC0)
 └── assets/
-    ├── firas-bouricha.jpg
+    ├── photos/         # Photos du haut de page (visionneuse cliquable)
     └── projects/       # Images des projets (photos, captures d'écran)
 ```
 
@@ -79,6 +79,14 @@ Sur une carte mise en avant (`featured: true`), l'image s'affiche à gauche du t
 - Citer les outils dans les `tags` plutôt que dans la phrase.
 - Réserver `featured: true` aux 2 ou 3 projets les plus représentatifs du poste visé.
 - Au-delà de 4 technologies, les suivantes sont regroupées dans un bouton « +N » : mettre les plus importantes en premier.
+
+---
+
+## Changer les photos du haut de page
+
+Les photos sont dans `assets/photos/` (format portrait 4:5, idéalement 640 × 800 px). Pour en ajouter une,
+copier un bloc `<figure class="deck__card">` dans `index.html`, puis modifier le nom du fichier, la légende
+(`data-caption`) et le texte alternatif (`alt`). Le compteur et la navigation s'adaptent automatiquement.
 
 ---
 
