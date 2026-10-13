@@ -144,53 +144,50 @@
 
   /* ---------- Navigation ---------- */
   function setupNav() {
+    const nav = document.getElementById("nav");
     const toggle = document.getElementById("nav-toggle");
-    const pill = document.getElementById("nav-links");
-    if (!pill) return;
-    const indicator = pill.querySelector(".nav__indicator");
-    const links = [...pill.querySelectorAll('a[href^="#"]')];
+    const menu = document.getElementById("nav-links");
+    const path = document.getElementById("prompt-path");
+    if (!nav || !menu) return;
+    const links = [...menu.querySelectorAll('a[href^="#"]')];
+
+    const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     // Menu mobile
     if (toggle) {
       const setOpen = (open) => {
         toggle.setAttribute("aria-expanded", String(open));
         toggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
-        pill.classList.toggle("is-open", open);
+        menu.classList.toggle("is-open", open);
+        nav.classList.toggle("menu-open", open);
       };
       toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
       links.forEach((a) => a.addEventListener("click", () => setOpen(false)));
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
       document.addEventListener("click", (e) => {
-        if (!pill.contains(e.target) && !toggle.contains(e.target)) setOpen(false);
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) setOpen(false);
       });
     }
 
-    // Pastille qui glisse sous le lien actif
-    let active = null;
-    const moveIndicator = () => {
-      if (!indicator) return;
-      if (!active || pill.classList.contains("is-open") || !active.offsetWidth) {
-        indicator.classList.remove("is-ready");
-        return;
-      }
-      indicator.style.width = `${active.offsetWidth}px`;
-      indicator.style.transform = `translateX(${active.offsetLeft}px)`;
-      indicator.classList.add("is-ready");
-    };
+    // Lien actif + chemin du prompt (firas@infra:~/projets$) selon la section visible
     const setActive = (id) => {
-      active = links.find((a) => a.getAttribute("href") === `#${id}`) || null;
+      let current = "~";
       links.forEach((a) => {
-        const on = a === active;
+        const on = a.getAttribute("href") === `#${id}`;
         a.classList.toggle("is-active", on);
-        if (on) a.setAttribute("aria-current", "true");
-        else a.removeAttribute("aria-current");
+        if (on) {
+          a.setAttribute("aria-current", "true");
+          current = a.dataset.path || current;
+        } else {
+          a.removeAttribute("aria-current");
+        }
       });
-      moveIndicator();
+      if (path) path.textContent = current;
     };
-    window.addEventListener("resize", moveIndicator);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
 
-    const sections = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+    const sections = [document.getElementById("top"), ...links.map((a) => document.querySelector(a.getAttribute("href")))].filter(Boolean);
     if ("IntersectionObserver" in window && sections.length) {
       const spy = new IntersectionObserver(
         (entries) => entries.forEach((entry) => { if (entry.isIntersecting) setActive(entry.target.id); }),
@@ -210,7 +207,7 @@
     const apply = (theme) => {
       root.setAttribute("data-theme", theme);
       if (meta) meta.setAttribute("content", theme === "light" ? "#FAFAFC" : "#0A0A0D");
-      if (button) button.setAttribute("aria-label", theme === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+      if (button) button.setAttribute("aria-checked", String(theme === "light"));
       try { localStorage.setItem("theme", theme); } catch { /* stockage indisponible : le choix vaut pour cette visite */ }
     };
     const toggleTheme = () => apply(root.getAttribute("data-theme") === "light" ? "dark" : "light");
@@ -325,6 +322,8 @@
     };
 
     document.querySelectorAll("#cmdk-open, [data-open-cmdk]").forEach((b) => b.addEventListener("click", openPalette));
+    const kbd = document.getElementById("cmdk-kbd");
+    if (kbd && /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent)) kbd.textContent = "⌘ K";
     document.addEventListener("keydown", (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
