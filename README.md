@@ -1,6 +1,6 @@
 # Portfolio · Firas Bouricha
 
-Site personnel de **Firas Bouricha**, ingénieur Cloud & Infrastructure, disponible pour un CDI.
+Site personnel de **Firas Bouricha**, ingénieur Cloud & Infrastructure.
 
 🔗 **En ligne :** https://firas-bouricha.github.io/firas_bouricha/
 

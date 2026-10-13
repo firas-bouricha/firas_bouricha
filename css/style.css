@@ -539,14 +539,14 @@ svg.fill { fill: currentColor; stroke: none; }
 
 /* ---------- Parcours façon « git log » ---------- */
 .gitlog { max-width: 980px; }
-.gitlog__track { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); }
+.gitlog__track { --n: 4; --half: calc(50% / var(--n)); position: relative; display: grid; grid-template-columns: repeat(var(--n), 1fr); }
 .gitlog__track::before {
-  content: ""; position: absolute; left: 10%; right: 10%; top: 51px; height: 2px;
-  background: linear-gradient(90deg, var(--blue), var(--violet), var(--cyan), var(--emerald));
+  content: ""; position: absolute; left: var(--half); right: calc(var(--half) * 3); top: 51px; height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--violet), var(--emerald));
 }
 .gitlog__track::after {
-  content: ""; position: absolute; right: 0; width: 10%; top: 51px; height: 2px;
-  background: repeating-linear-gradient(90deg, var(--amber) 0 6px, transparent 6px 12px); left: 90%;
+  content: ""; position: absolute; left: calc(100% - var(--half) * 3); right: var(--half); top: 51px; height: 2px;
+  background: repeating-linear-gradient(90deg, var(--amber) 0 6px, transparent 6px 12px);
 }
 .gitlog__commit {
   position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -560,7 +560,7 @@ svg.fill { fill: currentColor; stroke: none; }
   transition: transform .3s var(--ease), background .3s, box-shadow .3s;
 }
 .gitlog__commit--next .gitlog__dot { border-style: dashed; }
-.gitlog__label { font-weight: 600; font-size: 15px; }
+.gitlog__label { font-weight: 600; font-size: 15px; text-align: center; }
 .gitlog__commit[aria-selected="true"] { color: var(--text); }
 .gitlog__commit[aria-selected="true"] .gitlog__dot {
   background: var(--c); transform: scale(1.25);
@@ -731,7 +731,7 @@ kbd {
   .hero__cta .btn { flex: 1 1 auto; }
   .hero__socials { margin-left: 0; }
   .gitlog__track { grid-template-columns: 1fr; gap: 2px; padding-left: 4px; }
-  .gitlog__track::before { left: 23px; right: auto; top: 22px; bottom: 60px; width: 2px; height: auto; background: linear-gradient(180deg, var(--blue), var(--violet), var(--cyan), var(--emerald)); }
+  .gitlog__track::before { left: 23px; right: auto; top: 22px; bottom: 60px; width: 2px; height: auto; background: linear-gradient(180deg, var(--blue), var(--violet), var(--emerald)); }
   .gitlog__track::after { left: 23px; right: auto; top: auto; bottom: 22px; width: 2px; height: 38px; background: repeating-linear-gradient(180deg, var(--amber) 0 5px, transparent 5px 10px); }
   .gitlog__commit { flex-direction: row; justify-content: flex-start; gap: 14px; padding: 10px 10px 10px 10px; }
   .gitlog__commit .gitlog__year { order: 3; margin-left: auto; }
