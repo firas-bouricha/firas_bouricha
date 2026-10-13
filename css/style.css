@@ -26,6 +26,8 @@
   --status-text: #A7F3D0;
   --shadow: rgba(0, 0, 0, .7);
   --code-bg: #0E0E13;
+  --tile: #1C1D25;
+  --tile-border: #2A2B35;
 
   --violet: #8B5CF6;
   --violet-soft: #A78BFA;
@@ -66,6 +68,8 @@
   --status-text: #047857;
   --shadow: rgba(30, 20, 60, .14);
   --code-bg: #15151B;
+  --tile: #FFFFFF;
+  --tile-border: #E3E2EA;
 
   --text: #121218;
   --text-soft: #3F3F4A;
@@ -361,27 +365,42 @@ svg.fill { fill: currentColor; stroke: none; }
 /* ---------- Compétences ---------- */
 .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .skill {
-  padding: 22px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border);
-  transition: border-color .25s, transform .25s var(--ease), box-shadow .25s;
+  padding: 22px 20px 20px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border);
+  transition: border-color .25s;
 }
 .skill:hover { border-color: var(--border-strong); }
-.skill h3 { font-size: 12.5px; font-weight: 500; color: var(--muted); letter-spacing: .04em; margin-bottom: 16px; }
-.skill ul { display: flex; flex-wrap: wrap; gap: 8px; }
-.skill li {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 14.5px; padding: 6px 12px 6px 6px; border-radius: 9px;
-  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
-}
+.skill h3 { font-size: 12.5px; font-weight: 500; color: var(--muted); letter-spacing: .04em; margin-bottom: 18px; }
 
-.skill li:not(:has(.skill__logo)) { padding-left: 12px; }
-.skill__logo {
-  display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; font-size: 14px;
-  color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, transparent);
-  transition: transform .25s var(--ease);
+/* Tuiles de logos officiels */
+.techs { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 16px 8px; }
+.tech { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.tech__icon {
+  display: grid; place-items: center; width: 54px; height: 54px; border-radius: 15px;
+  background: var(--tile); border: 1px solid var(--tile-border);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 8px 18px -12px var(--shadow);
+  transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), box-shadow .35s, border-color .35s;
 }
-:root[data-theme="dark"] .skill__logo.is-low { color: var(--text); background: color-mix(in srgb, var(--text) 10%, transparent); }
-.skill__logo--mono { font-size: 10.5px; font-weight: 700; letter-spacing: -.02em; }
+.tech__icon img { width: 32px; height: 32px; object-fit: contain; }
+.tech__icon--mono {
+  font-size: 15px; font-weight: 700; letter-spacing: -.03em; color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 13%, var(--tile)); border-color: color-mix(in srgb, var(--brand) 35%, transparent);
+}
+.tech__name { font-size: 12.5px; line-height: 1.25; color: var(--text-soft); }
+.tech:hover .tech__icon { transform: translateY(-4px) rotate(-4deg); border-color: var(--border-strong); box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 14px 24px -14px var(--shadow); }
+.tech:hover .tech__name { color: var(--text); }
 
+/* Logos à double version selon le thème (texte sombre illisible sur fond sombre) */
+:root[data-theme="dark"] .only-light,
+:root[data-theme="light"] .only-dark { display: none; }
+
+/* Apparition en cascade quand la carte entre à l'écran */
+.js .skill.reveal .tech { opacity: 0; transform: translateY(10px) scale(.92); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.js .skill.reveal.is-visible .tech { opacity: 1; transform: none; }
+.js .skill.reveal.is-visible .tech:nth-child(2) { transition-delay: .06s; }
+.js .skill.reveal.is-visible .tech:nth-child(3) { transition-delay: .12s; }
+.js .skill.reveal.is-visible .tech:nth-child(4) { transition-delay: .18s; }
+.js .skill.reveal.is-visible .tech:nth-child(5) { transition-delay: .24s; }
+.js .skill.reveal.is-visible .tech:nth-child(6) { transition-delay: .30s; }
 
 /* ---------- Projets ---------- */
 .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }

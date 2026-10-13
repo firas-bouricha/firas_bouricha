@@ -19,9 +19,9 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 ├── css/
 │   └── style.css       # Le design (couleurs, mise en page, responsive)
 ├── js/
-│   ├── main.js         # Cartes projets, filtres, menu, thème, palette ⌘K, animations
-│   └── icons.js        # Logos des technologies (Simple Icons, CC0)
+│   └── main.js         # Cartes projets, filtres, menu, thème, palette ⌘K, animations
 └── assets/
+    ├── icons/          # Logos des technologies (devicon MIT, Simple Icons CC0)
     ├── photos/         # Photos du haut de page (visionneuse cliquable)
     └── projects/       # Images des projets (photos, captures d'écran)
 ```
@@ -82,6 +82,14 @@ Sur une carte mise en avant (`featured: true`), l'image s'affiche à gauche du t
 
 ---
 
+## Ajouter une compétence
+
+Dans `index.html`, section « Compétences », copier une ligne `<li class="tech">` dans la bonne catégorie et changer
+le logo (`assets/icons/…`) et le nom. Les logos officiels en couleur se trouvent sur
+[devicon.dev](https://devicon.dev) (fichier `*-original.svg`).
+
+---
+
 ## Changer les photos du haut de page
 
 Les photos sont dans `assets/photos/` (format portrait 4:5, idéalement 640 × 800 px). Pour en ajouter une,
@@ -96,7 +104,7 @@ Les navigateurs gardent le CSS et le JavaScript en cache pendant environ 10 minu
 mais que l'ancien CSS est encore en cache, l'affichage peut se casser.
 
 Pour l'éviter, dans `index.html`, **changez le numéro de version** `?v=...` des fichiers `css/style.css`,
-`data/projects.js`, `js/icons.js` et `js/main.js` à chaque modification de ces fichiers
+`data/projects.js` et `js/main.js` à chaque modification de ces fichiers
 (par exemple `?v=20261013-7` → `?v=20261020-1`). Les visiteurs téléchargent alors directement la nouvelle version.
 
 ---

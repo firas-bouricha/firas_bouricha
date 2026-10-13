@@ -27,7 +27,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261013-10">
+  <link rel="stylesheet" href="css/style.css?v=20261013-11">
   <script>
     // Thème appliqué avant l'affichage pour éviter un flash
     (function () {
@@ -293,68 +293,75 @@ jobs:
         </header>
 
         <div class="skills">
-          <article class="skill reveal" style="--c: var(--violet)">
+          <article class="skill reveal">
             <h3 class="mono">systèmes</h3>
-            <ul>
-              <li data-icon="linux">Linux</li>
-              <li data-icon="windows">Windows</li>
-              <li data-icon="bash">Bash</li>
-              <li data-mono="&gt;_" data-color="#5391FE">PowerShell</li>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/linux.png" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Linux</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/debian.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Debian</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/ubuntu.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Ubuntu</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/windows.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Windows</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/bash.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Bash</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/powershell.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">PowerShell</span></li>
             </ul>
           </article>
-          <article class="skill reveal" style="--c: var(--cyan)">
+          <article class="skill reveal">
             <h3 class="mono">virtualisation</h3>
-            <ul>
-              <li data-icon="proxmox">Proxmox VE</li>
-              <li data-icon="vmware">VMware</li>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/proxmox.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Proxmox VE</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/vsphere.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">vSphere</span></li>
             </ul>
           </article>
-          <article class="skill reveal" style="--c: var(--blue)">
+          <article class="skill reveal">
             <h3 class="mono">cloud</h3>
-            <ul>
-              <li data-icon="aws">AWS</li>
-              <li data-mono="Az" data-color="#0078D4">Azure</li>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img class="only-light" src="assets/icons/aws.svg" alt="" width="34" height="34" loading="lazy"><img class="only-dark" src="assets/icons/aws-dark.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">AWS</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/azure.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Azure</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/digitalocean.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">DigitalOcean</span></li>
             </ul>
           </article>
-          <article class="skill reveal" style="--c: var(--amber)">
+          <article class="skill reveal">
             <h3 class="mono">iac · automatisation</h3>
-            <ul>
-              <li data-icon="terraform">Terraform</li>
-              <li data-icon="opentofu">OpenTofu</li>
-              <li data-icon="ansible">Ansible</li>
-              <li data-mono="ci" data-color="#E95420">Cloud-Init</li>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/terraform.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Terraform</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/opentofu.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">OpenTofu</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/ansible.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Ansible</span></li>
+              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#E95420" aria-hidden="true">ci</span><span class="tech__name">Cloud-Init</span></li>
             </ul>
           </article>
-          <article class="skill reveal" style="--c: var(--emerald)">
+          <article class="skill reveal">
             <h3 class="mono">conteneurs · ci/cd</h3>
-            <ul>
-              <li data-icon="docker">Docker</li>
-              <li data-icon="githubactions">GitHub Actions</li>
-              <li data-icon="git">Git</li>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/docker.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Docker</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/podman.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Podman</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/githubactions.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">GitHub Actions</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/git.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Git</span></li>
             </ul>
           </article>
-          <article class="skill reveal" style="--c: var(--pink)">
-            <h3 class="mono">sécurité</h3>
-            <ul>
-              <li data-icon="trivy">Trivy</li>
-              <li data-mono="GL" data-color="#F472B6">Gitleaks</li>
-              <li data-mono="QL" data-color="#8B5CF6">CodeQL</li>
-              <li data-mono="S" data-color="#34D399">SOPS</li>
+          <article class="skill reveal">
+            <h3 class="mono">sécurité · réseau</h3>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img class="only-light" src="assets/icons/pfsense.svg" alt="" width="34" height="34" loading="lazy"><img class="only-dark" src="assets/icons/pfsense-dark.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">pfSense</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/trivy.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Trivy</span></li>
+              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#F472B6" aria-hidden="true">GL</span><span class="tech__name">Gitleaks</span></li>
+              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#8B5CF6" aria-hidden="true">QL</span><span class="tech__name">CodeQL</span></li>
+              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#34D399" aria-hidden="true">S</span><span class="tech__name">SOPS</span></li>
             </ul>
           </article>
-          <article class="skill reveal" style="--c: var(--violet-soft)">
+          <article class="skill reveal">
+            <h3 class="mono">supervision · itsm</h3>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/prometheus.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Prometheus</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/grafana.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Grafana</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/zabbix.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Zabbix</span></li>
+              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#F59E0B" aria-hidden="true">G</span><span class="tech__name">GLPI</span></li>
+            </ul>
+          </article>
+          <article class="skill reveal">
             <h3 class="mono">langages · data</h3>
-            <ul>
-              <li data-icon="go">Go</li>
-              <li data-icon="python">Python</li>
-              <li data-icon="postgresql">PostgreSQL</li>
-            </ul>
-          </article>
-          <article class="skill reveal" style="--c: var(--muted)">
-            <h3 class="mono">itsm · supervision</h3>
-            <ul>
-              <li data-mono="G" data-color="#F59E0B">GLPI</li>
-              <li data-mono="Z" data-color="#D40000">Zabbix</li>
+            <ul class="techs">
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/go.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Go</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/python.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Python</span></li>
+              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/postgresql.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">PostgreSQL</span></li>
             </ul>
           </article>
         </div>
@@ -554,9 +561,8 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/projects.js?v=20261013-10"></script>
-  <script src="js/icons.js?v=20261013-10"></script>
-  <script src="js/main.js?v=20261013-10"></script>
+  <script src="data/projects.js?v=20261013-11"></script>
+  <script src="js/main.js?v=20261013-11"></script>
 </body>
 
 </html>
