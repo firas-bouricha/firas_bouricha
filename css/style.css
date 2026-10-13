@@ -540,7 +540,8 @@ svg.fill { fill: currentColor; stroke: none; }
   background: var(--surface); border: 1px solid var(--border); font-size: 12.5px;
 }
 .statusbar > * { display: inline-flex; align-items: center; padding: 8px 14px; }
-.statusbar__mode { background: var(--violet); color: #fff; font-weight: 700; letter-spacing: .06em; }
+.statusbar__mode { gap: 8px; background: var(--violet); color: #fff; font-weight: 700; letter-spacing: .06em; }
+.statusbar__dot { width: 7px; height: 7px; border-radius: 50%; background: #6EE7B7; }
 .statusbar__seg { color: var(--text-soft); border: 0; border-right: 1px solid var(--border); background: none; font: inherit; transition: color .2s, background .2s; }
 .statusbar__seg--path { color: var(--cyan); }
 a.statusbar__seg:hover, button.statusbar__seg:hover { color: var(--text); background: color-mix(in srgb, var(--violet) 10%, transparent); }
