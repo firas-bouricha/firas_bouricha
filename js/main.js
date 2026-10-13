@@ -8,6 +8,9 @@
 
   document.documentElement.classList.add("js");
 
+  const EMAIL = "firas.bouricha@outlook.fr";
+  const MAX_TAGS = 4; // au-delà, les technologies sont regroupées dans un bouton « +N »
+
   /* ---------- Icônes disponibles pour les projets ---------- */
   const ICONS = {
     home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
@@ -46,10 +49,18 @@
   const svg = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ICONS.code}</svg>`;
 
   /* ---------- Rendu des projets ---------- */
+  function tagList(tags) {
+    const visible = tags.slice(0, MAX_TAGS).map((t) => `<li>${escapeHTML(t)}</li>`).join("");
+    const hidden = tags.slice(MAX_TAGS);
+    if (!hidden.length) return visible;
+    return `${visible}<li class="project__more"><button type="button" data-tags="${escapeHTML(JSON.stringify(hidden))}" aria-label="Afficher ${hidden.length} technologie${hidden.length > 1 ? "s" : ""} de plus : ${escapeHTML(hidden.join(", "))}">+${hidden.length}</button></li>`;
+  }
+
   function projectCard(project) {
     const color = COLORS[project.color] || COLORS.violet;
     const repoURL = project.repo ? `https://github.com/${project.repo}` : null;
     const demoURL = safeURL(project.demo);
+    const image = typeof project.image === "string" && !/^\s*javascript:/i.test(project.image) ? project.image : null;
     const tags = Array.isArray(project.tags) ? project.tags : [];
 
     const links = [];
@@ -61,18 +72,22 @@
     }
 
     return `
-      <article class="project${project.featured ? " project--featured" : ""}" style="--c: ${color}">
+      <article class="project${project.featured ? " project--featured" : ""}${image ? " project--media" : ""}" style="--c: ${color}">
+        ${image ? `<figure class="project__media"><img src="${escapeHTML(image)}" alt="${escapeHTML(project.imageAlt || project.title)}" loading="lazy" decoding="async"></figure>` : ""}
         <div class="project__body">
           <div class="project__head">
             <span class="project__icon">${svg(project.icon)}</span>
             <div class="project__titles">
               ${project.category ? `<p class="project__category">${escapeHTML(project.category)}</p>` : ""}
-              <h3 class="project__title">${escapeHTML(project.title)}</h3>
+              <div class="project__titleRow">
+                <h3 class="project__title">${escapeHTML(project.title)}</h3>
+                ${project.year ? `<span class="project__year mono">${escapeHTML(project.year)}</span>` : ""}
+              </div>
               ${project.repo ? `<span class="project__repo">${escapeHTML(project.repo)}</span>` : ""}
             </div>
           </div>
           <p class="project__desc">${escapeHTML(project.description)}</p>
-          ${tags.length ? `<ul class="project__tags">${tags.map((t) => `<li>${escapeHTML(t)}</li>`).join("")}</ul>` : ""}
+          ${tags.length ? `<ul class="project__tags">${tagList(tags)}</ul>` : ""}
         </div>
         ${links.length ? `<div class="project__links">${links.join("")}</div>` : ""}
       </article>`;
@@ -113,51 +128,338 @@
       filtersEl.remove();
     }
 
+    // Bouton « +N » : affiche les technologies restantes
+    list.addEventListener("click", (event) => {
+      const more = event.target.closest(".project__more button");
+      if (!more) return;
+      let hidden = [];
+      try { hidden = JSON.parse(more.dataset.tags); } catch { hidden = []; }
+      const item = more.parentElement;
+      item.insertAdjacentHTML("beforebegin", hidden.map((t) => `<li class="is-new">${escapeHTML(t)}</li>`).join(""));
+      item.remove();
+    });
+
     render("");
   }
 
   /* ---------- Navigation ---------- */
   function setupNav() {
-    const nav = document.getElementById("nav");
     const toggle = document.getElementById("nav-toggle");
-    const links = document.getElementById("nav-links");
-    if (!nav) return;
+    const pill = document.getElementById("nav-links");
+    if (!pill) return;
+    const indicator = pill.querySelector(".nav__indicator");
+    const links = [...pill.querySelectorAll('a[href^="#"]')];
 
-    const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    if (toggle && links) {
+    // Menu mobile
+    if (toggle) {
       const setOpen = (open) => {
         toggle.setAttribute("aria-expanded", String(open));
         toggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
-        links.classList.toggle("is-open", open);
-        nav.classList.toggle("menu-open", open);
+        pill.classList.toggle("is-open", open);
       };
       toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
-      links.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") setOpen(false);
+      links.forEach((a) => a.addEventListener("click", () => setOpen(false)));
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+      document.addEventListener("click", (e) => {
+        if (!pill.contains(e.target) && !toggle.contains(e.target)) setOpen(false);
       });
     }
 
-    // Lien actif selon la section visible
-    const navLinks = links ? [...links.querySelectorAll('a[href^="#"]:not(.btn)')] : [];
-    const sections = navLinks.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
-    const hero = document.getElementById("top");
-    if (hero) sections.unshift(hero); // en haut de page : aucun lien actif
+    // Pastille qui glisse sous le lien actif
+    let active = null;
+    const moveIndicator = () => {
+      if (!indicator) return;
+      if (!active || pill.classList.contains("is-open") || !active.offsetWidth) {
+        indicator.classList.remove("is-ready");
+        return;
+      }
+      indicator.style.width = `${active.offsetWidth}px`;
+      indicator.style.transform = `translateX(${active.offsetLeft}px)`;
+      indicator.classList.add("is-ready");
+    };
+    const setActive = (id) => {
+      active = links.find((a) => a.getAttribute("href") === `#${id}`) || null;
+      links.forEach((a) => {
+        const on = a === active;
+        a.classList.toggle("is-active", on);
+        if (on) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+      moveIndicator();
+    };
+    window.addEventListener("resize", moveIndicator);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
+
+    const sections = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
     if ("IntersectionObserver" in window && sections.length) {
       const spy = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            navLinks.forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === `#${entry.target.id}`));
-          });
-        },
-        { rootMargin: "-45% 0px -50% 0px" }
+        (entries) => entries.forEach((entry) => { if (entry.isIntersecting) setActive(entry.target.id); }),
+        { rootMargin: "-40% 0px -55% 0px" }
       );
-      sections.forEach((s) => spy.observe(s));
+      sections.forEach((section) => spy.observe(section));
     }
+    setActive("top");
+  }
+
+  /* ---------- Thème clair / sombre ---------- */
+  function setupTheme() {
+    const button = document.getElementById("theme-toggle");
+    const root = document.documentElement;
+    const meta = document.querySelector('meta[name="theme-color"]');
+
+    const apply = (theme) => {
+      root.setAttribute("data-theme", theme);
+      if (meta) meta.setAttribute("content", theme === "light" ? "#FAFAFC" : "#0A0A0D");
+      if (button) button.setAttribute("aria-label", theme === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+      try { localStorage.setItem("theme", theme); } catch { /* stockage indisponible : le choix vaut pour cette visite */ }
+    };
+    const toggleTheme = () => apply(root.getAttribute("data-theme") === "light" ? "dark" : "light");
+
+    apply(root.getAttribute("data-theme") === "light" ? "light" : "dark");
+    if (button) button.addEventListener("click", toggleTheme);
+    return toggleTheme;
+  }
+
+  /* ---------- Notifications ---------- */
+  let toastTimer;
+  function notify(message) {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add("is-visible");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2400);
+  }
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      notify(`✓ ${EMAIL} copié`);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
+  }
+
+  /* ---------- Palette de commandes (Ctrl/⌘ + K) ---------- */
+  function setupCommandPalette(toggleTheme) {
+    const dialog = document.getElementById("cmdk");
+    const input = document.getElementById("cmdk-input");
+    const list = document.getElementById("cmdk-list");
+    if (!dialog || !input || !list || typeof dialog.showModal !== "function") {
+      document.querySelectorAll("#cmdk-open, [data-open-cmdk]").forEach((b) => (b.hidden = true));
+      return;
+    }
+
+    const goTo = (id) => () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const open = (url) => () => window.open(url, "_blank", "noopener");
+    const ICON_LINK = '<path d="M7 17L17 7M9 7h8v8"/>';
+    const ICON_HASH = '<path d="M5 9h14M5 15h14M10 4l-2 16M16 4l-2 16"/>';
+
+    const commands = [
+      { group: "Sections", label: "Accueil", icon: ICON_HASH, run: goTo("top") },
+      { group: "Sections", label: "Profil", icon: ICON_HASH, run: goTo("about") },
+      { group: "Sections", label: "Compétences", icon: ICON_HASH, run: goTo("skills") },
+      { group: "Sections", label: "Projets", icon: ICON_HASH, run: goTo("projects") },
+      { group: "Sections", label: "Parcours", icon: ICON_HASH, run: goTo("journey") },
+      { group: "Sections", label: "Contact", icon: ICON_HASH, run: goTo("contact") },
+      ...(window.PROJECTS || []).filter((p) => p && p.title).map((p) => ({
+        group: "Projets",
+        label: p.title,
+        hint: (p.tags || []).slice(0, 3).join(" · "),
+        icon: ICONS[p.icon] || ICONS.code,
+        run: p.repo ? open(`https://github.com/${p.repo}`) : goTo("projects"),
+      })),
+      { group: "Actions", label: "Copier mon adresse e-mail", hint: EMAIL, icon: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>', run: copyEmail },
+      { group: "Actions", label: "M'écrire un e-mail", icon: '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>', run: () => { window.location.href = `mailto:${EMAIL}`; } },
+      { group: "Actions", label: "Changer de thème", hint: "clair / sombre", icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2"/>', run: toggleTheme },
+      { group: "Liens", label: "LinkedIn", hint: "in/firas-bouricha", icon: ICON_LINK, run: open("https://www.linkedin.com/in/firas-bouricha/") },
+      { group: "Liens", label: "GitHub", hint: "firas-bouricha", icon: ICON_LINK, run: open("https://github.com/firas-bouricha") },
+    ];
+
+    const normalize = (text) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    let results = commands;
+    let index = 0;
+
+    const render = () => {
+      if (!results.length) {
+        list.innerHTML = '<li class="cmdk__empty">Aucun résultat.</li>';
+        return;
+      }
+      let html = "";
+      let group = "";
+      results.forEach((cmd, i) => {
+        if (cmd.group !== group) {
+          group = cmd.group;
+          html += `<li class="cmdk__group mono" role="presentation">${escapeHTML(group)}</li>`;
+        }
+        html += `<li class="cmdk__item" role="option" id="cmdk-opt-${i}" data-index="${i}" aria-selected="${i === index}">
+          <svg viewBox="0 0 24 24" aria-hidden="true">${cmd.icon}</svg>
+          <span>${escapeHTML(cmd.label)}</span>
+          ${cmd.hint ? `<span class="cmdk__hint mono">${escapeHTML(cmd.hint)}</span>` : ""}
+        </li>`;
+      });
+      list.innerHTML = html;
+      input.setAttribute("aria-activedescendant", `cmdk-opt-${index}`);
+      list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
+    };
+
+    const filter = () => {
+      const q = normalize(input.value.trim());
+      results = q ? commands.filter((c) => normalize(`${c.label} ${c.hint || ""} ${c.group}`).includes(q)) : commands;
+      index = 0;
+      render();
+    };
+
+    const openPalette = () => {
+      if (dialog.open) return;
+      input.value = "";
+      filter();
+      dialog.showModal();
+      input.focus();
+    };
+    const run = (i) => {
+      const cmd = results[i];
+      if (!cmd) return;
+      dialog.close();
+      cmd.run();
+    };
+
+    document.querySelectorAll("#cmdk-open, [data-open-cmdk]").forEach((b) => b.addEventListener("click", openPalette));
+    document.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        dialog.open ? dialog.close() : openPalette();
+      }
+    });
+    input.addEventListener("input", filter);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!results.length) return;
+        index = (index + (e.key === "ArrowDown" ? 1 : -1) + results.length) % results.length;
+        render();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        run(index);
+      }
+    });
+    list.addEventListener("click", (e) => {
+      const item = e.target.closest(".cmdk__item");
+      if (item) run(Number(item.dataset.index));
+    });
+    list.addEventListener("mousemove", (e) => {
+      const item = e.target.closest(".cmdk__item");
+      if (!item || Number(item.dataset.index) === index) return;
+      index = Number(item.dataset.index);
+      list.querySelectorAll(".cmdk__item").forEach((el) => el.setAttribute("aria-selected", String(el === item)));
+      input.setAttribute("aria-activedescendant", item.id);
+    });
+    // Clic sur le fond : fermeture
+    dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
+  }
+
+  /* ---------- Éditeur à onglets (section Profil) ---------- */
+  function highlight(code, lang) {
+    return code.split("\n").map((line) => {
+      const hash = line.indexOf("#");
+      const body = hash >= 0 ? line.slice(0, hash) : line;
+      const comment = hash >= 0 ? line.slice(hash) : "";
+      let html = escapeHTML(body)
+        .replace(/(&quot;.*?&quot;)/g, '<span class="tk-s">$1</span>')
+        .replace(/\b(var|true|false)\b/g, '<span class="tk-k">$1</span>');
+      if (lang === "hcl") {
+        html = html.replace(/^(\s*)(resource|output)\b/, '$1<span class="tk-k">$2</span>')
+          .replace(/^(\s*)([a-z_]+)(\s*(=|\{))/, '$1<span class="tk-a">$2</span>$3');
+      } else {
+        html = html.replace(/^(\s*)([\w-]+)(:)/, '$1<span class="tk-a">$2</span>$3')
+          .replace(/\[([^\]]*)\]/g, '[<span class="tk-s">$1</span>]');
+      }
+      return html + (comment ? `<span class="tk-c">${escapeHTML(comment)}</span>` : "");
+    }).join("\n");
+  }
+
+  function setupEditor() {
+    const editor = document.getElementById("editor");
+    if (!editor) return;
+    editor.querySelectorAll("pre.code code").forEach((code) => {
+      code.innerHTML = highlight(code.textContent, code.parentElement.dataset.lang);
+    });
+    const tabs = [...editor.querySelectorAll('[role="tab"]')];
+    const select = (tab, focus) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => select(tab));
+      tab.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const next = tabs[(i + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length];
+        select(next, true);
+      });
+    });
+  }
+
+  /* ---------- Parcours façon « git log » ---------- */
+  function setupGitLog() {
+    const root = document.getElementById("gitlog");
+    if (!root) return;
+    const commits = [...root.querySelectorAll(".gitlog__commit")];
+    const panel = root.querySelector(".gitlog__panel");
+    const field = (name) => panel.querySelector(`.gitlog__${name}`);
+
+    const select = (commit, focus) => {
+      commits.forEach((c) => {
+        const on = c === commit;
+        c.setAttribute("aria-selected", String(on));
+        c.tabIndex = on ? 0 : -1;
+      });
+      const d = commit.dataset;
+      field("hash").textContent = d.hash === "HEAD" ? "HEAD →" : `commit ${d.hash}`;
+      field("date").textContent = d.date;
+      field("title").textContent = d.title;
+      field("org").textContent = d.org;
+      field("text").textContent = d.text;
+      panel.style.setProperty("--c", commit.querySelector(".gitlog__dot").style.getPropertyValue("--c"));
+      panel.classList.remove("is-swap");
+      void panel.offsetWidth; // relance l'animation
+      panel.classList.add("is-swap");
+      if (focus) commit.focus();
+    };
+
+    commits.forEach((commit, i) => {
+      commit.addEventListener("click", () => select(commit));
+      commit.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        e.preventDefault();
+        const next = commits[Math.min(commits.length - 1, Math.max(0, i + (e.key === "ArrowRight" ? 1 : -1)))];
+        select(next, true);
+      });
+    });
+    select(commits.find((c) => c.getAttribute("aria-selected") === "true") || commits[0]);
+  }
+
+  /* ---------- Logos des compétences ---------- */
+  function setupSkillIcons() {
+    const icons = window.TECH_ICONS || {};
+    const WINDOWS = "M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z";
+    document.querySelectorAll(".skill li").forEach((li) => {
+      const name = li.dataset.icon;
+      let badge = "";
+      if (name === "windows") {
+        badge = `<span class="skill__logo" style="--brand:#0078D4"><svg viewBox="0 0 24 24" class="fill" aria-hidden="true"><path d="${WINDOWS}"/></svg></span>`;
+      } else if (name && icons[name]) {
+        const icon = icons[name];
+        badge = `<span class="skill__logo${icon.low ? " is-low" : ""}" style="--brand:${icon.c}"><svg viewBox="0 0 24 24" class="fill" aria-hidden="true"><path d="${icon.p}"/></svg></span>`;
+      } else if (li.dataset.mono) {
+        badge = `<span class="skill__logo skill__logo--mono mono" style="--brand:${escapeHTML(li.dataset.color || "var(--violet)")}" aria-hidden="true">${escapeHTML(li.dataset.mono)}</span>`;
+      }
+      if (badge) li.insertAdjacentHTML("afterbegin", badge);
+    });
   }
 
   /* ---------- Apparition au défilement ---------- */
@@ -205,35 +507,20 @@
   /* ---------- Copie de l'adresse e-mail ---------- */
   function setupCopyEmail() {
     const button = document.getElementById("copy-email");
-    const toast = document.getElementById("toast");
-    if (!button) return;
-
-    let timer;
-    const notify = (message) => {
-      if (!toast) return;
-      toast.textContent = message;
-      toast.classList.add("is-visible");
-      clearTimeout(timer);
-      timer = setTimeout(() => toast.classList.remove("is-visible"), 2400);
-    };
-
-    button.addEventListener("click", async () => {
-      const email = button.dataset.email;
-      try {
-        await navigator.clipboard.writeText(email);
-        notify(`✓ ${email} copié`);
-      } catch {
-        window.location.href = `mailto:${email}`;
-      }
-    });
+    if (button) button.addEventListener("click", copyEmail);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     const year = document.getElementById("year");
     if (year) year.textContent = new Date().getFullYear();
 
+    const toggleTheme = setupTheme();
     setupProjects();
+    setupSkillIcons();
     setupNav();
+    setupEditor();
+    setupGitLog();
+    setupCommandPalette(toggleTheme);
     setupReveal();
     setupTyping();
     setupCopyEmail();
