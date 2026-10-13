@@ -4,27 +4,386 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firas Bouricha - DevOps & Linux Specialist</title>
+  <title>Firas Bouricha · Ingénieur Cloud & Infrastructure</title>
+  <meta name="description"
+    content="Firas Bouricha, ingénieur Cloud & Infrastructure basé à Sophia Antipolis. Virtualisation, automatisation (Terraform, Ansible), DevSecOps et sécurité. Disponible pour un CDI.">
+  <meta name="author" content="Firas Bouricha">
+  <meta name="theme-color" content="#0A0A0D">
+  <link rel="canonical" href="https://firas-bouricha.github.io/firas_bouricha/">
+
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Firas Bouricha · Ingénieur Cloud & Infrastructure">
+  <meta property="og:description"
+    content="Je conçois, automatise et sécurise des infrastructures. Disponible pour un CDI.">
+  <meta property="og:url" content="https://firas-bouricha.github.io/firas_bouricha/">
+  <meta property="og:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/firas-bouricha.jpg">
+  <meta property="og:locale" content="fr_FR">
+
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E0E13'/%3E%3Ctext x='12' y='43' font-family='monospace' font-size='30' font-weight='700' fill='%23A78BFA'%3E%3E_%3C/text%3E%3C/svg%3E">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add("js");</script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Firas Bouricha",
+    "jobTitle": "Ingénieur Cloud & Infrastructure",
+    "url": "https://firas-bouricha.github.io/firas_bouricha/",
+    "email": "mailto:firas.bouricha@outlook.fr",
+    "address": { "@type": "PostalAddress", "addressLocality": "Sophia Antipolis", "addressCountry": "FR" },
+    "sameAs": ["https://www.linkedin.com/in/firas-bouricha/", "https://github.com/firas-bouricha"]
+  }
+  </script>
 </head>
 
-<body class="bg-slate-900 text-white">
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
 
-  <div id="nav-container"></div>
-  <div id="hero-container"></div>
-  <div id="about-container"></div>
-  <div id="skills-container"></div>
-  <div id="projects-container"></div>
-  <div id="contact-container"></div>
-  <div id="footer-container"></div>
-  <div id="toast-container"></div>
+  <!-- ======================= NAVIGATION ======================= -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="#top" class="nav__logo mono" aria-label="Retour en haut de page">
+        <span class="accent">firas</span>@infra<span class="muted">:~$</span><span class="cursor" aria-hidden="true"></span>
+      </a>
 
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+      <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
+        <a href="#about">Profil</a>
+        <a href="#skills">Compétences</a>
+        <a href="#projects">Projets</a>
+        <a href="#journey">Parcours</a>
+        <a href="#contact" class="btn btn--primary btn--sm">Me contacter</a>
+      </nav>
+
+      <button class="nav__toggle" id="nav-toggle" type="button" aria-controls="nav-links" aria-expanded="false"
+        aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ======================= HERO ======================= -->
+    <section class="hero" id="top">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__grid"></div>
+        <div class="hero__glow hero__glow--a"></div>
+        <div class="hero__glow hero__glow--b"></div>
+      </div>
+
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <p class="status reveal">
+            <span class="status__dot" aria-hidden="true"></span>
+            Disponible pour un CDI
+          </p>
+
+          <p class="hero__prompt mono reveal"><span class="accent">firas@infra</span><span class="muted">:~$</span>
+            <span class="type" data-text="whoami"></span><span class="cursor" aria-hidden="true"></span>
+          </p>
+
+          <h1 class="hero__title reveal">
+            <span class="hero__name">Firas Bouricha</span>
+            Ingénieur Cloud <span class="accent">&amp;</span> Infrastructure
+          </h1>
+
+          <p class="hero__lead reveal">
+            Je conçois, j'automatise et je sécurise des infrastructures&nbsp;: virtualisation Proxmox,
+            Infrastructure as Code, pipelines CI/CD durcis. Je recherche un <strong>CDI</strong> pour mettre
+            ces compétences au service d'une équipe.
+          </p>
+
+          <ul class="hero__meta mono reveal">
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+              Sophia Antipolis
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11.5V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5"/></svg>
+              Mastère Cloud, Sécurité &amp; Infra · Ynov
+            </li>
+          </ul>
+
+          <div class="hero__cta reveal">
+            <a href="#projects" class="btn btn--primary">
+              Voir mes projets
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="#contact" class="btn btn--ghost">Me contacter</a>
+            <div class="hero__socials">
+              <a href="https://www.linkedin.com/in/firas-bouricha/" target="_blank" rel="noopener noreferrer"
+                class="icon-btn" aria-label="LinkedIn de Firas Bouricha">
+                <svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.21c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.341-1.248-.822 0-1.358.54-1.358 1.248 0 .694.521 1.248 1.326 1.248h.015zm4.908 8.21V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.633v3.866h2.4V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 01.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+              </a>
+              <a href="https://github.com/firas-bouricha" target="_blank" rel="noopener noreferrer" class="icon-btn"
+                aria-label="GitHub de Firas Bouricha">
+                <svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__visual reveal">
+          <figure class="portrait">
+            <img src="assets/firas-bouricha.jpg" alt="Portrait de Firas Bouricha" width="640" height="800">
+            <figcaption class="portrait__badge mono">
+              <span class="status__dot" aria-hidden="true"></span> open_to_work = true
+            </figcaption>
+          </figure>
+
+          <div class="term term--float mono" aria-hidden="true">
+            <div class="term__bar"><i></i><i></i><i></i><span>~/skills</span></div>
+            <div class="term__body">
+              <div><span class="accent">$</span> ls ~/skills</div>
+              <div class="term__line">cloud<span class="accent">/</span></div>
+              <div class="term__line">virtualisation<span class="accent">/</span></div>
+              <div class="term__line">automatisation<span class="accent">/</span></div>
+              <div class="term__line">admin-sys<span class="accent">/</span></div>
+              <div class="term__line">securite<span class="accent">/</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= PROFIL ======================= -->
+    <section class="section" id="about">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="section__kicker mono"><span class="accent">$</span> cat about.md</p>
+          <h2 class="section__title">Mon profil</h2>
+        </header>
+
+        <div class="about">
+          <div class="about__text reveal">
+            <p>
+              Étudiant en <strong>Mastère Expert Cloud, Sécurité &amp; Infrastructure</strong> à Ynov Sophia Antipolis,
+              j'ai construit mon profil sur une conviction simple&nbsp;: une infrastructure fiable est une
+              infrastructure <strong>documentée, automatisée et sécurisée dès sa conception</strong>.
+            </p>
+            <p>
+              Concrètement, je déploie des VM à partir d'une simple demande GLPI, je décris des environnements
+              complets en code avec Terraform, OpenTofu et Ansible, et je mets en place des pipelines CI/CD qui
+              bloquent les secrets exposés et les images vulnérables avant la mise en production.
+            </p>
+            <p>
+              En parallèle, j'accompagne les étudiants en informatique d'Ynov en tant que <strong>mentor IT</strong>.
+              Expliquer clairement un sujet technique, rédiger des procédures et transmettre mes connaissances fait
+              partie de ma façon de travailler.
+            </p>
+          </div>
+
+          <div class="term reveal mono">
+            <div class="term__bar"><i></i><i></i><i></i><span>firas@infra: ~</span></div>
+            <dl class="term__body kv">
+              <div><dt>rôle</dt><dd>Ingénieur Cloud &amp; Infrastructure</dd></div>
+              <div><dt>recherche</dt><dd>CDI <span class="muted">· Cloud · Infra · DevOps</span></dd></div>
+              <div><dt>école</dt><dd>Mastère Ynov <span class="muted">2025 – 2027</span></dd></div>
+              <div><dt>mentor</dt><dd>Étudiants IT @Ynov Sophia</dd></div>
+              <div><dt>focus</dt><dd>concevoir · automatiser · sécuriser</dd></div>
+              <div><dt>lieu</dt><dd>Sophia Antipolis (06)</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <ul class="pillars">
+          <li class="pillar reveal" style="--c: var(--violet)">
+            <span class="pillar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg></span>
+            <h3>Concevoir</h3>
+            <p>Architectures virtualisées et cloud, segmentation réseau, documentation claire et à jour.</p>
+          </li>
+          <li class="pillar reveal" style="--c: var(--amber)">
+            <span class="pillar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg></span>
+            <h3>Automatiser</h3>
+            <p>Infrastructure as Code, playbooks Ansible et pipelines reproductibles plutôt que des clics manuels.</p>
+          </li>
+          <li class="pillar reveal" style="--c: var(--emerald)">
+            <span class="pillar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.6-2.9 7.5-7 9-4.1-1.5-7-4.4-7-9V6l7-3z"/><path d="M9.5 12.5l1.8 1.8 3.2-3.3"/></svg></span>
+            <h3>Sécuriser</h3>
+            <p>Durcissement SSH et pare-feu, gestion chiffrée des secrets, scans de vulnérabilités en continu.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================= COMPÉTENCES ======================= -->
+    <section class="section section--alt" id="skills">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="section__kicker mono"><span class="accent">$</span> cat stack.txt</p>
+          <h2 class="section__title">Compétences techniques</h2>
+          <p class="section__sub">Les outils que j'utilise réellement dans mes projets et mon home lab.</p>
+        </header>
+
+        <div class="skills">
+          <article class="skill reveal" style="--c: var(--violet)">
+            <h3 class="mono">systèmes</h3>
+            <ul><li>Linux</li><li>Windows</li><li>Bash</li><li>PowerShell</li></ul>
+          </article>
+          <article class="skill reveal" style="--c: var(--cyan)">
+            <h3 class="mono">virtualisation</h3>
+            <ul><li>Proxmox VE</li><li>VMware</li></ul>
+          </article>
+          <article class="skill reveal" style="--c: var(--blue)">
+            <h3 class="mono">cloud</h3>
+            <ul><li>AWS</li><li>Azure</li></ul>
+          </article>
+          <article class="skill reveal" style="--c: var(--amber)">
+            <h3 class="mono">iac · automatisation</h3>
+            <ul><li>Terraform</li><li>OpenTofu</li><li>Ansible</li><li>Cloud-Init</li></ul>
+          </article>
+          <article class="skill reveal" style="--c: var(--emerald)">
+            <h3 class="mono">conteneurs · ci/cd</h3>
+            <ul><li>Docker</li><li>GitHub Actions</li><li>Git</li></ul>
+          </article>
+          <article class="skill reveal" style="--c: var(--pink)">
+            <h3 class="mono">sécurité</h3>
+            <ul><li>Trivy</li><li>Gitleaks</li><li>CodeQL</li><li>SOPS</li></ul>
+          </article>
+          <article class="skill reveal" style="--c: var(--violet-soft)">
+            <h3 class="mono">langages · data</h3>
+            <ul><li>Go</li><li>Python</li><li>PostgreSQL</li></ul>
+          </article>
+          <article class="skill reveal" style="--c: var(--muted)">
+            <h3 class="mono">itsm · supervision</h3>
+            <ul><li>GLPI</li><li>Zabbix</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= PROJETS ======================= -->
+    <section class="section" id="projects">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="section__kicker mono"><span class="accent">$</span> ls ~/projets</p>
+          <h2 class="section__title">Projets</h2>
+          <p class="section__sub">Des projets concrets, documentés et versionnés sur GitHub.</p>
+        </header>
+
+        <div class="filters" id="project-filters" role="toolbar" aria-label="Filtrer les projets"></div>
+        <div class="projects" id="project-list" aria-live="polite"></div>
+
+        <noscript>
+          <p class="section__sub">Activez JavaScript pour afficher les projets, ou consultez-les directement sur
+            <a href="https://github.com/firas-bouricha">github.com/firas-bouricha</a>.</p>
+        </noscript>
+
+        <div class="projects__more reveal">
+          <a href="https://github.com/firas-bouricha?tab=repositories" target="_blank" rel="noopener noreferrer"
+            class="btn btn--ghost">
+            Tous mes dépôts sur GitHub
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= PARCOURS ======================= -->
+    <section class="section section--alt" id="journey">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="section__kicker mono"><span class="accent">$</span> git log --oneline</p>
+          <h2 class="section__title">Parcours</h2>
+        </header>
+
+        <ol class="timeline">
+          <li class="timeline__item reveal">
+            <span class="timeline__date mono">2025 – 2027</span>
+            <div class="timeline__card">
+              <h3>Mastère Expert Cloud, Sécurité &amp; Infrastructure</h3>
+              <p class="timeline__org">Ynov Campus · Sophia Antipolis</p>
+              <p>Virtualisation, cloud public, Infrastructure as Code, DevSecOps, pilotage et maintenance du SI.</p>
+            </div>
+          </li>
+          <li class="timeline__item reveal">
+            <span class="timeline__date mono">Alternance</span>
+            <div class="timeline__card">
+              <h3>Mentor IT</h3>
+              <p class="timeline__org">Ynov Campus · Sophia Antipolis</p>
+              <p>Accompagnement des étudiants dans leurs projets techniques. Conception de supports de cours et de TP,
+                notamment le module <em>Git avancé</em> pour les Bachelor 1.</p>
+            </div>
+          </li>
+          <li class="timeline__item reveal">
+            <span class="timeline__date mono">En continu</span>
+            <div class="timeline__card">
+              <h3>Home Lab</h3>
+              <p class="timeline__org">Projet personnel</p>
+              <p>Serveur Dell PowerEdge sous Proxmox avec iDRAC, switch Cisco SG300 : un terrain d'expérimentation
+                pour tester, casser et documenter.</p>
+            </div>
+          </li>
+          <li class="timeline__item reveal">
+            <span class="timeline__date mono">2013 – 2016</span>
+            <div class="timeline__card">
+              <h3>Licence MIAGE</h3>
+              <p class="timeline__org">Institut Supérieur de Gestion · Tunisie</p>
+              <p>Méthodes informatiques appliquées à la gestion des entreprises.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ======================= CONTACT ======================= -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact reveal">
+          <div class="contact__glow" aria-hidden="true"></div>
+          <p class="section__kicker mono"><span class="accent">$</span> ./contact.sh</p>
+          <h2 class="contact__title">Vous recrutez&nbsp;? <span class="accent">Parlons-en.</span></h2>
+          <p class="contact__lead">
+            Je suis à la recherche d'un CDI en tant qu'ingénieur Cloud, Infrastructure ou DevOps.
+            Le plus simple pour me joindre&nbsp;: un e&#8209;mail ou un message sur LinkedIn.
+          </p>
+
+          <div class="contact__actions">
+            <a href="mailto:firas.bouricha@outlook.fr" class="btn btn--primary btn--lg">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg>
+              firas.bouricha@outlook.fr
+            </a>
+            <button type="button" class="btn btn--ghost btn--lg" id="copy-email"
+              data-email="firas.bouricha@outlook.fr">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+              <span>Copier l'adresse</span>
+            </button>
+          </div>
+
+          <div class="contact__links">
+            <a href="https://www.linkedin.com/in/firas-bouricha/" target="_blank" rel="noopener noreferrer"
+              class="contact-link">
+              <svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.21c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.341-1.248-.822 0-1.358.54-1.358 1.248 0 .694.521 1.248 1.326 1.248h.015zm4.908 8.21V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.633v3.866h2.4V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 01.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+              <span><strong>LinkedIn</strong><span class="mono muted">in/firas-bouricha</span></span>
+            </a>
+            <a href="https://github.com/firas-bouricha" target="_blank" rel="noopener noreferrer" class="contact-link">
+              <svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              <span><strong>GitHub</strong><span class="mono muted">firas-bouricha</span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= FOOTER ======================= -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="mono muted">firas@infra:~$ <span class="accent">exit</span></p>
+      <p class="muted">© <span id="year">2026</span> Firas Bouricha · Sophia Antipolis</p>
+    </div>
+  </footer>
+
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data/projects.js"></script>
   <script src="js/main.js"></script>
 </body>
 
