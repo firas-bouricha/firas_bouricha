@@ -552,25 +552,6 @@
     layout();
   }
 
-  /* ---------- Logos des compétences ---------- */
-  function setupSkillIcons() {
-    const icons = window.TECH_ICONS || {};
-    const WINDOWS = "M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z";
-    document.querySelectorAll(".skill li").forEach((li) => {
-      const name = li.dataset.icon;
-      let badge = "";
-      if (name === "windows") {
-        badge = `<span class="skill__logo" style="--brand:#0078D4"><svg viewBox="0 0 24 24" class="fill" aria-hidden="true"><path d="${WINDOWS}"/></svg></span>`;
-      } else if (name && icons[name]) {
-        const icon = icons[name];
-        badge = `<span class="skill__logo${icon.low ? " is-low" : ""}" style="--brand:${icon.c}"><svg viewBox="0 0 24 24" class="fill" aria-hidden="true"><path d="${icon.p}"/></svg></span>`;
-      } else if (li.dataset.mono) {
-        badge = `<span class="skill__logo skill__logo--mono mono" style="--brand:${escapeHTML(li.dataset.color || "var(--violet)")}" aria-hidden="true">${escapeHTML(li.dataset.mono)}</span>`;
-      }
-      if (badge) li.insertAdjacentHTML("afterbegin", badge);
-    });
-  }
-
   /* ---------- Apparition au défilement ---------- */
   function setupReveal() {
     const items = document.querySelectorAll(".reveal");
@@ -618,7 +599,6 @@
 
     const toggleTheme = safely("thème", setupTheme) || (() => {});
     safely("projets", setupProjects);
-    safely("compétences", setupSkillIcons);
     safely("navigation", setupNav);
     safely("photos", setupDeck);
     safely("éditeur", setupEditor);
