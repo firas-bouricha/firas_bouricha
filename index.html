@@ -28,7 +28,15 @@
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    // Thème appliqué avant l'affichage pour éviter un flash
+    (function () {
+      var d = document.documentElement, t = null;
+      d.classList.add("js");
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      d.setAttribute("data-theme", t === "light" ? "light" : "dark");
+    })();
+  </script>
 
   <script type="application/ld+json">
   {
@@ -50,22 +58,34 @@
   <!-- ======================= NAVIGATION ======================= -->
   <header class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#top" class="nav__logo mono" aria-label="Retour en haut de page">
-        <span class="accent">firas</span>@infra<span class="muted">:~$</span><span class="cursor" aria-hidden="true"></span>
+      <a href="#top" class="logo" aria-label="Firas Bouricha, retour en haut de page">
+        <span class="logo__mark">F<span>B</span></span><span class="logo__cursor" aria-hidden="true"></span>
       </a>
 
-      <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
+      <nav class="nav__pill" id="nav-links" aria-label="Navigation principale">
+        <span class="nav__indicator" aria-hidden="true"></span>
+        <a href="#top">Accueil</a>
         <a href="#about">Profil</a>
         <a href="#skills">Compétences</a>
         <a href="#projects">Projets</a>
         <a href="#journey">Parcours</a>
-        <a href="#contact" class="btn btn--primary btn--sm">Me contacter</a>
+        <a href="#contact">Contact</a>
       </nav>
 
-      <button class="nav__toggle" id="nav-toggle" type="button" aria-controls="nav-links" aria-expanded="false"
-        aria-label="Ouvrir le menu">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav__tools">
+        <button class="tool-btn" id="theme-toggle" type="button" aria-label="Passer au thème clair">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        </button>
+        <button class="tool-btn" id="cmdk-open" type="button" aria-label="Ouvrir la palette de commandes (Ctrl + K)"
+          aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z"/></svg>
+        </button>
+        <button class="tool-btn nav__toggle" id="nav-toggle" type="button" aria-controls="nav-links"
+          aria-expanded="false" aria-label="Ouvrir le menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -91,7 +111,7 @@
 
           <h1 class="hero__title reveal">
             <span class="hero__name">Firas Bouricha</span>
-            Ingénieur Cloud <span class="accent">&amp;</span> Infrastructure
+            Ingénieur <span class="gradient-text">Cloud &amp; Infrastructure</span>
           </h1>
 
           <p class="hero__lead reveal">
@@ -131,6 +151,10 @@
         </div>
 
         <div class="hero__visual reveal">
+          <div class="stack" aria-hidden="true">
+            <img class="stack__card stack__card--back" src="assets/projects/devsecops-pipeline.png" alt="" loading="lazy">
+            <img class="stack__card stack__card--mid" src="assets/projects/homelab.jpg" alt="" loading="lazy">
+          </div>
           <figure class="portrait">
             <img src="assets/firas-bouricha.jpg" alt="Portrait de Firas Bouricha" width="640" height="800">
             <figcaption class="portrait__badge mono">
@@ -146,7 +170,7 @@
       <div class="container">
         <header class="section__head reveal">
           <p class="section__kicker mono"><span class="accent">$</span> cat about.md</p>
-          <h2 class="section__title">Mon profil</h2>
+          <h2 class="section__title">Mon <span class="gradient-text">profil</span></h2>
         </header>
 
         <div class="about">
@@ -168,16 +192,64 @@
             </p>
           </div>
 
-          <div class="term reveal mono">
-            <div class="term__bar"><i></i><i></i><i></i><span>firas@infra: ~</span></div>
-            <dl class="term__body kv">
-              <div><dt>rôle</dt><dd>Ingénieur Cloud &amp; Infrastructure</dd></div>
-              <div><dt>recherche</dt><dd>CDI <span class="muted">· Cloud · Infra · DevOps</span></dd></div>
-              <div><dt>école</dt><dd>Mastère Ynov <span class="muted">2025 – 2027</span></dd></div>
-              <div><dt>mentor</dt><dd>Étudiants IT @Ynov Sophia</dd></div>
-              <div><dt>focus</dt><dd>concevoir · automatiser · sécuriser</dd></div>
-              <div><dt>lieu</dt><dd>Sophia Antipolis (06)</dd></div>
-            </dl>
+          <div class="editor reveal" id="editor">
+            <div class="editor__bar">
+              <span class="editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="editor__tabs" role="tablist" aria-label="Fichiers">
+                <button type="button" role="tab" id="tab-about" aria-controls="pane-about" aria-selected="true">about.md</button>
+                <button type="button" role="tab" id="tab-tf" aria-controls="pane-tf" aria-selected="false" tabindex="-1">main.tf</button>
+                <button type="button" role="tab" id="tab-ci" aria-controls="pane-ci" aria-selected="false" tabindex="-1">ci-cd.yml</button>
+              </div>
+            </div>
+
+            <div class="editor__pane" role="tabpanel" id="pane-about" aria-labelledby="tab-about">
+              <dl class="kv mono">
+                <div><dt>rôle</dt><dd>Ingénieur Cloud &amp; Infrastructure</dd></div>
+                <div><dt>recherche</dt><dd>CDI <span class="muted">· Cloud · Infra · DevOps</span></dd></div>
+                <div><dt>école</dt><dd>Mastère Ynov <span class="muted">2025 – 2027</span></dd></div>
+                <div><dt>mentor</dt><dd>Étudiants IT @Ynov Sophia</dd></div>
+                <div><dt>focus</dt><dd>concevoir · automatiser · sécuriser</dd></div>
+                <div><dt>lieu</dt><dd>Sophia Antipolis (06)</dd></div>
+              </dl>
+            </div>
+
+            <div class="editor__pane" role="tabpanel" id="pane-tf" aria-labelledby="tab-tf" hidden>
+<pre class="code" data-lang="hcl"><code># VM as a Service : clone d'une VM Proxmox
+resource "proxmox_virtual_environment_vm" "vm" {
+  name      = var.vm_name
+  node_name = var.proxmox_node
+
+  clone {
+    vm_id = var.template_id
+  }
+
+  cpu    { cores = var.vm_cpu }
+  memory { dedicated = var.vm_ram }
+  network_device { bridge = var.vm_bridge }
+
+  agent { enabled = true }  # remonte l'IP
+}
+
+output "vm_ipv4" {
+  value = proxmox_virtual_environment_vm.vm.ipv4_addresses
+}</code></pre>
+            </div>
+
+            <div class="editor__pane" role="tabpanel" id="pane-ci" aria-labelledby="tab-ci" hidden>
+<pre class="code" data-lang="yaml"><code># Pipeline DevSecOps (extrait)
+jobs:
+  gitleaks-ci:   # secret exposé = bloqué
+  codeql:        # faille critique = bloqué
+  test:
+  scan-image:
+    needs: [test]
+    uses: ./.github/actions/trivy-scan   # SBOM + CVE
+  publish:
+    needs: [scan-image, gitleaks-ci, codeql]
+  deploy-backend:
+    needs: [publish]
+    environment: production</code></pre>
+            </div>
           </div>
         </div>
 
@@ -206,42 +278,74 @@
       <div class="container">
         <header class="section__head reveal">
           <p class="section__kicker mono"><span class="accent">$</span> cat stack.txt</p>
-          <h2 class="section__title">Compétences techniques</h2>
+          <h2 class="section__title">Ma <span class="gradient-text">boîte à outils</span></h2>
           <p class="section__sub">Les outils que j'utilise réellement dans mes projets et mon home lab.</p>
         </header>
 
         <div class="skills">
           <article class="skill reveal" style="--c: var(--violet)">
             <h3 class="mono">systèmes</h3>
-            <ul><li>Linux</li><li>Windows</li><li>Bash</li><li>PowerShell</li></ul>
+            <ul>
+              <li data-icon="linux">Linux</li>
+              <li data-icon="windows">Windows</li>
+              <li data-icon="bash">Bash</li>
+              <li data-mono="&gt;_" data-color="#5391FE">PowerShell</li>
+            </ul>
           </article>
           <article class="skill reveal" style="--c: var(--cyan)">
             <h3 class="mono">virtualisation</h3>
-            <ul><li>Proxmox VE</li><li>VMware</li></ul>
+            <ul>
+              <li data-icon="proxmox">Proxmox VE</li>
+              <li data-icon="vmware">VMware</li>
+            </ul>
           </article>
           <article class="skill reveal" style="--c: var(--blue)">
             <h3 class="mono">cloud</h3>
-            <ul><li>AWS</li><li>Azure</li></ul>
+            <ul>
+              <li data-icon="aws">AWS</li>
+              <li data-mono="Az" data-color="#0078D4">Azure</li>
+            </ul>
           </article>
           <article class="skill reveal" style="--c: var(--amber)">
             <h3 class="mono">iac · automatisation</h3>
-            <ul><li>Terraform</li><li>OpenTofu</li><li>Ansible</li><li>Cloud-Init</li></ul>
+            <ul>
+              <li data-icon="terraform">Terraform</li>
+              <li data-icon="opentofu">OpenTofu</li>
+              <li data-icon="ansible">Ansible</li>
+              <li data-mono="ci" data-color="#E95420">Cloud-Init</li>
+            </ul>
           </article>
           <article class="skill reveal" style="--c: var(--emerald)">
             <h3 class="mono">conteneurs · ci/cd</h3>
-            <ul><li>Docker</li><li>GitHub Actions</li><li>Git</li></ul>
+            <ul>
+              <li data-icon="docker">Docker</li>
+              <li data-icon="githubactions">GitHub Actions</li>
+              <li data-icon="git">Git</li>
+            </ul>
           </article>
           <article class="skill reveal" style="--c: var(--pink)">
             <h3 class="mono">sécurité</h3>
-            <ul><li>Trivy</li><li>Gitleaks</li><li>CodeQL</li><li>SOPS</li></ul>
+            <ul>
+              <li data-icon="trivy">Trivy</li>
+              <li data-mono="GL" data-color="#F472B6">Gitleaks</li>
+              <li data-mono="QL" data-color="#8B5CF6">CodeQL</li>
+              <li data-mono="S" data-color="#34D399">SOPS</li>
+            </ul>
           </article>
           <article class="skill reveal" style="--c: var(--violet-soft)">
             <h3 class="mono">langages · data</h3>
-            <ul><li>Go</li><li>Python</li><li>PostgreSQL</li></ul>
+            <ul>
+              <li data-icon="go">Go</li>
+              <li data-icon="python">Python</li>
+              <li data-icon="postgresql">PostgreSQL</li>
+            </ul>
           </article>
           <article class="skill reveal" style="--c: var(--muted)">
             <h3 class="mono">itsm · supervision</h3>
-            <ul><li>GLPI</li><li>Zabbix</li></ul>
+            <ul>
+              <li data-mono="G" data-color="#F59E0B">GLPI</li>
+              <li data-mono="Z" data-color="#D40000">Zabbix</li>
+            </ul>
           </article>
         </div>
       </div>
@@ -250,10 +354,14 @@
     <!-- ======================= PROJETS ======================= -->
     <section class="section" id="projects">
       <div class="container">
-        <header class="section__head reveal">
-          <p class="section__kicker mono"><span class="accent">$</span> ls ~/projets</p>
-          <h2 class="section__title">Projets</h2>
-          <p class="section__sub">Des projets concrets, documentés et versionnés sur GitHub.</p>
+        <header class="section__head section__head--split reveal">
+          <div>
+            <p class="section__kicker mono"><span class="accent">$</span> ls ~/projets</p>
+            <h2 class="section__title">Mes <span class="gradient-text">réalisations</span></h2>
+            <p class="section__sub">Des projets concrets, documentés et versionnés sur GitHub.</p>
+          </div>
+          <a href="https://github.com/firas-bouricha?tab=repositories" target="_blank" rel="noopener noreferrer"
+            class="link-arrow">Tous mes dépôts <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </header>
 
         <div class="filters" id="project-filters" role="toolbar" aria-label="Filtrer les projets"></div>
@@ -264,13 +372,6 @@
             <a href="https://github.com/firas-bouricha">github.com/firas-bouricha</a>.</p>
         </noscript>
 
-        <div class="projects__more reveal">
-          <a href="https://github.com/firas-bouricha?tab=repositories" target="_blank" rel="noopener noreferrer"
-            class="btn btn--ghost">
-            Tous mes dépôts sur GitHub
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-          </a>
-        </div>
       </div>
     </section>
 
@@ -279,45 +380,59 @@
       <div class="container">
         <header class="section__head reveal">
           <p class="section__kicker mono"><span class="accent">$</span> git log --oneline</p>
-          <h2 class="section__title">Parcours</h2>
+          <h2 class="section__title">Mon <span class="gradient-text">parcours</span></h2>
         </header>
 
-        <ol class="timeline">
-          <li class="timeline__item reveal">
-            <span class="timeline__date mono">2025 – 2027</span>
-            <div class="timeline__card">
-              <h3>Mastère Expert Cloud, Sécurité &amp; Infrastructure</h3>
-              <p class="timeline__org">Ynov Campus · Sophia Antipolis</p>
-              <p>Virtualisation, cloud public, Infrastructure as Code, DevSecOps, pilotage et maintenance du SI.</p>
-            </div>
-          </li>
-          <li class="timeline__item reveal">
-            <span class="timeline__date mono">Alternance</span>
-            <div class="timeline__card">
-              <h3>Mentor IT</h3>
-              <p class="timeline__org">Ynov Campus · Sophia Antipolis</p>
-              <p>Accompagnement des étudiants dans leurs projets techniques. Conception de supports de cours et de TP,
-                notamment le module <em>Git avancé</em> pour les Bachelor 1.</p>
-            </div>
-          </li>
-          <li class="timeline__item reveal">
-            <span class="timeline__date mono">En continu</span>
-            <div class="timeline__card">
-              <h3>Home Lab</h3>
-              <p class="timeline__org">Projet personnel</p>
-              <p>Serveur Dell PowerEdge sous Proxmox avec iDRAC, switch Cisco SG300 : un terrain d'expérimentation
-                pour tester, casser et documenter.</p>
-            </div>
-          </li>
-          <li class="timeline__item reveal">
-            <span class="timeline__date mono">2013 – 2016</span>
-            <div class="timeline__card">
-              <h3>Licence MIAGE</h3>
-              <p class="timeline__org">Institut Supérieur de Gestion · Tunisie</p>
-              <p>Méthodes informatiques appliquées à la gestion des entreprises.</p>
-            </div>
-          </li>
-        </ol>
+        <div class="gitlog reveal" id="gitlog">
+          <div class="gitlog__track" role="tablist" aria-label="Étapes du parcours">
+            <button type="button" role="tab" class="gitlog__commit" aria-selected="false" aria-controls="gitlog-panel"
+              data-hash="a1f3c2e" data-date="2013 – 2016" data-title="Licence MIAGE"
+              data-org="Institut Supérieur de Gestion · Tunisie"
+              data-text="Méthodes informatiques appliquées à la gestion des entreprises : les bases du développement, des bases de données et des systèmes d'information.">
+              <span class="gitlog__year mono">2013</span><span class="gitlog__dot" style="--c: var(--blue)"></span><span class="gitlog__label">Licence</span>
+            </button>
+            <button type="button" role="tab" class="gitlog__commit" aria-selected="false" aria-controls="gitlog-panel"
+              data-hash="7c9e04b" data-date="2025 – 2027" data-title="Mastère Expert Cloud, Sécurité &amp; Infrastructure"
+              data-org="Ynov Campus · Sophia Antipolis"
+              data-text="Virtualisation, cloud public, Infrastructure as Code, DevSecOps, pilotage et maintenance du SI.">
+              <span class="gitlog__year mono">2025</span><span class="gitlog__dot" style="--c: var(--violet)"></span><span class="gitlog__label">Mastère</span>
+            </button>
+            <button type="button" role="tab" class="gitlog__commit" aria-selected="false" aria-controls="gitlog-panel"
+              data-hash="3be81d0" data-date="Alternance" data-title="Mentor IT"
+              data-org="Ynov Campus · Sophia Antipolis"
+              data-text="Accompagnement des étudiants dans leurs projets techniques. Conception de supports de cours et de TP, notamment le module « Git avancé » pour les Bachelor 1.">
+              <span class="gitlog__year mono">2025</span><span class="gitlog__dot" style="--c: var(--cyan)"></span><span class="gitlog__label">Mentor IT</span>
+            </button>
+            <button type="button" role="tab" class="gitlog__commit" aria-selected="true" aria-controls="gitlog-panel"
+              data-hash="e52a9f7" data-date="En continu" data-title="Home Lab"
+              data-org="Projet personnel"
+              data-text="Serveur Dell PowerEdge sous Proxmox avec iDRAC, switch Cisco SG300 : un terrain d'expérimentation pour tester, casser et documenter.">
+              <span class="gitlog__year mono">2026</span><span class="gitlog__dot" style="--c: var(--emerald)"></span><span class="gitlog__label">Home Lab</span>
+            </button>
+            <button type="button" role="tab" class="gitlog__commit gitlog__commit--next" aria-selected="false" aria-controls="gitlog-panel"
+              data-hash="HEAD" data-date="Prochaine étape" data-title="Ingénieur Cloud &amp; Infrastructure en CDI"
+              data-org="Votre équipe ?"
+              data-text="Mettre mes compétences en virtualisation, automatisation et sécurité au service d'une équipe, et continuer à progresser à ses côtés.">
+              <span class="gitlog__year mono">next</span><span class="gitlog__dot" style="--c: var(--amber)"></span><span class="gitlog__label">CDI</span>
+            </button>
+          </div>
+
+          <div class="gitlog__panel" id="gitlog-panel" role="tabpanel" aria-live="polite">
+            <p class="gitlog__meta mono"><span class="gitlog__hash"></span> <span class="gitlog__date muted"></span></p>
+            <h3 class="gitlog__title"></h3>
+            <p class="gitlog__org mono"></p>
+            <p class="gitlog__text"></p>
+          </div>
+
+          <noscript>
+            <ul class="gitlog__fallback">
+              <li><strong>2013 – 2016 · Licence MIAGE</strong> — Institut Supérieur de Gestion, Tunisie</li>
+              <li><strong>2025 – 2027 · Mastère Expert Cloud, Sécurité &amp; Infrastructure</strong> — Ynov Sophia Antipolis</li>
+              <li><strong>Alternance · Mentor IT</strong> — Ynov Sophia Antipolis</li>
+              <li><strong>En continu · Home Lab</strong> — Proxmox, iDRAC, Cisco SG300</li>
+            </ul>
+          </noscript>
+        </div>
       </div>
     </section>
 
@@ -327,7 +442,7 @@
         <div class="contact reveal">
           <div class="contact__glow" aria-hidden="true"></div>
           <p class="section__kicker mono"><span class="accent">$</span> ./contact.sh</p>
-          <h2 class="contact__title">Vous recrutez&nbsp;? <span class="accent">Parlons-en.</span></h2>
+          <h2 class="contact__title">Vous recrutez&nbsp;? <span class="gradient-text">Parlons-en.</span></h2>
           <p class="contact__lead">
             Je suis à la recherche d'un CDI en tant qu'ingénieur Cloud, Infrastructure ou DevOps.
             Le plus simple pour me joindre&nbsp;: un e&#8209;mail ou un message sur LinkedIn.
@@ -363,15 +478,52 @@
 
   <!-- ======================= FOOTER ======================= -->
   <footer class="footer">
-    <div class="container footer__inner">
-      <p class="mono muted">firas@infra:~$ <span class="accent">exit</span></p>
-      <p class="muted">© <span id="year">2026</span> Firas Bouricha · Sophia Antipolis</p>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="#top" class="logo" aria-label="Retour en haut de page">
+            <span class="logo__mark">F<span>B</span></span><span class="logo__cursor" aria-hidden="true"></span>
+          </a>
+          <p>Firas Bouricha, ingénieur Cloud &amp; Infrastructure à Sophia Antipolis. Merci de votre visite&nbsp;!</p>
+        </div>
+        <nav class="footer__col" aria-label="Sections">
+          <p class="footer__title mono">~/sections</p>
+          <a href="#about">Profil</a>
+          <a href="#skills">Compétences</a>
+          <a href="#projects">Projets</a>
+          <a href="#journey">Parcours</a>
+        </nav>
+        <nav class="footer__col" aria-label="Liens">
+          <p class="footer__title mono">~/liens</p>
+          <a href="https://www.linkedin.com/in/firas-bouricha/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://github.com/firas-bouricha" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="mailto:firas.bouricha@outlook.fr">E-mail</a>
+          <button type="button" class="footer__cmdk" data-open-cmdk>Palette <kbd>Ctrl</kbd><kbd>K</kbd></button>
+        </nav>
+      </div>
+      <div class="footer__bottom">
+        <p class="mono muted">firas@infra:~$ <span class="accent">exit</span></p>
+        <p class="muted">© <span id="year">2026</span> Firas Bouricha</p>
+      </div>
     </div>
   </footer>
+
+  <!-- ======================= PALETTE DE COMMANDES (Ctrl/⌘ + K) ======================= -->
+  <dialog class="cmdk" id="cmdk" aria-label="Palette de commandes">
+    <div class="cmdk__search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="cmdk-input" type="text" placeholder="Rechercher une section, un projet, une action…" autocomplete="off"
+        spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list">
+      <kbd>Échap</kbd>
+    </div>
+    <ul class="cmdk__list" id="cmdk-list" role="listbox" aria-label="Résultats"></ul>
+    <p class="cmdk__foot mono"><span><kbd>↑</kbd><kbd>↓</kbd> naviguer</span><span><kbd>↵</kbd> ouvrir</span><span class="cmdk__brand">firas@infra:~$</span></p>
+  </dialog>
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
   <script src="data/projects.js"></script>
+  <script src="js/icons.js"></script>
   <script src="js/main.js"></script>
 </body>
 

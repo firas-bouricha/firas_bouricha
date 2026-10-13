@@ -20,6 +20,7 @@
  *    color        (optionnel)  violet | cyan | emerald | amber | pink | blue | red
  *    category     (optionnel)  Catégorie utilisée pour les filtres,
  *                              ex. "Infrastructure", "DevSecOps", "Dev", "Pédagogie"
+ *    year         (optionnel)  Année ou période affichée sur la carte, ex. "2026" ou "En cours"
  *    featured     (optionnel)  true pour mettre le projet en avant (carte large)
  *
  *  L'ordre de la liste est l'ordre d'affichage sur le site.
@@ -28,6 +29,7 @@
 window.PROJECTS = [
   {
     title: "VM as a Service",
+    year: "2026",
     description:
       "Une demande GLPI déclenche Ansible (via Semaphore) puis Terraform, qui clone une VM Proxmox depuis un template et remonte son ID et son IP. Zéro intervention manuelle.",
     tags: ["Terraform", "Ansible", "Proxmox", "GLPI", "Semaphore"],
@@ -39,6 +41,7 @@ window.PROJECTS = [
   },
   {
     title: "Pipeline DevSecOps",
+    year: "2026",
     description:
       "Chaîne CI/CD durcie autour d'une API Node.js : protection de branche, hooks Gitleaks, secrets chiffrés SOPS + age, image Docker scannée par Trivy (SBOM), CodeQL et déploiement conditionnel.",
     tags: ["GitHub Actions", "Docker", "Trivy", "CodeQL", "SOPS"],
@@ -52,6 +55,7 @@ window.PROJECTS = [
   },
   {
     title: "Home Lab",
+    year: "En cours",
     description:
       "Mon infrastructure auto-hébergée : serveur Dell PowerEdge sous Proxmox, iDRAC, switch Cisco SG300. Architecture, inventaire et documentation technique.",
     tags: ["Proxmox", "Linux", "Réseau", "Cisco"],
@@ -65,6 +69,7 @@ window.PROJECTS = [
   },
   {
     title: "IaC Multi-VMs",
+    year: "2026",
     description:
       "Provisionnement d'une infrastructure complète (bastion, web, base de données, Zabbix) avec OpenTofu et Cloud-Init, puis durcissement SSH, pare-feu nftables et supervision via Ansible.",
     tags: ["OpenTofu", "Cloud-Init", "Ansible", "nftables", "Zabbix"],
@@ -75,6 +80,7 @@ window.PROJECTS = [
   },
   {
     title: "Ytasty Crousty",
+    year: "2026",
     description:
       "Application fullstack conteneurisée, de la commande client au pilotage de la direction. Gestion de projet Jira, modélisation MCD et environnement Docker Compose.",
     tags: ["FastAPI", "React", "PostgreSQL", "Docker"],
@@ -85,6 +91,7 @@ window.PROJECTS = [
   },
   {
     title: "CyberCrise",
+    year: "2026",
     description:
       "Jeu de révision web pour le Master : quiz arcade, examen blanc chronométré et mode aventure 2D. 160 questions sur le pilotage de la maintenance du SI.",
     tags: ["JavaScript", "HTML/CSS", "GitHub Pages"],
@@ -96,6 +103,7 @@ window.PROJECTS = [
   },
   {
     title: "Git avancé",
+    year: "2025",
     description:
       "Cours, TP guidés et projet final en Go que j'ai conçus pour accompagner les étudiants de Bachelor 1 à Ynov Sophia Antipolis.",
     tags: ["Git", "Go", "Pédagogie"],
