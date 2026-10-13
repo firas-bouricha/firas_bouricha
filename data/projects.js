@@ -12,6 +12,9 @@
  *    tags         (obligatoire) Technologies utilisées, ex. ["Terraform", "Proxmox"]
  *    repo         (optionnel)  Dépôt GitHub au format "utilisateur/depot"
  *    demo         (optionnel)  Lien vers une démo en ligne
+ *    image        (optionnel)  Photo ou capture d'écran, à déposer dans
+ *                              assets/projects/ (ex. "assets/projects/homelab.jpg")
+ *    imageAlt     (optionnel)  Description courte de l'image (accessibilité)
  *    icon         (optionnel)  home | server | shield | layers | code | git
  *                              | cloud | database | game | terminal | network
  *    color        (optionnel)  violet | cyan | emerald | amber | pink | blue | red
@@ -40,9 +43,24 @@ window.PROJECTS = [
       "Chaîne CI/CD durcie autour d'une API Node.js : protection de branche, hooks Gitleaks, secrets chiffrés SOPS + age, image Docker scannée par Trivy (SBOM), CodeQL et déploiement conditionnel.",
     tags: ["GitHub Actions", "Docker", "Trivy", "CodeQL", "SOPS"],
     repo: "firas-bouricha/Projet-_final_DevSecOps",
+    image: "assets/projects/devsecops-pipeline.png",
+    imageAlt: "Exécution réussie du pipeline CI/CD : tests, Gitleaks, CodeQL, scan d'image, publication et déploiements",
     icon: "shield",
     color: "emerald",
     category: "DevSecOps",
+    featured: true,
+  },
+  {
+    title: "Home Lab",
+    description:
+      "Mon infrastructure auto-hébergée : serveur Dell PowerEdge sous Proxmox, iDRAC, switch Cisco SG300. Architecture, inventaire et documentation technique.",
+    tags: ["Proxmox", "Linux", "Réseau", "Cisco"],
+    repo: "firas-bouricha/Home_Lab",
+    image: "assets/projects/homelab.jpg",
+    imageAlt: "Le home lab : serveur Dell PowerEdge T130, Dell OptiPlex et switch Cisco SG300",
+    icon: "home",
+    color: "violet",
+    category: "Infrastructure",
     featured: true,
   },
   {
@@ -53,16 +71,6 @@ window.PROJECTS = [
     repo: "firas-bouricha/Infrastructure-as-Code-Automatisation-Multi-VMs",
     icon: "layers",
     color: "amber",
-    category: "Infrastructure",
-  },
-  {
-    title: "Home Lab",
-    description:
-      "Mon infrastructure auto-hébergée : serveur Dell PowerEdge sous Proxmox, iDRAC, switch Cisco SG300. Architecture, inventaire et documentation technique.",
-    tags: ["Proxmox", "Linux", "Réseau", "Cisco"],
-    repo: "firas-bouricha/Home_Lab",
-    icon: "home",
-    color: "violet",
     category: "Infrastructure",
   },
   {

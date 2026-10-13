@@ -50,6 +50,7 @@
     const color = COLORS[project.color] || COLORS.violet;
     const repoURL = project.repo ? `https://github.com/${project.repo}` : null;
     const demoURL = safeURL(project.demo);
+    const image = typeof project.image === "string" && !/^\s*javascript:/i.test(project.image) ? project.image : null;
     const tags = Array.isArray(project.tags) ? project.tags : [];
 
     const links = [];
@@ -61,7 +62,8 @@
     }
 
     return `
-      <article class="project${project.featured ? " project--featured" : ""}" style="--c: ${color}">
+      <article class="project${project.featured ? " project--featured" : ""}${image ? " project--media" : ""}" style="--c: ${color}">
+        ${image ? `<figure class="project__media"><img src="${escapeHTML(image)}" alt="${escapeHTML(project.imageAlt || project.title)}" loading="lazy" decoding="async"></figure>` : ""}
         <div class="project__body">
           <div class="project__head">
             <span class="project__icon">${svg(project.icon)}</span>

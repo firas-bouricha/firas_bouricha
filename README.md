@@ -21,7 +21,8 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 ├── js/
 │   └── main.js         # Génération des cartes projets, filtres, menu mobile, animations
 └── assets/
-    └── firas-bouricha.jpg
+    ├── firas-bouricha.jpg
+    └── projects/       # Images des projets (photos, captures d'écran)
 ```
 
 Le site est 100 % statique : aucun framework, aucune étape de build. Il suffit de pousser sur la branche publiée
@@ -42,6 +43,8 @@ par GitHub Pages pour le mettre à jour.
   tags: ["Terraform", "Proxmox"],
   repo: "firas-bouricha/nom-du-depot",   // optionnel
   demo: "https://lien-vers-la-demo",     // optionnel
+  image: "assets/projects/mon-projet.jpg", // optionnel (photo ou capture)
+  imageAlt: "Ce que montre l'image",     // optionnel
   icon: "server",                        // optionnel
   color: "cyan",                         // optionnel
   category: "Infrastructure",            // optionnel (crée le filtre automatiquement)
@@ -56,6 +59,14 @@ par GitHub Pages pour le mettre à jour.
 |-------|-------------------|
 | `icon` | `home`, `server`, `shield`, `layers`, `code`, `git`, `cloud`, `database`, `game`, `terminal`, `network` |
 | `color` | `violet`, `cyan`, `emerald`, `amber`, `pink`, `blue`, `red` |
+
+**Ajouter une image**
+
+1. Déposer la photo ou la capture d'écran dans `assets/projects/` (format `.jpg` ou `.png`, idéalement moins de
+   200 Ko et environ 900 à 1500 px de large).
+2. Renseigner `image` (le chemin du fichier) et `imageAlt` (une phrase qui décrit l'image).
+
+Sur une carte mise en avant (`featured: true`), l'image s'affiche à gauche du texte ; sur une carte normale, en haut.
 
 **Conseils pour une bonne description**
 
