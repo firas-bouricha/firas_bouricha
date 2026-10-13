@@ -171,6 +171,22 @@
       });
     }
 
+    // Pastille qui glisse sous le lien actif
+    const indicator = menu.querySelector(".nav__indicator");
+    let activeLink = null;
+    const moveIndicator = () => {
+      if (!indicator) return;
+      if (!activeLink || !activeLink.offsetWidth || getComputedStyle(indicator).display === "none") {
+        indicator.classList.remove("is-ready");
+        return;
+      }
+      indicator.style.width = `${activeLink.offsetWidth}px`;
+      indicator.style.transform = `translateX(${activeLink.offsetLeft}px)`;
+      indicator.classList.add("is-ready");
+    };
+    window.addEventListener("resize", moveIndicator);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
+
     // Lien actif + chemin du prompt (firas@infra:~/projets$) selon la section visible
     const setActive = (id) => {
       let current = "~";
@@ -178,6 +194,7 @@
         const on = a.getAttribute("href") === `#${id}`;
         a.classList.toggle("is-active", on);
         if (on) {
+          activeLink = a;
           a.setAttribute("aria-current", "true");
           current = a.dataset.path || current;
         } else {
@@ -185,9 +202,10 @@
         }
       });
       if (path) path.textContent = current;
+      moveIndicator();
     };
 
-    const sections = [document.getElementById("top"), ...links.map((a) => document.querySelector(a.getAttribute("href")))].filter(Boolean);
+    const sections = [...new Set(links.map((a) => document.querySelector(a.getAttribute("href"))))].filter(Boolean);
     if ("IntersectionObserver" in window && sections.length) {
       const spy = new IntersectionObserver(
         (entries) => entries.forEach((entry) => { if (entry.isIntersecting) setActive(entry.target.id); }),
@@ -529,7 +547,7 @@
     const items = document.querySelectorAll(".reveal");
     if (!("IntersectionObserver" in window)) {
       items.forEach((el) => el.classList.add("is-visible"));
-      return;
+      return true;
     }
     const observer = new IntersectionObserver(
       (entries) => {
@@ -546,24 +564,7 @@
       el.style.transitionDelay = `${(i % 4) * 70}ms`;
       observer.observe(el);
     });
-  }
-
-  /* ---------- Effet machine à écrire ---------- */
-  function setupTyping() {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.querySelectorAll(".type[data-text]").forEach((el) => {
-      const text = el.dataset.text;
-      if (reduce) {
-        el.textContent = text;
-        return;
-      }
-      let i = 0;
-      const tick = () => {
-        el.textContent = text.slice(0, ++i);
-        if (i < text.length) setTimeout(tick, 90 + Math.random() * 60);
-      };
-      setTimeout(tick, 500);
-    });
+    return true;
   }
 
   /* ---------- Copie de l'adresse e-mail ---------- */
@@ -572,20 +573,32 @@
     if (button) button.addEventListener("click", copyEmail);
   }
 
+  // Chaque module démarre indépendamment : une erreur dans l'un n'empêche pas les autres de fonctionner
+  function safely(name, fn) {
+    try {
+      return fn();
+    } catch (error) {
+      console.error(`[portfolio] ${name} :`, error);
+      return undefined;
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     const year = document.getElementById("year");
     if (year) year.textContent = new Date().getFullYear();
 
-    const toggleTheme = setupTheme();
-    setupProjects();
-    setupSkillIcons();
-    setupNav();
-    setupDeck();
-    setupEditor();
-    setupGitLog();
-    setupCommandPalette(toggleTheme);
-    setupReveal();
-    setupTyping();
-    setupCopyEmail();
+    const toggleTheme = safely("thème", setupTheme) || (() => {});
+    safely("projets", setupProjects);
+    safely("compétences", setupSkillIcons);
+    safely("navigation", setupNav);
+    safely("photos", setupDeck);
+    safely("éditeur", setupEditor);
+    safely("parcours", setupGitLog);
+    safely("palette", () => setupCommandPalette(toggleTheme));
+    safely("e-mail", setupCopyEmail);
+
+    // Si les animations ne démarrent pas, on affiche directement tout le contenu
+    if (safely("animations", setupReveal) !== true) document.documentElement.classList.remove("js");
+    document.documentElement.setAttribute("data-ready", "");
   });
 })();

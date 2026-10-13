@@ -90,6 +90,17 @@ copier un bloc `<figure class="deck__card">` dans `index.html`, puis modifier le
 
 ---
 
+## Publier une modification du design (important)
+
+Les navigateurs gardent le CSS et le JavaScript en cache pendant environ 10 minutes. Si la page HTML est à jour
+mais que l'ancien CSS est encore en cache, l'affichage peut se casser.
+
+Pour l'éviter, dans `index.html`, **changez le numéro de version** `?v=...` des fichiers `css/style.css`,
+`data/projects.js`, `js/icons.js` et `js/main.js` à chaque modification de ces fichiers
+(par exemple `?v=20261013-7` → `?v=20261020-1`). Les visiteurs téléchargent alors directement la nouvelle version.
+
+---
+
 ## Tester en local
 
 Ouvrir directement `index.html` dans un navigateur suffit. Pour un rendu identique à GitHub Pages :
