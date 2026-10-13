@@ -248,13 +248,6 @@ svg.fill { fill: currentColor; stroke: none; }
 .term__body { padding: 16px 20px; line-height: 1.8; }
 .term__line { padding-left: 16px; }
 
-.term--float {
-  position: absolute; left: -90px; bottom: 56px; width: 240px; z-index: 2;
-  background: rgba(17, 17, 22, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  animation: float 7s ease-in-out infinite;
-}
-.term--float .term__body { padding: 12px 16px; font-size: 13.5px; line-height: 1.7; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
 /* ---------- Sections ---------- */
 .section { position: relative; padding: 120px 0; }
@@ -456,14 +449,12 @@ svg.fill { fill: currentColor; stroke: none; }
   .projects { grid-template-columns: repeat(2, 1fr); }
   .project--featured { grid-column: span 2; }
   .skills { grid-template-columns: repeat(2, 1fr); }
-  .term--float { left: -40px; }
 }
 
 @media (max-width: 900px) {
   .hero { padding-top: calc(var(--nav-h) + 48px); min-height: 0; }
   .hero__inner { grid-template-columns: 1fr; gap: 56px; }
   .hero__visual { justify-self: center; max-width: 340px; }
-  .term--float { left: -56px; bottom: 36px; width: 210px; }
   .about { grid-template-columns: 1fr; gap: 36px; }
   .pillars { grid-template-columns: 1fr; }
 
@@ -500,7 +491,6 @@ svg.fill { fill: currentColor; stroke: none; }
   .project { padding: 24px 22px; }
   .hero__cta .btn { flex: 1 1 auto; }
   .hero__socials { margin-left: 0; }
-  .term--float { display: none; }
   .timeline::before { left: 5px; }
   .timeline__item { grid-template-columns: 1fr; gap: 8px; padding-left: 28px; }
   .timeline__item::before { left: 0; top: 4px; }
