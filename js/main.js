@@ -421,43 +421,35 @@
     });
   }
 
-  /* ---------- Parcours façon « git log » ---------- */
-  function setupGitLog() {
-    const root = document.getElementById("gitlog");
+  /* ---------- Parcours : la ligne se remplit et les étapes s'allument au défilement ---------- */
+  function setupJourney() {
+    const root = document.getElementById("journey-timeline");
     if (!root) return;
-    const commits = [...root.querySelectorAll(".gitlog__commit")];
-    const panel = root.querySelector(".gitlog__panel");
-    const field = (name) => panel.querySelector(`.gitlog__${name}`);
+    const rail = root.querySelector(".journey__rail");
+    const fill = root.querySelector(".journey__fill");
+    const items = [...root.querySelectorAll(".journey__item")];
+    let ticking = false;
 
-    const select = (commit, focus) => {
-      commits.forEach((c) => {
-        const on = c === commit;
-        c.setAttribute("aria-selected", String(on));
-        c.tabIndex = on ? 0 : -1;
+    const update = () => {
+      ticking = false;
+      const anchor = window.innerHeight * 0.62; // repère : un peu sous le milieu de l'écran
+      const r = rail.getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, (anchor - r.top) / r.height));
+      fill.style.setProperty("--progress", progress.toFixed(4));
+      items.forEach((item) => {
+        const dot = item.querySelector(".journey__dot").getBoundingClientRect();
+        item.classList.toggle("is-lit", dot.top < anchor);
       });
-      const d = commit.dataset;
-      field("hash").textContent = d.hash === "HEAD" ? "HEAD →" : `commit ${d.hash}`;
-      field("date").textContent = d.date;
-      field("title").textContent = d.title;
-      field("org").textContent = d.org;
-      field("text").textContent = d.text;
-      panel.style.setProperty("--c", commit.querySelector(".gitlog__dot").style.getPropertyValue("--c"));
-      panel.classList.remove("is-swap");
-      void panel.offsetWidth; // relance l'animation
-      panel.classList.add("is-swap");
-      if (focus) commit.focus();
     };
-
-    commits.forEach((commit, i) => {
-      commit.addEventListener("click", () => select(commit));
-      commit.addEventListener("keydown", (e) => {
-        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-        e.preventDefault();
-        const next = commits[Math.min(commits.length - 1, Math.max(0, i + (e.key === "ArrowRight" ? 1 : -1)))];
-        select(next, true);
-      });
-    });
-    select(commits.find((c) => c.getAttribute("aria-selected") === "true") || commits[0]);
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
   }
 
   /* ---------- Visionneuse de photos (hero) ---------- */
@@ -593,7 +585,7 @@
     safely("navigation", setupNav);
     safely("photos", setupDeck);
     safely("éditeur", setupEditor);
-    safely("parcours", setupGitLog);
+    safely("parcours", setupJourney);
     safely("palette", () => setupCommandPalette(toggleTheme));
     safely("e-mail", setupCopyEmail);
 

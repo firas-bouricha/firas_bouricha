@@ -472,43 +472,42 @@ svg.fill { fill: currentColor; stroke: none; }
 .project--featured:not(.project--media) { display: flex; }
 
 
-/* ---------- Parcours façon « git log » ---------- */
-.gitlog { max-width: 980px; }
-.gitlog__track { --n: 4; --half: calc(50% / var(--n)); position: relative; display: grid; grid-template-columns: repeat(var(--n), 1fr); }
-.gitlog__track::before {
-  content: ""; position: absolute; left: var(--half); right: calc(var(--half) * 3); top: 49px; height: 2px;
-  background: var(--border-strong);
+/* ---------- Parcours : frise verticale qui se remplit au défilement ---------- */
+.journey { --year-w: 200px; --col: 56px; position: relative; max-width: 1000px; }
+.journey__rail {
+  position: absolute; top: 40px; bottom: 40px; width: 2px; border-radius: 2px; overflow: hidden;
+  left: calc(var(--year-w) + var(--col) / 2 - 1px); background: var(--border);
 }
-.gitlog__track::after {
-  content: ""; position: absolute; left: calc(100% - var(--half) * 3); right: var(--half); top: 49px; height: 2px;
-  background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px);
+.journey__fill {
+  position: absolute; inset: 0; transform-origin: top; transform: scaleY(var(--progress, 1));
+  background: linear-gradient(180deg, var(--violet-soft), var(--violet));
 }
-.gitlog__commit {
-  position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px;
-  padding: 8px 6px 14px; border: 0; background: transparent; color: var(--muted); border-radius: 14px;
-  transition: color .2s, background .2s;
+.journey__list { display: grid; }
+.journey__item { display: grid; grid-template-columns: var(--year-w) var(--col) minmax(0, 1fr); padding: 36px 0; }
+.journey__year {
+  text-align: right; font-size: clamp(32px, 3.8vw, 52px); font-weight: 600; line-height: 1; letter-spacing: -.045em;
+  font-variant-numeric: tabular-nums; color: var(--text); transition: color .6s var(--ease);
 }
-.gitlog__commit:hover { color: var(--text); background: var(--ghost); }
-.gitlog__year { font-size: 12.5px; }
-.gitlog__dot {
-  width: 16px; height: 16px; border-radius: 50%; background: var(--bg-alt); border: 2px solid var(--muted);
-  transition: transform .3s var(--ease), background .3s, box-shadow .3s;
+.journey__now {
+  display: block; margin-top: 10px; font-family: var(--font-mono); font-size: 11.5px; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--violet-soft);
 }
-.gitlog__commit--next .gitlog__dot { border-style: dashed; }
-.gitlog__label { font-weight: 600; font-size: 15px; text-align: center; }
-.gitlog__commit[aria-selected="true"] { color: var(--text); }
-.gitlog__commit[aria-selected="true"] .gitlog__dot { background: var(--violet); border-color: var(--violet); transform: scale(1.15); }
-.gitlog__panel {
-  position: relative; margin-top: 26px; padding: 28px 30px; border-radius: var(--radius);
-  background: var(--surface); border: 1px solid var(--border);
+.journey__dot {
+  position: relative; z-index: 1; justify-self: center; width: 13px; height: 13px; margin-top: 15px; border-radius: 50%;
+  background: var(--violet); border: 2px solid var(--violet);
+  transition: background .5s, border-color .5s, box-shadow .5s, transform .5s var(--ease);
 }
-.gitlog__panel.is-swap { animation: cardIn .4s var(--ease) both; }
-.gitlog__meta { font-size: 13px; }
-.gitlog__hash { color: var(--violet-soft); }
-.gitlog__title { font-size: 22px; letter-spacing: -.015em; margin-top: 8px; }
-.gitlog__org { font-size: 13px; color: var(--violet-soft); margin: 4px 0 12px; }
-.gitlog__text { color: var(--text-soft); max-width: 720px; }
-.gitlog__fallback { display: grid; gap: 10px; color: var(--text-soft); }
+.journey__item--now .journey__dot { width: 17px; height: 17px; margin-top: 13px; box-shadow: 0 0 0 6px color-mix(in srgb, var(--violet) 20%, transparent); }
+.journey__body { max-width: 640px; transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.journey__place { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.journey__title { margin: 8px 0 10px; font-size: clamp(20px, 2.1vw, 26px); font-weight: 600; letter-spacing: -.02em; line-height: 1.25; }
+.journey__text { color: var(--text-soft); font-size: 16.5px; line-height: 1.7; }
+
+/* Avec JavaScript : les étapes s'allument quand on les atteint */
+.js .journey__fill { transform: scaleY(var(--progress, 0)); }
+.js .journey__item:not(.is-lit) .journey__year { color: color-mix(in srgb, var(--text) 22%, transparent); }
+.js .journey__item:not(.is-lit) .journey__dot { background: var(--bg-alt); border-color: var(--border-strong); box-shadow: none; transform: scale(.85); }
+.js .journey__item:not(.is-lit) .journey__body { opacity: .4; transform: translateY(10px); }
 
 /* ---------- Contact ---------- */
 .contact {
@@ -652,13 +651,15 @@ kbd {
   .project--featured.project--media .project__media { margin: -24px -22px 22px; }
   .hero__cta .btn { flex: 1 1 auto; }
   .hero__socials { margin-left: 0; }
-  .gitlog__track { grid-template-columns: 1fr; gap: 2px; padding-left: 4px; }
-  .gitlog__track::before { left: 23px; right: auto; top: 22px; bottom: 60px; width: 2px; height: auto; background: var(--border-strong); }
-  .gitlog__track::after { left: 23px; right: auto; top: auto; bottom: 22px; width: 2px; height: 38px; background: repeating-linear-gradient(180deg, var(--border-strong) 0 5px, transparent 5px 10px); }
-  .gitlog__commit { flex-direction: row; justify-content: flex-start; gap: 14px; padding: 10px 10px 10px 10px; }
-  .gitlog__commit .gitlog__year { order: 3; margin-left: auto; }
-  .gitlog__dot { position: relative; z-index: 1; }
-  .gitlog__panel { padding: 22px 20px; }
+  .journey { --year-w: 0px; --col: 32px; }
+  .journey__rail { top: 22px; bottom: 22px; }
+  .journey__item { grid-template-columns: var(--col) minmax(0, 1fr); padding: 26px 0; }
+  .journey__year { grid-column: 2; grid-row: 1; text-align: left; font-size: 30px; }
+  .journey__now { display: inline-block; margin: 0 0 0 12px; vertical-align: middle; }
+  .journey__dot { grid-column: 1; grid-row: 1; margin-top: 9px; }
+  .journey__item--now .journey__dot { margin-top: 7px; }
+  .journey__body { grid-column: 2; grid-row: 2; margin-top: 12px; }
+  .journey__text { font-size: 15.5px; }
   .statusbar__spacer, .statusbar__seg--path { display: none; }
   .cmdk { margin-top: 8vh; }
   .cmdk__hint { display: none; }
