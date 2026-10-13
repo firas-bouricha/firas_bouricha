@@ -27,7 +27,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261013-7">
   <script>
     // Thème appliqué avant l'affichage pour éviter un flash
     (function () {
@@ -35,6 +35,8 @@
       d.classList.add("js");
       try { t = localStorage.getItem("theme"); } catch (e) {}
       d.setAttribute("data-theme", t === "light" ? "light" : "dark");
+      // Sécurité : si le script principal ne démarre pas, on affiche tout le contenu
+      setTimeout(function () { if (!d.hasAttribute("data-ready")) d.classList.remove("js"); }, 2500);
     })();
   </script>
 
@@ -62,12 +64,14 @@
         <span class="accent">firas</span>@infra<span class="muted">:</span><span class="prompt__path" id="prompt-path">~</span><span class="muted">$</span><span class="cursor" aria-hidden="true"></span>
       </a>
 
-      <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
-        <a href="#about" data-path="~/profil"><span class="nav__num">01</span>profil</a>
-        <a href="#skills" data-path="~/stack"><span class="nav__num">02</span>compétences</a>
-        <a href="#projects" data-path="~/projets"><span class="nav__num">03</span>projets</a>
-        <a href="#journey" data-path="~/parcours"><span class="nav__num">04</span>parcours</a>
-        <a href="#contact" data-path="~/contact"><span class="nav__num">05</span>contact</a>
+      <nav class="nav__pill" id="nav-links" aria-label="Navigation principale">
+        <span class="nav__indicator" aria-hidden="true"></span>
+        <a href="#top" data-path="~">Accueil</a>
+        <a href="#about" data-path="~/profil">Profil</a>
+        <a href="#skills" data-path="~/stack">Compétences</a>
+        <a href="#projects" data-path="~/projets">Projets</a>
+        <a href="#journey" data-path="~/parcours">Parcours</a>
+        <a href="#contact" data-path="~/contact">Contact</a>
       </nav>
 
       <div class="nav__tools">
@@ -506,9 +510,9 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/projects.js"></script>
-  <script src="js/icons.js"></script>
-  <script src="js/main.js"></script>
+  <script src="data/projects.js?v=20261013-7"></script>
+  <script src="js/icons.js?v=20261013-7"></script>
+  <script src="js/main.js?v=20261013-7"></script>
 </body>
 
 </html>
