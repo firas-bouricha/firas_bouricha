@@ -749,7 +749,7 @@ kbd {
 @media (max-width: 960px) {
   :root { --nav-h: 64px; }
   .nav__inner { grid-template-columns: minmax(0, 1fr) auto; }
-  .prompt { min-width: 0; overflow: hidden; }
+  .prompt { min-width: 0; max-width: 100%; overflow: hidden; }
   .prompt__path { overflow: hidden; text-overflow: ellipsis; }
   .nav__toggle { display: inline-flex; }
   .nav__pill {
@@ -770,6 +770,18 @@ kbd {
   #cmdk-open { display: none; }
   .nav__tools { gap: 8px; }
   .nav__inner { gap: 12px; }
+}
+
+@media (max-width: 380px) {
+  .prompt { font-size: 12px; }
+  .prompt > .muted, .prompt__path { display: none; }
+}
+
+@media (max-width: 340px) {
+  .prompt { font-size: 11px; }
+  .prompt .cursor { width: 6px; height: 14px; }
+  .nav__inner { column-gap: 6px; }
+  .nav__tools { gap: 4px; }
 }
 
 @media (max-width: 640px) {

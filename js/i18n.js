@@ -132,7 +132,7 @@
     // Pied de page
     "footer.status": "AVAILABLE",
     "footer.search": ":search",
-    "footer.note": "Firas Bouricha · Cloud &amp; Infrastructure Engineer · Sophia Antipolis · <span class=\"mono\">firas@infra:~$ <span class=\"accent\">exit</span></span>",
+    "footer.note": "Firas Bouricha · Cloud &amp; Infrastructure Engineer · Sophia Antipolis · <span class=\"mono\">firas@Portfolio:~$ <span class=\"accent\">exit</span></span>",
 
     // Palette de commandes
     "cmdk.aria": "Command palette",

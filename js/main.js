@@ -204,7 +204,7 @@
     window.addEventListener("resize", moveIndicator);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
 
-    // Lien actif + chemin du prompt (firas@infra:~/projets$) selon la section visible
+    // Lien actif + chemin du prompt (firas@Portfolio:~/projets$) selon la section visible
     let activeId = "top";
     const setActive = (id) => {
       activeId = id;
