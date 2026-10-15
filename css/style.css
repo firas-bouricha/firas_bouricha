@@ -19,6 +19,11 @@
   --line: #1B1B22;
   --dot: #2C2C35;
   --glass: rgba(23, 23, 30, .72);
+  /* Bord « verre » du menu : clair en haut, presque invisible au milieu, reflet violet en bas */
+  --edge-top: rgba(255, 255, 255, .18);
+  --edge-mid: rgba(255, 255, 255, .04);
+  --edge-bottom: rgba(167, 139, 250, .32);
+  --edge-inner: rgba(255, 255, 255, .06);
   --glass-strong: rgba(17, 17, 23, .97);
   --ghost: rgba(255, 255, 255, .03);
   --contact-a: #18181F;
@@ -67,6 +72,10 @@
   --line: #E9E8EF;
   --dot: #DCDAE6;
   --glass: rgba(255, 255, 255, .78);
+  --edge-top: rgba(255, 255, 255, 1);
+  --edge-mid: rgba(20, 20, 40, .08);
+  --edge-bottom: rgba(124, 58, 237, .28);
+  --edge-inner: rgba(255, 255, 255, .9);
   --glass-strong: rgba(255, 255, 255, .98);
   --ghost: rgba(15, 15, 30, .02);
   --contact-a: #FFFFFF;
@@ -218,8 +227,16 @@ svg.fill { fill: currentColor; stroke: none; }
 /* Menu en pilule avec pastille glissante */
 .nav__pill {
   position: relative; display: flex; align-items: center; gap: 2px; padding: 5px; border-radius: 999px;
-  background: var(--glass); border: 1px solid var(--border);
+  background: var(--glass); border: 1px solid transparent;
+  box-shadow: inset 0 1px 0 var(--edge-inner), 0 10px 30px -14px var(--shadow);
   backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%);
+}
+/* Liseré en dégradé dessiné par un masque : seul le bord de 1 px reste visible */
+.nav__pill::before {
+  content: ""; position: absolute; inset: -1px; z-index: 2; padding: 1px; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(180deg, var(--edge-top), var(--edge-mid) 45%, var(--edge-mid) 60%, var(--edge-bottom));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
 }
 .nav__pill a {
   position: relative; z-index: 1; padding: 9px 16px; border-radius: 999px; white-space: nowrap;
