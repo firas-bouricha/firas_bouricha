@@ -505,8 +505,8 @@
   }
 
   /* ---------- Terminal (onglet ">_ terminal" de la section Profil) ----------
-     Un petit shell simulé : help, ls, cat, whoami, neofetch, projets, open, cd…
-     Les textes personnels (.mystere, whoami) sont dans data/terminal.js. */
+     Un petit shell simulé, façon zsh + oh-my-zsh : help, ls, cat, whoami, neofetch,
+     projets, open, cd… Les textes personnels (.mystere, whoami) sont dans data/terminal.js. */
   let openTerminal = () => {};
 
   function setupTerminal(toggleTheme) {
@@ -515,23 +515,46 @@
     const out = document.getElementById("term-out");
     const form = document.getElementById("term-form");
     const input = document.getElementById("term-input");
-    if (!tab || !pane || !out || !form || !input) return;
+    const ps1Live = document.getElementById("term-ps1");
+    const mirror = document.getElementById("term-mirror");
+    if (!tab || !pane || !out || !form || !input || !ps1Live || !mirror) return;
 
     const DATA = window.TERMINAL || {};
     const say = (entry) => (entry ? (isEN() ? entry.en : entry.fr) || "" : "");
     const fine = window.matchMedia("(pointer: fine)");
     const strip = (text) => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-    const PROMPT = '<span class="term__user">firas</span>@Portfolio<span class="muted">:</span><span class="term__cwd">~</span><span class="muted">$</span>';
     const SINCE = 2013; // début des études en informatique
+    // Logo « FB » (police figlet « poison »), dans l'esprit du logo Arch de neofetch
+    const LOGO = [
+      "@@@@@@@@  @@@@@@@",
+      "@@@@@@@@  @@@@@@@@",
+      "@@!       @@!  @@@",
+      "!@!       !@   @!@",
+      "@!!!:!    @!@!@!@",
+      "!!!!!:    !!!@!!!!",
+      "!!:       !!:  !!!",
+      ":!:       :!:  !:!",
+      " ::        :: ::::",
+      " :        :: : ::",
+    ].join("\n");
 
     const history = [];
     let cursor = 0;
     let busy = false;
     let started = false;
+    let failed = false; // la dernière commande a-t-elle échoué ? (flèche rouge, comme oh-my-zsh)
+    let cwd = "~";
 
     /* Affichage */
+    const clock = () => new Date().toLocaleTimeString(isEN() ? "en-GB" : "fr-FR", { hour: "2-digit", minute: "2-digit" });
+    // Invite sur deux lignes : ➜ firas@Portfolio ~ git:(main)        15:19  /  » commande
+    const ps1 = () =>
+      `<span class="t-arrow${failed ? " is-err" : ""}">➜</span><span><span class="t-user">firas</span><span class="t-dim">@</span><span class="t-host">Portfolio</span></span>` +
+      `<span class="t-cwd">${escapeHTML(cwd)}</span><span class="t-git">git:(<span class="t-branch">main</span>)</span><span class="t-time">${clock()}</span>`;
+    const refreshPrompt = () => { ps1Live.innerHTML = ps1(); };
+
     // Échappe le texte et met en forme les `commandes`
-    const fmt = (text) => escapeHTML(text).replace(/`([^`]+)`/g, '<span class="term__cmd">$1</span>');
+    const fmt = (text) => escapeHTML(text).replace(/`([^`]+)`/g, '<span class="t-cmd">$1</span>');
     const print = (html = "", cls = "") => {
       const row = document.createElement("div");
       row.className = cls ? `term__row ${cls}` : "term__row";
@@ -539,13 +562,16 @@
       out.appendChild(row);
       out.scrollTop = out.scrollHeight;
     };
-    const grid = (pairs, keyCls = "term__cmd") =>
+    const echo = (raw) => print(`<div class="term__ps1">${ps1()}</div><div><span class="t-chev">»</span> ${escapeHTML(raw)}</div>`, "term__echo");
+    const grid = (pairs, keyCls = "t-cmd") =>
       print(pairs.map(([k, v]) => `<span class="${keyCls}">${escapeHTML(k)}</span><span>${v}</span>`).join(""), "term__grid");
-    const err = (text) => print(fmt(text), "term__err");
+    const err = (text) => { failed = true; print(fmt(text), "t-err"); };
 
-    const welcome = () => {
-      print(fmt(T("Bienvenue sur firas@Portfolio. Un vrai terminal… ou presque.", "Welcome to firas@Portfolio. A real terminal… almost.")), "term__muted");
-      print(fmt(T("Tapez `help` pour voir les commandes, ou essayez `ls -a`.", "Type `help` to see the commands, or try `ls -a`.")), "term__muted");
+    // Ligne de commande : bloc-curseur rétro dessiné par-dessus le vrai champ de saisie
+    const syncCursor = () => {
+      const v = input.value;
+      const pos = input.selectionStart ?? v.length;
+      mirror.innerHTML = `${escapeHTML(v.slice(0, pos))}<span class="term__cursor">${escapeHTML(v[pos] || " ")}</span>${escapeHTML(v.slice(pos + 1))}`;
     };
 
     /* Contenu */
@@ -571,13 +597,13 @@
           row.querySelector("dt")?.textContent.trim() || "",
           escapeHTML(row.querySelector("dd")?.textContent.replace(/\s+/g, " ").trim() || ""),
         ]);
-        grid(rows, "term__key");
+        grid(rows, "t-key");
       } else if (name === "main.tf" || name === "ci-cd.yml") {
         const code = document.querySelector(`#${name === "main.tf" ? "pane-tf" : "pane-ci"} pre.code code`);
         print(`<pre class="code">${code ? code.innerHTML : ""}</pre>`);
       } else if (name === ".mystere") {
-        print(fmt(T("# .mystere · dossier confidentiel 🔒", "# .mystere · classified file 🔒")), "term__muted");
-        (say(DATA.mystere) || []).forEach((line) => print(`<span class="term__hidden">→</span> ${fmt(line)}`));
+        print(fmt(T("# .mystere · dossier confidentiel 🔒", "# .mystere · classified file 🔒")), "t-dim");
+        (say(DATA.mystere) || []).forEach((line) => print(`<span class="t-hidden">→</span> ${fmt(line)}`));
       } else if (DIRS.includes(name.replace(/\/$/, ""))) {
         err(T(`cat : ${name} : est un dossier (essayez \`ls ${name}\`)`, `cat: ${name}: is a directory (try \`ls ${name}\`)`));
       } else {
@@ -587,44 +613,54 @@
 
     const listProjects = () => {
       const list = projects();
-      grid(list.map((p, i) => [String(i + 1), `${escapeHTML(pick(p, "title"))} <span class="term__muted">· ${escapeHTML(pick(p, "year") || "")} · ${escapeHTML(p.category || "")}</span>`]));
-      print(fmt(T("Tapez `open 1` pour ouvrir le premier projet.", "Type `open 1` to open the first project.")), "term__muted");
+      grid(list.map((p, i) => [String(i + 1), `${escapeHTML(pick(p, "title"))} <span class="t-dim">· ${escapeHTML(pick(p, "year") || "")} · ${escapeHTML(p.category || "")}</span>`]));
+      print(fmt(T("Tapez `open 1` pour ouvrir le premier projet.", "Type `open 1` to open the first project.")), "t-dim");
     };
 
     const neofetch = () => {
-      const art = [
-        " _____ ____  ",
-        "|  ___| __ ) ",
-        "| |_  |  _ \\ ",
-        "|  _| | |_) |",
-        "|_|   |____/ ",
-      ].join("\n");
-      const head = [
-        '<span class="term__user">firas</span>@Portfolio',
-        '<span class="term__muted">───────────────</span>',
-        T("Ingénieur Cloud &amp; Infrastructure", "Cloud &amp; Infrastructure Engineer"),
-        `<span class="term__ok">●</span> ${T("disponible", "available")}`,
-      ];
       const info = [
-        [T("lieu", "location"), "Sophia Antipolis (06)"],
-        ["uptime", T(`${new Date().getFullYear() - SINCE} ans d'informatique`, `${new Date().getFullYear() - SINCE} years of computing`)],
-        [T("formation", "education"), T("Mastère Cloud, Sécurité &amp; Infra · Ynov", "Master's in Cloud, Security &amp; Infra · Ynov")],
-        ["stack", "Terraform · Ansible · Proxmox · Docker"],
-        [T("mentorat", "mentoring"), T("20+ étudiants accompagnés", "20+ students mentored")],
-        ["shell", "bash"],
+        ["OS", "Portfolio OS · HTML/CSS/JS"],
+        ["Shell", "zsh 5.9 + oh-my-zsh"],
+        [T("Rôle", "Role"), T("Ingénieur Cloud &amp; Infra", "Cloud &amp; Infra Engineer")],
+        [T("Lieu", "Location"), "Sophia Antipolis (06)"],
+        ["Uptime", T(`${new Date().getFullYear() - SINCE} ans d'informatique`, `${new Date().getFullYear() - SINCE} years of computing`)],
+        ["Stack", "Terraform · Ansible · Proxmox"],
+        [T("Statut", "Status"), `<span class="t-ok">●</span> ${T("disponible", "available")}`],
       ];
-      print(`<pre class="term__art" aria-hidden="true">${escapeHTML(art)}</pre><div>${head.join("<br>")}</div>`, "term__neo");
-      grid(info, "term__key");
+      const colors = ["#2E2E36", "#FF5C57", "#5AF78E", "#F3F99D", "#57C7FF", "#C4A7FF", "#9AEDFE", "#F1F1F0"]
+        .map((c) => `<i style="background:${c}"></i>`).join("");
+      print(
+        `<pre class="term__logo" aria-hidden="true">${escapeHTML(LOGO)}</pre>` +
+          `<div class="term__info">` +
+          `<div><span class="t-user">firas</span><span class="t-dim">@</span><span class="t-host">Portfolio</span></div>` +
+          `<div class="t-dim">─────────────────</div>` +
+          info.map(([k, v]) => `<div><span class="t-key">${k}</span><span class="t-dim">:</span> ${v}</div>`).join("") +
+          `<div class="term__swatches" aria-hidden="true">${colors}</div>` +
+          `</div>`,
+        "term__neo"
+      );
+    };
+
+    const welcome = () => {
+      const last = new Date().toLocaleString(isEN() ? "en-GB" : "fr-FR", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      print(escapeHTML(T(`Dernière connexion : ${last} sur ttys001`, `Last login: ${last} on ttys001`)), "t-dim");
+      print(fmt(T("Bienvenue ! Tapez `help` pour voir les commandes.", "Welcome! Type `help` to see the commands.")));
+      echo("neofetch");
+      neofetch();
+      out.scrollTop = 0; // l'accueil se lit depuis le haut
     };
 
     const later = (steps, done) => {
       busy = true;
       input.disabled = true;
+      pane.classList.add("is-busy");
       let delay = 0;
       steps.forEach(([wait, fn]) => { delay += wait; setTimeout(fn, delay); });
       setTimeout(() => {
         busy = false;
         input.disabled = false;
+        pane.classList.remove("is-busy");
+        refreshPrompt();
         if (fine.matches) input.focus({ preventScroll: true });
         if (done) done();
       }, delay + 50);
@@ -635,7 +671,7 @@
       help: ["", "afficher cette aide", "show this help", () => {
         print(T("Commandes disponibles :", "Available commands:"));
         grid(Object.entries(COMMANDS).filter(([, c]) => c[1]).map(([name, c]) => [`${name}${c[0] ? ` ${c[0]}` : ""}`, escapeHTML(T(c[1], c[2]))]));
-        print(fmt(T("Astuce : Tab complète, ↑ ↓ parcourent l'historique, Ctrl + L efface.", "Tip: Tab completes, ↑ ↓ browse history, Ctrl + L clears.")), "term__muted");
+        print(fmt(T("Astuce : Tab complète, ↑ ↓ parcourent l'historique, Ctrl + L efface.", "Tip: Tab completes, ↑ ↓ browse history, Ctrl + L clears.")), "t-dim");
       }],
       ls: ["[-a]", "lister les fichiers", "list files", (args) => {
         const target = args.find((a) => !a.startsWith("-"));
@@ -646,12 +682,12 @@
         }
         const all = args.some((a) => /^-\w*a/.test(a));
         const items = [
-          ...(all ? ['<span class="term__muted">.</span>', '<span class="term__muted">..</span>', '<span class="term__hidden">.mystere</span>'] : []),
+          ...(all ? ['<span class="t-dim">.</span>', '<span class="t-dim">..</span>', '<span class="t-hidden">.mystere</span>'] : []),
           ...FILES.map((f) => escapeHTML(f)),
-          ...DIRS.map((d) => `<span class="term__dir">${d}/</span>`),
+          ...DIRS.map((d) => `<span class="t-dir">${d}/</span>`),
         ];
         print(items.join("   "));
-        if (!all) print(fmt(T("(certains fichiers sont cachés…)", "(some files are hidden…)")), "term__muted");
+        if (!all) print(fmt(T("(certains fichiers sont cachés…)", "(some files are hidden…)")), "t-dim");
       }],
       cat: ["<fichier>", "lire un fichier", "read a file", (args) => {
         if (!args.length) return err(T("cat : nom de fichier manquant (essayez `cat about.md`)", "cat: missing file name (try `cat about.md`)"));
@@ -671,40 +707,40 @@
         }
         if (what === "cv") return err(T("open : cv : bientôt disponible", "open: cv: coming soon"));
         if (!url) return err(T("open : précisez un numéro de projet, github ou linkedin", "open: give a project number, github or linkedin"));
-        print(`<span class="term__ok">↗</span> ${escapeHTML(url)}`);
+        print(`<span class="t-ok">↗</span> ${escapeHTML(url)}`);
         window.open(url, "_blank", "noopener");
       }],
       cd: ["<section>", "aller à une section (projets, parcours…)", "go to a section (projects, journey…)", (args) => {
         const where = strip((args[0] || "~").replace(/\/$/, ""));
-        if (where === "..") return print(fmt(T("Impossible de remonter plus haut : vous êtes déjà chez moi.", "Can't go any higher: you're already at my place.")), "term__muted");
+        if (where === "..") return print(fmt(T("Impossible de remonter plus haut : vous êtes déjà chez moi.", "Can't go any higher: you're already at my place.")), "t-dim");
         const id = SECTIONS[where];
         if (!id) return err(T(`cd : ${args[0]} : aucun dossier de ce nom (essayez \`cd projets\`)`, `cd: ${args[0]}: no such directory (try \`cd projects\`)`));
-        print(`<span class="term__ok">→</span> /${escapeHTML(where === "~" ? "" : where)}`);
+        cwd = id === "top" ? "~" : `~/${where}`;
         setTimeout(() => scrollToSection(id), 250);
       }],
       contact: ["", "mes coordonnées", "my contact details", () => {
-        grid([["mail", escapeHTML(EMAIL)], ["linkedin", "in/firas-bouricha"], ["github", "firas-bouricha"]], "term__key");
+        grid([["mail", escapeHTML(EMAIL)], ["linkedin", "in/firas-bouricha"], ["github", "firas-bouricha"]], "t-key");
       }],
       lang: ["<fr|en>", "changer de langue", "switch language", (args) => {
         const next = (args[0] || "").toLowerCase();
-        if (next !== "fr" && next !== "en") return print(T("Langue : français. Tapez `lang en` pour passer en anglais.", "Language: English. Type `lang fr` to switch to French.").replace(/`([^`]+)`/g, '<span class="term__cmd">$1</span>'));
+        if (next !== "fr" && next !== "en") return print(fmt(T("Langue : français. Tapez `lang en` pour passer en anglais.", "Language: English. Type `lang fr` to switch to French.")));
         if (window.i18n) window.i18n.set(next);
-        print(`<span class="term__ok">✔</span> ${T("Langue : français", "Language: English")}`);
+        print(`<span class="t-ok">✔</span> ${T("Langue : français", "Language: English")}`);
       }],
       theme: ["[light|dark]", "thème clair / sombre", "light / dark theme", (args) => {
         const now = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
         const want = (args[0] || "").toLowerCase();
         if (want !== now) toggleTheme();
         const light = document.documentElement.getAttribute("data-theme") === "light";
-        print(`<span class="term__ok">✔</span> ${T("Thème", "Theme")} : ${light ? T("clair", "light") : T("sombre", "dark")}`);
+        print(`<span class="t-ok">✔</span> ${T("Thème", "Theme")} : ${light ? T("clair", "light") : T("sombre", "dark")}`);
       }],
       history: ["", "commandes déjà tapées", "previous commands", () => {
-        grid(history.map((h, i) => [String(i + 1), escapeHTML(h)]), "term__muted");
+        grid(history.map((h, i) => [String(i + 1), escapeHTML(h)]), "t-dim");
       }],
       clear: ["", "effacer l'écran", "clear the screen", () => { out.innerHTML = ""; }],
       exit: ["", "fermer le terminal", "close the terminal", () => {
-        print("logout", "term__muted");
-        later([[500, () => {
+        print(T("[Processus terminé]", "[Process completed]"), "t-dim");
+        later([[600, () => {
           out.innerHTML = "";
           started = false;
           selectEditorTab(document.getElementById("tab-about"));
@@ -718,8 +754,8 @@
         }
         print(T("[sudo] mot de passe pour recruteur : ********", "[sudo] password for recruiter: ********"));
         later([
-          [700, () => print(`<span class="term__ok">✔</span> ${T("Accès accordé. Excellent choix.", "Access granted. Excellent choice.")}`)],
-          [700, () => print(T("Ouverture de votre messagerie…", "Opening your mail client…"), "term__muted")],
+          [700, () => print(`<span class="t-ok">✔</span> ${T("Accès accordé. Excellent choix.", "Access granted. Excellent choice.")}`)],
+          [700, () => print(T("Ouverture de votre messagerie…", "Opening your mail client…"), "t-dim")],
           [600, () => {
             const subject = encodeURIComponent(T("Opportunité pour vous", "An opportunity for you"));
             window.location.href = `mailto:${EMAIL}?subject=${subject}`;
@@ -730,22 +766,23 @@
         if (args.some((a) => /^-\w*r/.test(a))) return err(T("rm : opération refusée. Cette infra est durcie. 🔒", "rm: operation denied. This infrastructure is hardened. 🔒"));
         err(T("rm : système de fichiers en lecture seule", "rm: read-only file system"));
       }],
-      pwd: ["", "", "", () => print("/home/firas/portfolio")],
+      pwd: ["", "", "", () => print(escapeHTML(`/home/firas${cwd.slice(1)}`))],
       date: ["", "", "", () => print(escapeHTML(new Date().toLocaleString(isEN() ? "en-GB" : "fr-FR")))],
       echo: ["", "", "", (args) => print(escapeHTML(args.join(" ")))],
     };
     const ALIASES = { aide: "help", projects: "projets", dir: "ls", cls: "clear", "?": "help" };
 
     const run = (raw) => {
-      print(`${PROMPT} ${escapeHTML(raw)}`, "term__echo");
+      echo(raw);
       const line = raw.trim();
       if (!line) return;
       history.push(line);
       cursor = history.length;
+      failed = false;
       const [first, ...args] = line.split(/\s+/);
       const name = ALIASES[first.toLowerCase()] || first.toLowerCase();
       const cmd = COMMANDS[name];
-      if (!cmd) return err(T(`commande introuvable : ${first}. Tapez \`help\`.`, `command not found: ${first}. Type \`help\`.`));
+      if (!cmd) return err(T(`zsh : commande introuvable : ${first}. Tapez \`help\`.`, `zsh: command not found: ${first}. Type \`help\`.`));
       cmd[3](args);
     };
 
@@ -771,9 +808,10 @@
         tokens[tokens.length - 1] = matches[0];
         input.value = `${tokens.join(" ")} `;
       } else if (matches.length > 1) {
-        print(`${PROMPT} ${escapeHTML(input.value)}`, "term__echo");
-        print(matches.map(escapeHTML).join("   "), "term__muted");
+        echo(input.value);
+        print(matches.map(escapeHTML).join("   "), "t-dim");
       }
+      syncCursor();
     };
 
     /* Événements */
@@ -783,6 +821,8 @@
       const raw = input.value;
       input.value = "";
       run(raw);
+      refreshPrompt();
+      syncCursor();
     });
     input.addEventListener("keydown", (e) => {
       if (e.key === "Tab" && input.value.trim()) {
@@ -793,11 +833,15 @@
         e.preventDefault();
         cursor = Math.max(0, Math.min(history.length, cursor + (e.key === "ArrowUp" ? -1 : 1)));
         input.value = history[cursor] || "";
+        input.setSelectionRange(input.value.length, input.value.length);
+        syncCursor();
       } else if (e.key.toLowerCase() === "l" && e.ctrlKey) {
         e.preventDefault();
         out.innerHTML = "";
       }
     });
+    input.addEventListener("input", syncCursor);
+    document.addEventListener("selectionchange", () => { if (document.activeElement === input) syncCursor(); });
     // Un clic n'importe où dans le terminal donne le focus à la ligne de commande
     pane.addEventListener("click", (e) => {
       if (e.target.closest("a") || String(window.getSelection())) return;
@@ -807,15 +851,25 @@
     const start = () => {
       if (started) return;
       started = true;
+      cwd = "~";
+      failed = false;
       welcome();
+      refreshPrompt();
+      syncCursor();
     };
-    // Premier affichage de l'onglet : message d'accueil
+    // Le terminal est l'onglet ouvert par défaut ; après `exit`, l'accueil revient à la réouverture
     new MutationObserver(() => { if (!pane.hidden) start(); }).observe(pane, { attributes: true, attributeFilter: ["hidden"] });
+    if (!pane.hidden) start();
+    out.setAttribute("role", "log"); // après l'accueil : les lecteurs d'écran n'annoncent que les réponses
+    out.setAttribute("aria-live", "polite");
     tab.addEventListener("click", () => { if (fine.matches) input.focus({ preventScroll: true }); });
     // Changement de langue : l'accueil suit, tant que rien n'a été tapé
     onLang(() => {
       if (started && !history.length) { out.innerHTML = ""; welcome(); }
+      refreshPrompt();
     });
+    // L'heure de l'invite reste à jour
+    setInterval(refreshPrompt, 30000);
 
     openTerminal = () => {
       selectEditorTab(tab);

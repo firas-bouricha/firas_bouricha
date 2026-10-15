@@ -98,7 +98,8 @@ le logo (`assets/icons/…`) et le nom. Les logos officiels en couleur se trouve
 
 ## Le terminal (`firas@Portfolio`)
 
-L'onglet **`>_ terminal`** de la section Profil est un petit shell simulé. On l'ouvre aussi depuis la palette
+L'onglet **`>_ terminal`** de la section Profil, ouvert par défaut, est un petit shell simulé façon zsh +
+oh-my-zsh : au chargement, il affiche `neofetch` avec le logo ASCII « FB ». On l'ouvre aussi depuis la palette
 (`Ctrl` + `K` → « Ouvrir le terminal ») ou en cliquant sur `firas@Portfolio` dans la barre d'état du bas.
 
 | Commande | Effet |

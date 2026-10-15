@@ -9,7 +9,7 @@
     content="Firas Bouricha, ingénieur Cloud & Infrastructure basé à Sophia Antipolis. Virtualisation, automatisation (Terraform, Ansible), DevSecOps et sécurité. Ouvert aux opportunités.">
   <meta name="author" content="Firas Bouricha">
   <meta name="theme-color" content="#0A0A0D">
-  <meta name="site-version" content="20261015-1519">
+  <meta name="site-version" content="20261015-1526">
   <link rel="canonical" href="https://firas-bouricha.github.io/firas_bouricha/">
 
   <meta property="og:type" content="profile">
@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261015-1519">
+  <link rel="stylesheet" href="css/style.css?v=20261015-1526">
   <script>
     // Mise à jour automatique : GitHub Pages laisse le navigateur garder la page en cache ~10 min.
     // On compare la version de cette page à version.json (jamais mis en cache) ; si une version
@@ -232,14 +232,29 @@
             <div class="editor__bar">
               <span class="editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>
               <div class="editor__tabs" role="tablist" aria-label="Fichiers" data-i18n-attr="aria-label:editor.aria">
-                <button type="button" role="tab" id="tab-about" aria-controls="pane-about" aria-selected="true">about.md</button>
+                <button type="button" role="tab" id="tab-term" class="editor__tab--term" aria-controls="pane-term" aria-selected="true"><span aria-hidden="true">&gt;_ </span>terminal</button>
+                <button type="button" role="tab" id="tab-about" aria-controls="pane-about" aria-selected="false" tabindex="-1">about.md</button>
                 <button type="button" role="tab" id="tab-tf" aria-controls="pane-tf" aria-selected="false" tabindex="-1">main.tf</button>
                 <button type="button" role="tab" id="tab-ci" aria-controls="pane-ci" aria-selected="false" tabindex="-1">ci-cd.yml</button>
-                <button type="button" role="tab" id="tab-term" class="editor__tab--term" aria-controls="pane-term" aria-selected="false" tabindex="-1"><span aria-hidden="true">&gt;_ </span>terminal</button>
               </div>
             </div>
 
-            <div class="editor__pane" role="tabpanel" id="pane-about" aria-labelledby="tab-about">
+            <div class="editor__pane term" role="tabpanel" id="pane-term" aria-labelledby="tab-term">
+              <div class="term__out" id="term-out" data-lenis-prevent></div>
+              <form class="term__line" id="term-form" autocomplete="off">
+                <div class="term__ps1" id="term-ps1" aria-hidden="true"></div>
+                <div class="term__cmdline">
+                  <span class="t-chev" aria-hidden="true">»</span>
+                  <div class="term__field">
+                    <input class="term__input" id="term-input" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="send"
+                      aria-label="Commande (tapez help)" data-i18n-attr="aria-label:term.input">
+                    <span class="term__mirror" id="term-mirror" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="editor__pane" role="tabpanel" id="pane-about" aria-labelledby="tab-about" hidden>
               <dl class="kv mono">
                 <div><dt data-i18n="kv.role">rôle</dt><dd data-i18n="kv.role.v">Ingénieur Cloud &amp; Infrastructure</dd></div>
                 <div><dt data-i18n="kv.seek">recherche</dt><dd data-i18n="kv.seek.v">poste <span class="muted">Cloud · Infra · DevOps</span></dd></div>
@@ -286,15 +301,6 @@ jobs:
   deploy-backend:
     needs: [publish]
     environment: production</code></pre>
-            </div>
-
-            <div class="editor__pane term" role="tabpanel" id="pane-term" aria-labelledby="tab-term" hidden>
-              <div class="term__out" id="term-out" role="log" aria-live="polite" data-lenis-prevent></div>
-              <form class="term__line" id="term-form" autocomplete="off">
-                <label class="term__prompt" for="term-input"><span class="term__user">firas</span>@Portfolio<span class="muted">:</span><span class="term__cwd">~</span><span class="muted">$</span></label>
-                <input class="term__input" id="term-input" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="send"
-                  aria-label="Commande (tapez help)" data-i18n-attr="aria-label:term.input">
-              </form>
             </div>
           </div>
         </div>
@@ -613,11 +619,11 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/vendor/lenis.min.js?v=20261015-1519"></script>
-  <script src="data/projects.js?v=20261015-1519"></script>
-  <script src="data/terminal.js?v=20261015-1519"></script>
-  <script src="js/i18n.js?v=20261015-1519"></script>
-  <script src="js/main.js?v=20261015-1519"></script>
+  <script src="js/vendor/lenis.min.js?v=20261015-1526"></script>
+  <script src="data/projects.js?v=20261015-1526"></script>
+  <script src="data/terminal.js?v=20261015-1526"></script>
+  <script src="js/i18n.js?v=20261015-1526"></script>
+  <script src="js/main.js?v=20261015-1526"></script>
 </body>
 
 </html>
