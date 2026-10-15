@@ -19,6 +19,7 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 ├── css/
 │   └── style.css       # Le design (couleurs, mise en page, responsive)
 ├── js/
+│   ├── i18n.js         # Traductions anglaises (bouton FR / EN)
 │   └── main.js         # Cartes projets, filtres, menu, thème, palette ⌘K, animations
 └── assets/
     ├── icons/          # Logos des technologies (devicon MIT, Simple Icons CC0)
@@ -26,7 +27,7 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
     └── projects/       # Images des projets (photos, captures d'écran)
 ```
 
-Fonctionnalités : thème clair / sombre (mémorisé), palette de commandes (`Ctrl` + `K` ou `⌘` + `K`),
+Fonctionnalités : site bilingue FR / EN (français par défaut), thème clair / sombre (mémorisé), palette de commandes (`Ctrl` + `K` ou `⌘` + `K`),
 filtres de projets, parcours interactif façon `git log`, éditeur de code à onglets dans la section Profil.
 
 Le site est 100 % statique : aucun framework, aucune étape de build. Il suffit de pousser sur la branche publiée
@@ -90,6 +91,21 @@ le logo (`assets/icons/…`) et le nom. Les logos officiels en couleur se trouve
 
 ---
 
+## Version anglaise (FR / EN)
+
+Le français est la langue par défaut : il est écrit directement dans `index.html`. Le bouton **FR / EN** du menu
+bascule la langue et mémorise le choix. Un lien direct vers la version anglaise :
+`https://firas-bouricha.github.io/firas_bouricha/?lang=en` (pratique pour une candidature en anglais).
+
+- **Modifier une traduction** : changer la phrase anglaise dans `js/i18n.js`.
+- **Traduire un nouveau texte** : ajouter `data-i18n="ma.cle"` sur l'élément dans `index.html`
+  (ou `data-i18n-attr="aria-label:ma.cle"` pour un attribut), puis `"ma.cle": "English text"` dans `js/i18n.js`.
+- **Projets** : ajouter un bloc `en: { description: "…" }` au projet dans `data/projects.js`
+  (champs possibles : `title`, `description`, `imageAlt`, `year`, `tags`).
+- **Photos du haut de page** : attribut `data-caption-en` pour la légende anglaise.
+
+---
+
 ## Changer les photos du haut de page
 
 Les photos sont dans `assets/photos/` (format portrait 4:5, idéalement 640 × 800 px). Pour en ajouter une,
@@ -104,7 +120,7 @@ Les navigateurs gardent le CSS et le JavaScript en cache pendant environ 10 minu
 mais que l'ancien CSS est encore en cache, l'affichage peut se casser.
 
 Pour l'éviter, dans `index.html`, **changez le numéro de version** `?v=...` des fichiers `css/style.css`,
-`data/projects.js` et `js/main.js` à chaque modification de ces fichiers
+`data/projects.js`, `js/i18n.js` et `js/main.js` à chaque modification de ces fichiers
 (par exemple `?v=20261013-7` → `?v=20261020-1`). Les visiteurs téléchargent alors directement la nouvelle version.
 
 ---
