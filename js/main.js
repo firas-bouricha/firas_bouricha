@@ -248,7 +248,7 @@
 
     const apply = (theme) => {
       root.setAttribute("data-theme", theme);
-      if (meta) meta.setAttribute("content", theme === "light" ? "#FAFAFC" : "#0A0A0D");
+      if (meta) meta.setAttribute("content", theme === "light" ? "#FAFAFC" : "#111117");
       if (button) button.setAttribute("aria-checked", String(theme === "light"));
       try { localStorage.setItem("theme", theme); } catch { /* stockage indisponible : le choix vaut pour cette visite */ }
     };
@@ -523,7 +523,6 @@
     const say = (entry) => (entry ? (isEN() ? entry.en : entry.fr) || "" : "");
     const fine = window.matchMedia("(pointer: fine)");
     const strip = (text) => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-    const SINCE = 2013; // début des études en informatique
     // Logo « FB » (police figlet « poison »), dans l'esprit du logo Arch de neofetch
     const LOGO = [
       "@@@@@@@@  @@@@@@@",
@@ -544,6 +543,8 @@
     let started = false;
     let failed = false; // la dernière commande a-t-elle échoué ? (flèche rouge, comme oh-my-zsh)
     let cwd = "~";
+    let intro = null; // animation d'accueil en cours (frappe de « neofetch »)
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     /* Affichage */
     const clock = () => new Date().toLocaleTimeString(isEN() ? "en-GB" : "fr-FR", { hour: "2-digit", minute: "2-digit" });
@@ -555,14 +556,19 @@
 
     // Échappe le texte et met en forme les `commandes`
     const fmt = (text) => escapeHTML(text).replace(/`([^`]+)`/g, '<span class="t-cmd">$1</span>');
+    // Chaque ligne apparaît en fondu ; les lignes d'une même réponse arrivent en cascade
+    let burst = 0;
     const print = (html = "", cls = "") => {
       const row = document.createElement("div");
       row.className = cls ? `term__row ${cls}` : "term__row";
       row.innerHTML = html || "&nbsp;";
+      row.style.setProperty("--d", `${Math.min(burst++, 14) * 40}ms`);
+      if (burst === 1) requestAnimationFrame(() => { burst = 0; });
       out.appendChild(row);
       out.scrollTop = out.scrollHeight;
+      return row;
     };
-    const echo = (raw) => print(`<div class="term__ps1">${ps1()}</div><div><span class="t-chev">»</span> ${escapeHTML(raw)}</div>`, "term__echo");
+    const echo = (raw) => print(`<div class="term__ps1">${ps1()}</div><div><span class="t-chev">»</span> <span class="t-typed">${escapeHTML(raw)}</span></div>`, "term__echo");
     const grid = (pairs, keyCls = "t-cmd") =>
       print(pairs.map(([k, v]) => `<span class="${keyCls}">${escapeHTML(k)}</span><span>${v}</span>`).join(""), "term__grid");
     const err = (text) => { failed = true; print(fmt(text), "t-err"); };
@@ -623,31 +629,68 @@
         ["Shell", "zsh 5.9 + oh-my-zsh"],
         [T("Rôle", "Role"), T("Ingénieur Cloud &amp; Infra", "Cloud &amp; Infra Engineer")],
         [T("Lieu", "Location"), "Sophia Antipolis (06)"],
-        ["Uptime", T(`${new Date().getFullYear() - SINCE} ans d'informatique`, `${new Date().getFullYear() - SINCE} years of computing`)],
-        ["Stack", "Terraform · Ansible · Proxmox"],
-        [T("Statut", "Status"), `<span class="t-ok">●</span> ${T("disponible", "available")}`],
+        [T("Statut", "Status"), `<span class="t-ok t-live">●</span> ${T("disponible", "available")}`],
       ];
       const colors = ["#2E2E36", "#FF5C57", "#5AF78E", "#F3F99D", "#57C7FF", "#C4A7FF", "#9AEDFE", "#F1F1F0"]
-        .map((c) => `<i style="background:${c}"></i>`).join("");
+        .map((c, i) => `<i style="background:${c};--i:${i}"></i>`).join("");
       print(
         `<pre class="term__logo" aria-hidden="true">${escapeHTML(LOGO)}</pre>` +
           `<div class="term__info">` +
-          `<div><span class="t-user">firas</span><span class="t-dim">@</span><span class="t-host">Portfolio</span></div>` +
-          `<div class="t-dim">─────────────────</div>` +
-          info.map(([k, v]) => `<div><span class="t-key">${k}</span><span class="t-dim">:</span> ${v}</div>`).join("") +
+          `<div style="--i:0"><span class="t-user">firas</span><span class="t-dim">@</span><span class="t-host">Portfolio</span></div>` +
+          `<div class="t-dim" style="--i:1">─────────────────</div>` +
+          info.map(([k, v], i) => `<div style="--i:${i + 2}"><span class="t-key">${k}</span><span class="t-dim">:</span> ${v}</div>`).join("") +
           `<div class="term__swatches" aria-hidden="true">${colors}</div>` +
           `</div>`,
         "term__neo"
       );
     };
 
-    const welcome = () => {
+    // Lance fn quand le terminal apparaît à l'écran ; renvoie de quoi annuler
+    const whenVisible = (fn) => {
+      if (!("IntersectionObserver" in window)) { fn(); return null; }
+      const io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { io.disconnect(); fn(); }
+      }, { threshold: 0.35 });
+      io.observe(pane);
+      return () => io.disconnect();
+    };
+    const stopIntro = () => {
+      if (!intro) return;
+      clearInterval(intro.timer);
+      clearTimeout(intro.wait);
+      if (intro.cancel) intro.cancel();
+      intro = null;
+    };
+
+    // Accueil : dernière connexion, puis « neofetch » tapé lettre par lettre
+    const welcome = (instant) => {
+      stopIntro();
       const last = new Date().toLocaleString(isEN() ? "en-GB" : "fr-FR", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
       print(escapeHTML(T(`Dernière connexion : ${last} sur ttys001`, `Last login: ${last} on ttys001`)), "t-dim");
       print(fmt(T("Bienvenue ! Tapez `help` pour voir les commandes.", "Welcome! Type `help` to see the commands.")));
-      echo("neofetch");
-      neofetch();
-      out.scrollTop = 0; // l'accueil se lit depuis le haut
+      const typed = echo("").querySelector(".t-typed");
+      const word = "neofetch";
+      const done = () => {
+        stopIntro();
+        typed.textContent = word;
+        neofetch();
+        out.scrollTop = 0; // l'accueil se lit depuis le haut
+      };
+      if (instant || reduce.matches) return done();
+      typed.innerHTML = '<span class="term__cursor is-typing"> </span>';
+      intro = { finish: done };
+      intro.cancel = whenVisible(() => {
+        if (!intro) return;
+        let i = 0;
+        intro.timer = setInterval(() => {
+          i += 1;
+          typed.innerHTML = `${escapeHTML(word.slice(0, i))}<span class="term__cursor is-typing"> </span>`;
+          if (i >= word.length) {
+            clearInterval(intro.timer);
+            intro.wait = setTimeout(done, 280);
+          }
+        }, 90);
+      });
     };
 
     const later = (steps, done) => {
@@ -666,6 +709,42 @@
       }, delay + 50);
     };
 
+    /* ls façon GNU coreutils : tri par nom, -a (fichiers cachés), -l (format long), -h (tailles lisibles) */
+    const MTIME = new Date(); // date de modification affichée : l'ouverture de la page
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const two = (n) => String(n).padStart(2, "0");
+    const lsDate = (d) => `${MONTHS[d.getMonth()]} ${String(d.getDate()).padStart(2, " ")} ${two(d.getHours())}:${two(d.getMinutes())}`;
+    const bytes = (text) => new TextEncoder().encode(text).length;
+    const fileText = (name) => {
+      if (name === "about.md") return [...document.querySelectorAll("#pane-about .kv > div")].map((r) => r.textContent.replace(/\s+/g, " ").trim()).join("\n");
+      if (name === "main.tf") return document.querySelector("#pane-tf code")?.textContent || "";
+      if (name === "ci-cd.yml") return document.querySelector("#pane-ci code")?.textContent || "";
+      if (name === ".mystere") return (say(DATA.mystere) || []).join("\n");
+      return "";
+    };
+    const lsEntries = () => [
+      { name: ".", dir: true, links: 3, size: 4096 },
+      { name: "..", dir: true, links: 4, size: 4096 },
+      { name: ".mystere", perm: "-rw-------", size: bytes(fileText(".mystere")) },
+      ...FILES.map((f) => ({ name: f, size: bytes(fileText(f)) })),
+      ...DIRS.map((d) => ({ name: d, dir: true, links: 2 + projects().length, size: 4096 })),
+    ].sort((a, b) => (a.name < b.name ? -1 : 1));
+    const lsProjects = () => projects()
+      .map((p) => ({ name: (p.repo ? p.repo.split("/")[1] : p.title).toLowerCase().replace(/\s+/g, "-"), dir: true, links: 2, size: 4096 }))
+      .sort((a, b) => (a.name < b.name ? -1 : 1));
+    const lsName = (e) => {
+      const cls = e.dir ? "t-dir" : e.name.startsWith(".") ? "t-hidden" : "";
+      return cls ? `<span class="${cls}">${escapeHTML(e.name)}</span>` : escapeHTML(e.name);
+    };
+    // Droits colorés caractère par caractère, comme eza / lsd
+    const PERM_CLS = { d: "p-d", r: "p-r", w: "p-w", x: "p-x", "-": "p-n" };
+    const lsPerm = (perm) => [...perm].map((c) => `<span class="${PERM_CLS[c] || ""}">${c}</span>`).join("");
+    const lsSize = (n, human) => (human && n >= 1024 ? `${(n / 1024).toFixed(1)}K` : String(n));
+    const lsLong = (e, human) =>
+      `<span>${lsPerm(e.perm || (e.dir ? "drwxr-xr-x" : "-rw-r--r--"))}</span><span class="t-num">${e.links || 1}</span>` +
+      `<span class="t-owner">firas</span><span class="t-grp">firas</span><span class="t-size">${lsSize(e.size, human)}</span>` +
+      `<span class="t-date">${lsDate(MTIME)}</span><span>${lsName(e)}</span>`;
+
     /* Commandes : [arguments, description FR, description EN, action] */
     const COMMANDS = {
       help: ["", "afficher cette aide", "show this help", () => {
@@ -673,21 +752,28 @@
         grid(Object.entries(COMMANDS).filter(([, c]) => c[1]).map(([name, c]) => [`${name}${c[0] ? ` ${c[0]}` : ""}`, escapeHTML(T(c[1], c[2]))]));
         print(fmt(T("Astuce : Tab complète, ↑ ↓ parcourent l'historique, Ctrl + L efface.", "Tip: Tab completes, ↑ ↓ browse history, Ctrl + L clears.")), "t-dim");
       }],
-      ls: ["[-a]", "lister les fichiers", "list files", (args) => {
-        const target = args.find((a) => !a.startsWith("-"));
-        if (target) {
-          if (DIRS.includes(target.replace(/\/$/, ""))) return listProjects();
-          if (FILES.includes(target) || target === ".mystere") return print(escapeHTML(target));
-          return err(T(`ls : ${target} : aucun fichier ou dossier de ce nom`, `ls: ${target}: no such file or directory`));
+      ls: ["[-la] [dossier]", "lister les fichiers", "list files", (args) => {
+        const flags = args.filter((a) => a.startsWith("-")).join("");
+        const all = /a/i.test(flags);
+        const long = flags.includes("l");
+        const human = flags.includes("h");
+        const target = (args.find((a) => !a.startsWith("-")) || "").replace(/\/$/, "");
+        let list;
+        if (!target || target === "." || target === "~") list = lsEntries().filter((e) => all || !e.name.startsWith("."));
+        else if (DIRS.includes(target)) {
+          if (!long) return listProjects();
+          list = lsProjects();
+        } else {
+          list = lsEntries().filter((e) => e.name === target && e.name !== "." && e.name !== "..");
+          if (!list.length) return err(T(`ls : impossible d'accéder à '${target}' : aucun fichier ou dossier de ce nom`, `ls: cannot access '${target}': No such file or directory`));
         }
-        const all = args.some((a) => /^-\w*a/.test(a));
-        const items = [
-          ...(all ? ['<span class="t-dim">.</span>', '<span class="t-dim">..</span>', '<span class="t-hidden">.mystere</span>'] : []),
-          ...FILES.map((f) => escapeHTML(f)),
-          ...DIRS.map((d) => `<span class="t-dir">${d}/</span>`),
-        ];
-        print(items.join("   "));
-        if (!all) print(fmt(T("(certains fichiers sont cachés…)", "(some files are hidden…)")), "t-dim");
+        if (long) {
+          if (!target || DIRS.includes(target) || target === "." || target === "~") print(`total ${list.reduce((n, e) => n + Math.ceil(e.size / 4096) * 4, 0)}`);
+          print(list.map((e) => lsLong(e, human)).join(""), "term__ls");
+        } else {
+          print(list.map(lsName).join("  "));
+          if (!all && !target) print(fmt(T("(certains fichiers sont cachés…)", "(some files are hidden…)")), "t-dim");
+        }
       }],
       cat: ["<fichier>", "lire un fichier", "read a file", (args) => {
         if (!args.length) return err(T("cat : nom de fichier manquant (essayez `cat about.md`)", "cat: missing file name (try `cat about.md`)"));
@@ -741,6 +827,7 @@
       exit: ["", "fermer le terminal", "close the terminal", () => {
         print(T("[Processus terminé]", "[Process completed]"), "t-dim");
         later([[600, () => {
+          stopIntro();
           out.innerHTML = "";
           started = false;
           selectEditorTab(document.getElementById("tab-about"));
@@ -755,7 +842,18 @@
         print(T("[sudo] mot de passe pour recruteur : ********", "[sudo] password for recruiter: ********"));
         later([
           [700, () => print(`<span class="t-ok">✔</span> ${T("Accès accordé. Excellent choix.", "Access granted. Excellent choice.")}`)],
-          [700, () => print(T("Ouverture de votre messagerie…", "Opening your mail client…"), "t-dim")],
+          [400, () => {
+            const label = T("Rédaction de l'e-mail", "Drafting the email");
+            const bar = (n) => `${label} [<span class="t-ok">${"#".repeat(n)}</span><span class="t-dim">${".".repeat(20 - n)}</span>] ${n * 5}%`;
+            const row = print(bar(0));
+            let n = 0;
+            const tick = setInterval(() => {
+              n += 1;
+              row.innerHTML = bar(n);
+              if (n >= 20) clearInterval(tick);
+            }, 50);
+          }],
+          [1200, () => print(T("Ouverture de votre messagerie…", "Opening your mail client…"), "t-dim")],
           [600, () => {
             const subject = encodeURIComponent(T("Opportunité pour vous", "An opportunity for you"));
             window.location.href = `mailto:${EMAIL}?subject=${subject}`;
@@ -773,13 +871,15 @@
     const ALIASES = { aide: "help", projects: "projets", dir: "ls", cls: "clear", "?": "help" };
 
     const run = (raw) => {
+      if (intro) intro.finish();
       echo(raw);
       const line = raw.trim();
       if (!line) return;
       history.push(line);
       cursor = history.length;
       failed = false;
-      const [first, ...args] = line.split(/\s+/);
+      let [first, ...args] = line.split(/\s+/);
+      if (first.toLowerCase() === "ll") { first = "ls"; args = ["-la", ...args]; } // alias habituel
       const name = ALIASES[first.toLowerCase()] || first.toLowerCase();
       const cmd = COMMANDS[name];
       if (!cmd) return err(T(`zsh : commande introuvable : ${first}. Tapez \`help\`.`, `zsh: command not found: ${first}. Type \`help\`.`));
@@ -792,7 +892,7 @@
       const cmd = ALIASES[tokens[0].toLowerCase()] || tokens[0].toLowerCase();
       return {
         cat: [...FILES, ".mystere"],
-        ls: [...DIRS, "-a"],
+        ls: [...DIRS, "-a", "-l", "-la", "-lah"],
         cd: ["projets", "parcours", "competences", "profil", "contact", "~"],
         open: ["github", "linkedin", ...projects().map((_, i) => String(i + 1))],
         lang: ["fr", "en"],
@@ -837,6 +937,7 @@
         syncCursor();
       } else if (e.key.toLowerCase() === "l" && e.ctrlKey) {
         e.preventDefault();
+        stopIntro();
         out.innerHTML = "";
       }
     });
@@ -865,7 +966,7 @@
     tab.addEventListener("click", () => { if (fine.matches) input.focus({ preventScroll: true }); });
     // Changement de langue : l'accueil suit, tant que rien n'a été tapé
     onLang(() => {
-      if (started && !history.length) { out.innerHTML = ""; welcome(); }
+      if (started && !history.length) { out.innerHTML = ""; welcome(true); }
       refreshPrompt();
     });
     // L'heure de l'invite reste à jour
