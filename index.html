@@ -9,6 +9,7 @@
     content="Firas Bouricha, ingénieur Cloud & Infrastructure basé à Sophia Antipolis. Virtualisation, automatisation (Terraform, Ansible), DevSecOps et sécurité. Ouvert aux opportunités.">
   <meta name="author" content="Firas Bouricha">
   <meta name="theme-color" content="#0A0A0D">
+  <meta name="site-version" content="20261016-3">
   <link rel="canonical" href="https://firas-bouricha.github.io/firas_bouricha/">
 
   <meta property="og:type" content="profile">
@@ -27,7 +28,25 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261016-1">
+  <link rel="stylesheet" href="css/style.css?v=20261016-3">
+  <script>
+    // Mise à jour automatique : GitHub Pages laisse le navigateur garder la page en cache ~10 min.
+    // On compare la version de cette page à version.json (jamais mis en cache) ; si une version
+    // plus récente est en ligne, on recharge une seule fois pour l'afficher.
+    (function () {
+      var current = document.querySelector('meta[name="site-version"]').content;
+      if (!window.fetch || location.protocol === "file:") return;
+      fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.version || data.version === current) return;
+          var key = "reloaded-for-" + data.version;
+          try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, "1"); } catch (e) { return; }
+          location.reload();
+        })
+        .catch(function () { /* hors ligne : on garde la page affichée */ });
+    })();
+  </script>
   <script>
     // Thème appliqué avant l'affichage pour éviter un flash
     (function () {
@@ -578,15 +597,16 @@ jobs:
         spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list">
       <kbd data-i18n="cmdk.esc">Échap</kbd>
     </div>
-    <ul class="cmdk__list" id="cmdk-list" role="listbox" aria-label="Résultats" data-i18n-attr="aria-label:cmdk.results"></ul>
+    <ul class="cmdk__list" id="cmdk-list" data-lenis-prevent role="listbox" aria-label="Résultats" data-i18n-attr="aria-label:cmdk.results"></ul>
     <p class="cmdk__foot mono"><span><kbd>↑</kbd><kbd>↓</kbd> <span data-i18n="cmdk.nav">naviguer</span></span><span><kbd>↵</kbd> <span data-i18n="cmdk.open">ouvrir</span></span><span class="cmdk__brand">firas@infra:~$</span></p>
   </dialog>
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/projects.js?v=20261016-1"></script>
-  <script src="js/i18n.js?v=20261016-1"></script>
-  <script src="js/main.js?v=20261016-1"></script>
+  <script src="js/vendor/lenis.min.js?v=20261016-3"></script>
+  <script src="data/projects.js?v=20261016-3"></script>
+  <script src="js/i18n.js?v=20261016-3"></script>
+  <script src="js/main.js?v=20261016-3"></script>
 </body>
 
 </html>
