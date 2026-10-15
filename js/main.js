@@ -204,7 +204,7 @@
     window.addEventListener("resize", moveIndicator);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
 
-    // Lien actif + chemin du prompt (firas@infra:~/projets$) selon la section visible
+    // Lien actif + chemin du prompt (firas@Portfolio:~/projets$) selon la section visible
     let activeId = "top";
     const setActive = (id) => {
       activeId = id;
@@ -286,7 +286,13 @@
   function scrollToSection(id) {
     const target = document.getElementById(id);
     if (!target) return;
-    if (lenis) { lenis.start(); lenis.scrollTo(target, { offset: navOffset(), force: true }); }
+    if (lenis) {
+      // Position absolue calculée à partir du défilement réel : reste juste même si
+      // la page a bougé sans Lenis (saut d'ancre, clavier, défilement du navigateur)
+      const y = target.getBoundingClientRect().top + window.scrollY + navOffset();
+      lenis.start();
+      lenis.scrollTo(Math.max(0, y), { force: true });
+    }
     else target.scrollIntoView({ behavior: "smooth" });
   }
 
@@ -354,6 +360,7 @@
         icon: ICONS[p.icon] || ICONS.code,
         run: p.repo ? open(`https://github.com/${p.repo}`) : goTo("projects"),
       })),
+      { group: "Actions", label: T("Ouvrir le terminal", "Open the terminal"), hint: "help · ls · cat", icon: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 9l3 3-3 3M12 15h5"/>', run: () => openTerminal() },
       { group: "Actions", label: T("Copier mon adresse e-mail", "Copy my email address"), hint: EMAIL, icon: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>', run: copyEmail },
       { group: "Actions", label: T("M'écrire un e-mail", "Send me an email"), icon: '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>', run: () => { window.location.href = `mailto:${EMAIL}`; } },
       { group: "Actions", label: T("Changer de thème", "Switch theme"), hint: T("clair / sombre", "light / dark"), icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2"/>', run: toggleTheme },
@@ -449,6 +456,8 @@
   }
 
   /* ---------- Éditeur à onglets (section Profil) ---------- */
+  let selectEditorTab = () => {};
+
   function highlight(code, lang) {
     return code.split("\n").map((line) => {
       const hash = line.indexOf("#");
@@ -484,6 +493,7 @@
       });
       if (focus) tab.focus();
     };
+    selectEditorTab = select;
     tabs.forEach((tab, i) => {
       tab.addEventListener("click", () => select(tab));
       tab.addEventListener("keydown", (e) => {
@@ -492,6 +502,327 @@
         select(next, true);
       });
     });
+  }
+
+  /* ---------- Terminal (onglet ">_ terminal" de la section Profil) ----------
+     Un petit shell simulé : help, ls, cat, whoami, neofetch, projets, open, cd…
+     Les textes personnels (.mystere, whoami) sont dans data/terminal.js. */
+  let openTerminal = () => {};
+
+  function setupTerminal(toggleTheme) {
+    const tab = document.getElementById("tab-term");
+    const pane = document.getElementById("pane-term");
+    const out = document.getElementById("term-out");
+    const form = document.getElementById("term-form");
+    const input = document.getElementById("term-input");
+    if (!tab || !pane || !out || !form || !input) return;
+
+    const DATA = window.TERMINAL || {};
+    const say = (entry) => (entry ? (isEN() ? entry.en : entry.fr) || "" : "");
+    const fine = window.matchMedia("(pointer: fine)");
+    const strip = (text) => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    const PROMPT = '<span class="term__user">firas</span>@Portfolio<span class="muted">:</span><span class="term__cwd">~</span><span class="muted">$</span>';
+    const SINCE = 2013; // début des études en informatique
+
+    const history = [];
+    let cursor = 0;
+    let busy = false;
+    let started = false;
+
+    /* Affichage */
+    // Échappe le texte et met en forme les `commandes`
+    const fmt = (text) => escapeHTML(text).replace(/`([^`]+)`/g, '<span class="term__cmd">$1</span>');
+    const print = (html = "", cls = "") => {
+      const row = document.createElement("div");
+      row.className = cls ? `term__row ${cls}` : "term__row";
+      row.innerHTML = html || "&nbsp;";
+      out.appendChild(row);
+      out.scrollTop = out.scrollHeight;
+    };
+    const grid = (pairs, keyCls = "term__cmd") =>
+      print(pairs.map(([k, v]) => `<span class="${keyCls}">${escapeHTML(k)}</span><span>${v}</span>`).join(""), "term__grid");
+    const err = (text) => print(fmt(text), "term__err");
+
+    const welcome = () => {
+      print(fmt(T("Bienvenue sur firas@Portfolio. Un vrai terminal… ou presque.", "Welcome to firas@Portfolio. A real terminal… almost.")), "term__muted");
+      print(fmt(T("Tapez `help` pour voir les commandes, ou essayez `ls -a`.", "Type `help` to see the commands, or try `ls -a`.")), "term__muted");
+    };
+
+    /* Contenu */
+    const FILES = ["about.md", "main.tf", "ci-cd.yml"];
+    const DIRS = ["projets"];
+    const SECTIONS = {
+      "~": "top", accueil: "top", home: "top",
+      profil: "about", profile: "about", about: "about",
+      competences: "skills", skills: "skills",
+      projets: "projects", projects: "projects",
+      parcours: "journey", journey: "journey",
+      contact: "contact",
+    };
+    const LINKS = {
+      github: "https://github.com/firas-bouricha",
+      linkedin: "https://www.linkedin.com/in/firas-bouricha/",
+    };
+    const projects = () => (window.PROJECTS || []).filter((p) => p && p.title);
+
+    const catFile = (name) => {
+      if (name === "about.md") {
+        const rows = [...document.querySelectorAll("#pane-about .kv > div")].map((row) => [
+          row.querySelector("dt")?.textContent.trim() || "",
+          escapeHTML(row.querySelector("dd")?.textContent.replace(/\s+/g, " ").trim() || ""),
+        ]);
+        grid(rows, "term__key");
+      } else if (name === "main.tf" || name === "ci-cd.yml") {
+        const code = document.querySelector(`#${name === "main.tf" ? "pane-tf" : "pane-ci"} pre.code code`);
+        print(`<pre class="code">${code ? code.innerHTML : ""}</pre>`);
+      } else if (name === ".mystere") {
+        print(fmt(T("# .mystere · dossier confidentiel 🔒", "# .mystere · classified file 🔒")), "term__muted");
+        (say(DATA.mystere) || []).forEach((line) => print(`<span class="term__hidden">→</span> ${fmt(line)}`));
+      } else if (DIRS.includes(name.replace(/\/$/, ""))) {
+        err(T(`cat : ${name} : est un dossier (essayez \`ls ${name}\`)`, `cat: ${name}: is a directory (try \`ls ${name}\`)`));
+      } else {
+        err(T(`cat : ${name} : aucun fichier de ce nom`, `cat: ${name}: no such file`));
+      }
+    };
+
+    const listProjects = () => {
+      const list = projects();
+      grid(list.map((p, i) => [String(i + 1), `${escapeHTML(pick(p, "title"))} <span class="term__muted">· ${escapeHTML(pick(p, "year") || "")} · ${escapeHTML(p.category || "")}</span>`]));
+      print(fmt(T("Tapez `open 1` pour ouvrir le premier projet.", "Type `open 1` to open the first project.")), "term__muted");
+    };
+
+    const neofetch = () => {
+      const art = [
+        " _____ ____  ",
+        "|  ___| __ ) ",
+        "| |_  |  _ \\ ",
+        "|  _| | |_) |",
+        "|_|   |____/ ",
+      ].join("\n");
+      const head = [
+        '<span class="term__user">firas</span>@Portfolio',
+        '<span class="term__muted">───────────────</span>',
+        T("Ingénieur Cloud &amp; Infrastructure", "Cloud &amp; Infrastructure Engineer"),
+        `<span class="term__ok">●</span> ${T("disponible", "available")}`,
+      ];
+      const info = [
+        [T("lieu", "location"), "Sophia Antipolis (06)"],
+        ["uptime", T(`${new Date().getFullYear() - SINCE} ans d'informatique`, `${new Date().getFullYear() - SINCE} years of computing`)],
+        [T("formation", "education"), T("Mastère Cloud, Sécurité &amp; Infra · Ynov", "Master's in Cloud, Security &amp; Infra · Ynov")],
+        ["stack", "Terraform · Ansible · Proxmox · Docker"],
+        [T("mentorat", "mentoring"), T("20+ étudiants accompagnés", "20+ students mentored")],
+        ["shell", "bash"],
+      ];
+      print(`<pre class="term__art" aria-hidden="true">${escapeHTML(art)}</pre><div>${head.join("<br>")}</div>`, "term__neo");
+      grid(info, "term__key");
+    };
+
+    const later = (steps, done) => {
+      busy = true;
+      input.disabled = true;
+      let delay = 0;
+      steps.forEach(([wait, fn]) => { delay += wait; setTimeout(fn, delay); });
+      setTimeout(() => {
+        busy = false;
+        input.disabled = false;
+        if (fine.matches) input.focus({ preventScroll: true });
+        if (done) done();
+      }, delay + 50);
+    };
+
+    /* Commandes : [arguments, description FR, description EN, action] */
+    const COMMANDS = {
+      help: ["", "afficher cette aide", "show this help", () => {
+        print(T("Commandes disponibles :", "Available commands:"));
+        grid(Object.entries(COMMANDS).filter(([, c]) => c[1]).map(([name, c]) => [`${name}${c[0] ? ` ${c[0]}` : ""}`, escapeHTML(T(c[1], c[2]))]));
+        print(fmt(T("Astuce : Tab complète, ↑ ↓ parcourent l'historique, Ctrl + L efface.", "Tip: Tab completes, ↑ ↓ browse history, Ctrl + L clears.")), "term__muted");
+      }],
+      ls: ["[-a]", "lister les fichiers", "list files", (args) => {
+        const target = args.find((a) => !a.startsWith("-"));
+        if (target) {
+          if (DIRS.includes(target.replace(/\/$/, ""))) return listProjects();
+          if (FILES.includes(target) || target === ".mystere") return print(escapeHTML(target));
+          return err(T(`ls : ${target} : aucun fichier ou dossier de ce nom`, `ls: ${target}: no such file or directory`));
+        }
+        const all = args.some((a) => /^-\w*a/.test(a));
+        const items = [
+          ...(all ? ['<span class="term__muted">.</span>', '<span class="term__muted">..</span>', '<span class="term__hidden">.mystere</span>'] : []),
+          ...FILES.map((f) => escapeHTML(f)),
+          ...DIRS.map((d) => `<span class="term__dir">${d}/</span>`),
+        ];
+        print(items.join("   "));
+        if (!all) print(fmt(T("(certains fichiers sont cachés…)", "(some files are hidden…)")), "term__muted");
+      }],
+      cat: ["<fichier>", "lire un fichier", "read a file", (args) => {
+        if (!args.length) return err(T("cat : nom de fichier manquant (essayez `cat about.md`)", "cat: missing file name (try `cat about.md`)"));
+        args.forEach(catFile);
+      }],
+      whoami: ["", "qui suis-je ?", "who am I?", () => print(escapeHTML(say(DATA.whoami) || "Firas Bouricha"))],
+      neofetch: ["", "fiche système", "system info", neofetch],
+      projets: ["", "lister mes projets", "list my projects", listProjects],
+      open: ["<n|github|linkedin>", "ouvrir un projet ou un lien", "open a project or a link", (args) => {
+        const what = (args[0] || "").toLowerCase();
+        const list = projects();
+        const n = Number(what);
+        let url = LINKS[what];
+        if (Number.isInteger(n) && n >= 1 && n <= list.length) {
+          const p = list[n - 1];
+          url = p.repo ? `https://github.com/${p.repo}` : p.demo;
+        }
+        if (what === "cv") return err(T("open : cv : bientôt disponible", "open: cv: coming soon"));
+        if (!url) return err(T("open : précisez un numéro de projet, github ou linkedin", "open: give a project number, github or linkedin"));
+        print(`<span class="term__ok">↗</span> ${escapeHTML(url)}`);
+        window.open(url, "_blank", "noopener");
+      }],
+      cd: ["<section>", "aller à une section (projets, parcours…)", "go to a section (projects, journey…)", (args) => {
+        const where = strip((args[0] || "~").replace(/\/$/, ""));
+        if (where === "..") return print(fmt(T("Impossible de remonter plus haut : vous êtes déjà chez moi.", "Can't go any higher: you're already at my place.")), "term__muted");
+        const id = SECTIONS[where];
+        if (!id) return err(T(`cd : ${args[0]} : aucun dossier de ce nom (essayez \`cd projets\`)`, `cd: ${args[0]}: no such directory (try \`cd projects\`)`));
+        print(`<span class="term__ok">→</span> /${escapeHTML(where === "~" ? "" : where)}`);
+        setTimeout(() => scrollToSection(id), 250);
+      }],
+      contact: ["", "mes coordonnées", "my contact details", () => {
+        grid([["mail", escapeHTML(EMAIL)], ["linkedin", "in/firas-bouricha"], ["github", "firas-bouricha"]], "term__key");
+      }],
+      lang: ["<fr|en>", "changer de langue", "switch language", (args) => {
+        const next = (args[0] || "").toLowerCase();
+        if (next !== "fr" && next !== "en") return print(T("Langue : français. Tapez `lang en` pour passer en anglais.", "Language: English. Type `lang fr` to switch to French.").replace(/`([^`]+)`/g, '<span class="term__cmd">$1</span>'));
+        if (window.i18n) window.i18n.set(next);
+        print(`<span class="term__ok">✔</span> ${T("Langue : français", "Language: English")}`);
+      }],
+      theme: ["[light|dark]", "thème clair / sombre", "light / dark theme", (args) => {
+        const now = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+        const want = (args[0] || "").toLowerCase();
+        if (want !== now) toggleTheme();
+        const light = document.documentElement.getAttribute("data-theme") === "light";
+        print(`<span class="term__ok">✔</span> ${T("Thème", "Theme")} : ${light ? T("clair", "light") : T("sombre", "dark")}`);
+      }],
+      history: ["", "commandes déjà tapées", "previous commands", () => {
+        grid(history.map((h, i) => [String(i + 1), escapeHTML(h)]), "term__muted");
+      }],
+      clear: ["", "effacer l'écran", "clear the screen", () => { out.innerHTML = ""; }],
+      exit: ["", "fermer le terminal", "close the terminal", () => {
+        print("logout", "term__muted");
+        later([[500, () => {
+          out.innerHTML = "";
+          started = false;
+          selectEditorTab(document.getElementById("tab-about"));
+        }]]);
+      }],
+      // Commandes cachées (absentes de help)
+      sudo: ["", "", "", (args) => {
+        const what = args.join(" ").toLowerCase();
+        if (what !== "hire-me" && what !== "hire me") {
+          return err(T("recruteur n'est pas dans le fichier sudoers. Cet incident sera signalé. 😉", "recruiter is not in the sudoers file. This incident will be reported. 😉"));
+        }
+        print(T("[sudo] mot de passe pour recruteur : ********", "[sudo] password for recruiter: ********"));
+        later([
+          [700, () => print(`<span class="term__ok">✔</span> ${T("Accès accordé. Excellent choix.", "Access granted. Excellent choice.")}`)],
+          [700, () => print(T("Ouverture de votre messagerie…", "Opening your mail client…"), "term__muted")],
+          [600, () => {
+            const subject = encodeURIComponent(T("Opportunité pour vous", "An opportunity for you"));
+            window.location.href = `mailto:${EMAIL}?subject=${subject}`;
+          }],
+        ]);
+      }],
+      rm: ["", "", "", (args) => {
+        if (args.some((a) => /^-\w*r/.test(a))) return err(T("rm : opération refusée. Cette infra est durcie. 🔒", "rm: operation denied. This infrastructure is hardened. 🔒"));
+        err(T("rm : système de fichiers en lecture seule", "rm: read-only file system"));
+      }],
+      pwd: ["", "", "", () => print("/home/firas/portfolio")],
+      date: ["", "", "", () => print(escapeHTML(new Date().toLocaleString(isEN() ? "en-GB" : "fr-FR")))],
+      echo: ["", "", "", (args) => print(escapeHTML(args.join(" ")))],
+    };
+    const ALIASES = { aide: "help", projects: "projets", dir: "ls", cls: "clear", "?": "help" };
+
+    const run = (raw) => {
+      print(`${PROMPT} ${escapeHTML(raw)}`, "term__echo");
+      const line = raw.trim();
+      if (!line) return;
+      history.push(line);
+      cursor = history.length;
+      const [first, ...args] = line.split(/\s+/);
+      const name = ALIASES[first.toLowerCase()] || first.toLowerCase();
+      const cmd = COMMANDS[name];
+      if (!cmd) return err(T(`commande introuvable : ${first}. Tapez \`help\`.`, `command not found: ${first}. Type \`help\`.`));
+      cmd[3](args);
+    };
+
+    /* Complétion (Tab) */
+    const candidates = (tokens) => {
+      if (tokens.length <= 1) return Object.keys(COMMANDS).filter((c) => COMMANDS[c][1] || c === "sudo");
+      const cmd = ALIASES[tokens[0].toLowerCase()] || tokens[0].toLowerCase();
+      return {
+        cat: [...FILES, ".mystere"],
+        ls: [...DIRS, "-a"],
+        cd: ["projets", "parcours", "competences", "profil", "contact", "~"],
+        open: ["github", "linkedin", ...projects().map((_, i) => String(i + 1))],
+        lang: ["fr", "en"],
+        theme: ["light", "dark"],
+        sudo: ["hire-me"],
+      }[cmd] || [];
+    };
+    const complete = () => {
+      const tokens = input.value.replace(/^\s+/, "").split(/\s+/);
+      const last = tokens[tokens.length - 1];
+      const matches = candidates(tokens).filter((c) => c.startsWith(last.toLowerCase()) && (last.startsWith(".") || !c.startsWith(".")));
+      if (matches.length === 1) {
+        tokens[tokens.length - 1] = matches[0];
+        input.value = `${tokens.join(" ")} `;
+      } else if (matches.length > 1) {
+        print(`${PROMPT} ${escapeHTML(input.value)}`, "term__echo");
+        print(matches.map(escapeHTML).join("   "), "term__muted");
+      }
+    };
+
+    /* Événements */
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (busy) return;
+      const raw = input.value;
+      input.value = "";
+      run(raw);
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Tab" && input.value.trim()) {
+        e.preventDefault();
+        complete();
+      } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        if (!history.length) return;
+        e.preventDefault();
+        cursor = Math.max(0, Math.min(history.length, cursor + (e.key === "ArrowUp" ? -1 : 1)));
+        input.value = history[cursor] || "";
+      } else if (e.key.toLowerCase() === "l" && e.ctrlKey) {
+        e.preventDefault();
+        out.innerHTML = "";
+      }
+    });
+    // Un clic n'importe où dans le terminal donne le focus à la ligne de commande
+    pane.addEventListener("click", (e) => {
+      if (e.target.closest("a") || String(window.getSelection())) return;
+      input.focus({ preventScroll: true });
+    });
+
+    const start = () => {
+      if (started) return;
+      started = true;
+      welcome();
+    };
+    // Premier affichage de l'onglet : message d'accueil
+    new MutationObserver(() => { if (!pane.hidden) start(); }).observe(pane, { attributes: true, attributeFilter: ["hidden"] });
+    tab.addEventListener("click", () => { if (fine.matches) input.focus({ preventScroll: true }); });
+    // Changement de langue : l'accueil suit, tant que rien n'a été tapé
+    onLang(() => {
+      if (started && !history.length) { out.innerHTML = ""; welcome(); }
+    });
+
+    openTerminal = () => {
+      selectEditorTab(tab);
+      scrollToSection("editor");
+      if (fine.matches) setTimeout(() => input.focus({ preventScroll: true }), 700);
+    };
+    document.querySelectorAll("[data-open-term]").forEach((b) => b.addEventListener("click", openTerminal));
   }
 
   /* ---------- Parcours : frise horizontale animée ----------
@@ -818,6 +1149,7 @@
     safely("photos", setupDeck);
     safely("activité GitHub", setupActivity);
     safely("éditeur", setupEditor);
+    safely("terminal", () => setupTerminal(toggleTheme));
     safely("parcours", setupJourney);
     safely("palette", () => setupCommandPalette(toggleTheme));
     safely("e-mail", setupCopyEmail);
