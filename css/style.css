@@ -385,6 +385,34 @@ svg.fill { fill: currentColor; stroke: none; }
 .kv dd { color: #F5F5F7; }
 .editor .muted { color: #8C8C99; }
 
+/* Terminal (onglet ">_ terminal") */
+.editor__tabs .editor__tab--term { color: #7EE0B5; }
+.editor__tabs .editor__tab--term:hover, .editor__tabs .editor__tab--term[aria-selected="true"] { color: #A7F3D0; }
+.term { display: flex; flex-direction: column; height: 340px; padding: 14px 18px 16px; font-family: var(--font-mono); font-size: 13.2px; line-height: 1.7; color: #D8D8E0; cursor: text; }
+.term[hidden] { display: none; }
+.term__out { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #3A3A46 transparent; }
+.term__row { white-space: pre-wrap; overflow-wrap: anywhere; }
+.term__row + .term__echo { margin-top: 6px; }
+.term__grid { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 20px; white-space: normal; }
+.term__row .code { margin: 2px 0; }
+.term__neo { display: flex; align-items: center; gap: 22px; margin: 4px 0 10px; white-space: normal; }
+.term__art { flex: none; margin: 0; font: inherit; line-height: 1.25; color: #C4A7FF; }
+.term__user { color: #C4A7FF; }
+.term__cwd { color: #67D8EF; }
+.term__cmd, .term__ok { color: #7EE0B5; }
+.term__key, .term__dir { color: #67D8EF; }
+.term__hidden { color: #C4A7FF; }
+.term__err { color: #FCA5A5; }
+.term__muted { color: #8C8C99; }
+.term__line { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.term__prompt { flex: none; color: #F5F5F7; }
+.term__input {
+  flex: 1; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent;
+  font: inherit; color: #fff; caret-color: var(--violet);
+}
+.term__input:disabled { opacity: .5; }
+.term:focus-within .term__prompt { text-shadow: 0 0 12px rgba(139, 92, 246, .45); }
+
 .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 72px; }
 .principle { padding-top: 20px; border-top: 1px solid var(--border-strong); }
 .principle dt { display: flex; align-items: baseline; gap: 12px; font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
@@ -786,6 +814,10 @@ kbd {
 
 @media (max-width: 640px) {
   body { font-size: 16px; }
+  .term { height: 380px; padding: 12px 14px 14px; font-size: 12.5px; }
+  .term__input { font-size: 16px; } /* évite le zoom automatique sur iPhone */
+  .term__art { font-size: 10px; }
+  .term__neo { gap: 14px; }
   .container { padding: 0 16px; }
   .section { padding: 84px 0; }
   .section__head { margin-bottom: 40px; }

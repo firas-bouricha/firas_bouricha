@@ -9,7 +9,7 @@
     content="Firas Bouricha, ingénieur Cloud & Infrastructure basé à Sophia Antipolis. Virtualisation, automatisation (Terraform, Ansible), DevSecOps et sécurité. Ouvert aux opportunités.">
   <meta name="author" content="Firas Bouricha">
   <meta name="theme-color" content="#0A0A0D">
-  <meta name="site-version" content="20261015-1435">
+  <meta name="site-version" content="20261015-1457">
   <link rel="canonical" href="https://firas-bouricha.github.io/firas_bouricha/">
 
   <meta property="og:type" content="profile">
@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261015-1435">
+  <link rel="stylesheet" href="css/style.css?v=20261015-1457">
   <script>
     // Mise à jour automatique : GitHub Pages laisse le navigateur garder la page en cache ~10 min.
     // On compare la version de cette page à version.json (jamais mis en cache) ; si une version
@@ -235,6 +235,7 @@
                 <button type="button" role="tab" id="tab-about" aria-controls="pane-about" aria-selected="true">about.md</button>
                 <button type="button" role="tab" id="tab-tf" aria-controls="pane-tf" aria-selected="false" tabindex="-1">main.tf</button>
                 <button type="button" role="tab" id="tab-ci" aria-controls="pane-ci" aria-selected="false" tabindex="-1">ci-cd.yml</button>
+                <button type="button" role="tab" id="tab-term" class="editor__tab--term" aria-controls="pane-term" aria-selected="false" tabindex="-1"><span aria-hidden="true">&gt;_ </span>terminal</button>
               </div>
             </div>
 
@@ -285,6 +286,15 @@ jobs:
   deploy-backend:
     needs: [publish]
     environment: production</code></pre>
+            </div>
+
+            <div class="editor__pane term" role="tabpanel" id="pane-term" aria-labelledby="tab-term" hidden>
+              <div class="term__out" id="term-out" role="log" aria-live="polite" data-lenis-prevent></div>
+              <form class="term__line" id="term-form" autocomplete="off">
+                <label class="term__prompt" for="term-input"><span class="term__user">firas</span>@Portfolio<span class="muted">:</span><span class="term__cwd">~</span><span class="muted">$</span></label>
+                <input class="term__input" id="term-input" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="send"
+                  aria-label="Commande (tapez help)" data-i18n-attr="aria-label:term.input">
+              </form>
             </div>
           </div>
         </div>
@@ -576,7 +586,7 @@ jobs:
     <div class="container">
       <div class="statusbar mono">
         <span class="statusbar__mode"><span class="statusbar__dot" aria-hidden="true"></span><span data-i18n="footer.status">DISPONIBLE</span></span>
-        <span class="statusbar__seg">firas@Portfolio</span>
+        <button class="statusbar__seg" type="button" data-open-term title="Ouvrir le terminal" data-i18n-attr="title:term.open">firas@Portfolio</button>
         <span class="statusbar__seg statusbar__seg--path">~/portfolio</span>
         <span class="statusbar__spacer" aria-hidden="true"></span>
         <a class="statusbar__seg" href="https://www.linkedin.com/in/firas-bouricha/" target="_blank" rel="noopener noreferrer">linkedin</a>
@@ -603,10 +613,11 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/vendor/lenis.min.js?v=20261015-1435"></script>
-  <script src="data/projects.js?v=20261015-1435"></script>
-  <script src="js/i18n.js?v=20261015-1435"></script>
-  <script src="js/main.js?v=20261015-1435"></script>
+  <script src="js/vendor/lenis.min.js?v=20261015-1457"></script>
+  <script src="data/projects.js?v=20261015-1457"></script>
+  <script src="data/terminal.js?v=20261015-1457"></script>
+  <script src="js/i18n.js?v=20261015-1457"></script>
+  <script src="js/main.js?v=20261015-1457"></script>
 </body>
 
 </html>
