@@ -292,7 +292,24 @@ svg.fill { fill: currentColor; stroke: none; }
   display: inline-flex; align-items: center; gap: 10px; margin-bottom: 28px;
   font-size: 13.5px; color: var(--text-soft);
 }
-.hero__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--emerald); }
+/* Statut « en ligne » : onde qui s'élargit autour du point, reflet qui balaie le texte */
+.hero__dot {
+  position: relative; flex: none; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--emerald); box-shadow: 0 0 8px color-mix(in srgb, var(--emerald) 55%, transparent);
+}
+.hero__dot::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--emerald);
+  animation: statusPing 2.6s cubic-bezier(0, 0, .2, 1) infinite;
+}
+@keyframes statusPing { 0% { transform: scale(1); opacity: .5; } 70%, 100% { transform: scale(3.4); opacity: 0; } }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero__status-text {
+    background: linear-gradient(100deg, var(--text-soft) 42%, color-mix(in srgb, var(--emerald) 55%, var(--text)) 50%, var(--text-soft) 58%) 100% 0 / 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: statusShimmer 5s ease-in-out 1.2s infinite;
+  }
+}
+@keyframes statusShimmer { 0% { background-position: 100% 0; } 40%, 100% { background-position: 0 0; } }
 
 .hero__title { display: flex; flex-direction: column; gap: 14px; }
 .hero__name { font-size: clamp(46px, 7.4vw, 92px); font-weight: 700; line-height: .95; letter-spacing: -.045em; }
@@ -877,4 +894,5 @@ kbd {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .js .reveal { opacity: 1; transform: none; }
+  .hero__dot::after, .hero__status-text { animation: none !important; }
 }
