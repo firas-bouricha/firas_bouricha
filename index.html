@@ -27,7 +27,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261013-11">
+  <link rel="stylesheet" href="css/style.css?v=20261015-2">
   <script>
     // Thème appliqué avant l'affichage pour éviter un flash
     (function () {
@@ -153,15 +153,15 @@
               </figure>
               <figure class="deck__card" data-pos="1" data-caption="Mentorat : j'accompagne un étudiant sur son projet à Ynov">
                 <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/mentorat.jpg</span></div>
-                <img src="assets/photos/mentorat.jpg" alt="Firas accompagne un étudiant devant son ordinateur" width="640" height="800" loading="lazy">
+                <img src="assets/photos/mentorat.jpg" alt="Firas accompagne un étudiant devant son ordinateur" width="640" height="800">
               </figure>
               <figure class="deck__card" data-pos="2" data-caption="Ydays : 11 projets étudiants hébergés sur notre infrastructure">
                 <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/ydays.jpg</span></div>
-                <img src="assets/photos/ydays.jpg" alt="Firas et son équipe devant l'écran « 11 projets Ydays hébergés »" width="640" height="800" loading="lazy">
+                <img src="assets/photos/ydays.jpg" alt="Firas et son équipe devant l'écran « 11 projets Ydays hébergés »" width="640" height="800">
               </figure>
               <figure class="deck__card" data-pos="3" data-caption="Sur le terrain, lors d'un événement">
                 <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/evenement.jpg</span></div>
-                <img src="assets/photos/evenement.jpg" alt="Firas lors d'un événement, téléphone en main" width="640" height="800" loading="lazy">
+                <img src="assets/photos/evenement.jpg" alt="Firas lors d'un événement, téléphone en main" width="640" height="800">
               </figure>
             </div>
             <div class="deck__controls">
@@ -389,6 +389,25 @@ jobs:
             <a href="https://github.com/firas-bouricha">github.com/firas-bouricha</a>.</p>
         </noscript>
 
+        <!-- Activité GitHub des 12 derniers mois (données publiques, chargées au défilement) -->
+        <div class="activity reveal" id="activity" data-user="firas-bouricha">
+          <div class="activity__head">
+            <div>
+              <h3 class="activity__title">Activité GitHub</h3>
+              <p class="activity__total mono" id="activity-total">12 derniers mois</p>
+            </div>
+            <a href="https://github.com/firas-bouricha" target="_blank" rel="noopener noreferrer" class="link-arrow">Mon profil GitHub
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+          <div class="activity__scroll" id="activity-scroll">
+            <div class="activity__graph is-loading" id="activity-graph" role="img" aria-label="Calendrier des contributions GitHub des 12 derniers mois"></div>
+          </div>
+          <div class="activity__foot">
+            <p class="activity__note muted" id="activity-note">Chaque case représente un jour de travail versionné sur GitHub.</p>
+            <p class="activity__legend mono" aria-hidden="true">moins <i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i> plus</p>
+          </div>
+          <div class="activity__tip mono" id="activity-tip" role="status" hidden></div>
+        </div>
       </div>
     </section>
 
@@ -561,8 +580,8 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/projects.js?v=20261013-11"></script>
-  <script src="js/main.js?v=20261013-11"></script>
+  <script src="data/projects.js?v=20261015-2"></script>
+  <script src="js/main.js?v=20261015-2"></script>
 </body>
 
 </html>
