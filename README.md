@@ -14,12 +14,16 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 ```
 .
 ├── index.html          # Toute la page (profil, compétences, parcours, contact)
+├── version.json        # Numéro de version en ligne (mise à jour automatique des visiteurs)
+├── scripts/
+│   └── bump-version.sh # Change le numéro de version avant une publication
 ├── data/
 │   └── projects.js     # ⭐ La liste des projets : c'est ici qu'on en ajoute
 ├── css/
 │   └── style.css       # Le design (couleurs, mise en page, responsive)
 ├── js/
 │   ├── i18n.js         # Traductions anglaises (bouton FR / EN)
+│   ├── vendor/lenis.min.js  # Défilement doux (Lenis, licence MIT)
 │   └── main.js         # Cartes projets, filtres, menu, thème, palette ⌘K, animations
 └── assets/
     ├── icons/          # Logos des technologies (devicon MIT, Simple Icons CC0)
@@ -27,7 +31,7 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
     └── projects/       # Images des projets (photos, captures d'écran)
 ```
 
-Fonctionnalités : site bilingue FR / EN (français par défaut), thème clair / sombre (mémorisé), palette de commandes (`Ctrl` + `K` ou `⌘` + `K`),
+Fonctionnalités : site bilingue FR / EN (français par défaut), défilement doux avec inertie, thème clair / sombre (mémorisé), palette de commandes (`Ctrl` + `K` ou `⌘` + `K`),
 filtres de projets, parcours interactif façon `git log`, éditeur de code à onglets dans la section Profil.
 
 Le site est 100 % statique : aucun framework, aucune étape de build. Il suffit de pousser sur la branche publiée
@@ -114,14 +118,19 @@ copier un bloc `<figure class="deck__card">` dans `index.html`, puis modifier le
 
 ---
 
-## Publier une modification du design (important)
+## Publier une modification (important)
 
-Les navigateurs gardent le CSS et le JavaScript en cache pendant environ 10 minutes. Si la page HTML est à jour
-mais que l'ancien CSS est encore en cache, l'affichage peut se casser.
+Après chaque modification, lancer **une seule commande** avant le commit :
 
-Pour l'éviter, dans `index.html`, **changez le numéro de version** `?v=...` des fichiers `css/style.css`,
-`data/projects.js`, `js/i18n.js` et `js/main.js` à chaque modification de ces fichiers
-(par exemple `?v=20261013-7` → `?v=20261020-1`). Les visiteurs téléchargent alors directement la nouvelle version.
+```bash
+./scripts/bump-version.sh
+```
+
+Elle change le numéro de version partout (`index.html` et `version.json`). Résultat :
+
+- les fichiers CSS et JavaScript sont retéléchargés (leur adresse contient le numéro de version) ;
+- la page elle-même vérifie à chaque visite `version.json` : si une version plus récente est en ligne,
+  elle se recharge automatiquement une fois. Plus besoin de vider le cache ni de faire Ctrl + Maj + R.
 
 ---
 

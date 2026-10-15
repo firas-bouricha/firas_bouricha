@@ -259,6 +259,37 @@
     return toggleTheme;
   }
 
+  /* ---------- Défilement doux (Lenis) ----------
+     Inertie douce à la molette, façon Apple. Le défilement tactile reste natif,
+     et rien n'est activé si le visiteur a demandé à réduire les animations. */
+  let lenis = null;
+  const navOffset = () => -((document.getElementById("nav")?.offsetHeight || 72) + 8);
+
+  function setupSmoothScroll() {
+    if (!window.Lenis || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    lenis = new window.Lenis({
+      lerp: 0.09,              // inertie : plus la valeur est basse, plus le défilement est « glissant »
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      autoRaf: true,
+      anchors: { offset: navOffset() }, // liens #section : arrivée juste sous le menu
+      allowNestedScroll: true, // les zones qui défilent seules (calendrier, code) gardent leur défilement
+    });
+    // Pause pendant la palette de commandes
+    const dialog = document.getElementById("cmdk");
+    if (dialog) {
+      new MutationObserver(() => (dialog.open ? lenis.stop() : lenis.start())).observe(dialog, { attributes: true, attributeFilter: ["open"] });
+    }
+  }
+
+  // Défilement vers une section (utilisé par la palette de commandes)
+  function scrollToSection(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    if (lenis) { lenis.start(); lenis.scrollTo(target, { offset: navOffset(), force: true }); }
+    else target.scrollIntoView({ behavior: "smooth" });
+  }
+
   /* ---------- Langue FR / EN ---------- */
   function setupLang() {
     const button = document.getElementById("lang-toggle");
@@ -303,7 +334,7 @@
       return;
     }
 
-    const goTo = (id) => () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const goTo = (id) => () => scrollToSection(id);
     const open = (url) => () => window.open(url, "_blank", "noopener");
     const ICON_LINK = '<path d="M7 17L17 7M9 7h8v8"/>';
     const ICON_HASH = '<path d="M5 9h14M5 15h14M10 4l-2 16M16 4l-2 16"/>';
@@ -781,6 +812,7 @@
 
     const toggleTheme = safely("thème", setupTheme) || (() => {});
     safely("langue", setupLang);
+    safely("défilement doux", setupSmoothScroll);
     safely("projets", setupProjects);
     safely("navigation", setupNav);
     safely("photos", setupDeck);

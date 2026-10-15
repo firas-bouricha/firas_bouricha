@@ -96,6 +96,13 @@
 }
 
 /* ---------- Base ---------- */
+/* Défilement doux (Lenis) : le défilement natif « smooth » est désactivé quand Lenis est actif */
+html.lenis, html.lenis body { height: auto; }
+html.lenis { scroll-behavior: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
 *,
 *::before,
 *::after { box-sizing: border-box; }
