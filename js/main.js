@@ -9,6 +9,13 @@
   document.documentElement.classList.add("js");
 
   const EMAIL = "firas.bouricha@outlook.fr";
+  // Traduction : T("texte français", "English text") selon la langue active (voir js/i18n.js)
+  const T = (fr, en) => (window.i18n ? window.i18n.t(fr, en) : fr);
+  const onLang = (fn) => document.addEventListener("langchange", fn);
+  const isEN = () => Boolean(window.i18n && window.i18n.lang === "en");
+  // Version anglaise d'un champ de projet si elle existe
+  const pick = (project, field) => (isEN() && project.en && project.en[field] != null ? project.en[field] : project[field]);
+  const CATEGORY_EN = { "Pédagogie": "Teaching" };
   const MAX_TAGS = 4; // au-delà, les technologies sont regroupées dans un bouton « +N »
 
   /* ---------- Icônes disponibles pour les projets ---------- */
@@ -53,7 +60,7 @@
     const visible = tags.slice(0, MAX_TAGS).map((t) => `<li>${escapeHTML(t)}</li>`).join("");
     const hidden = tags.slice(MAX_TAGS);
     if (!hidden.length) return visible;
-    return `${visible}<li class="project__more"><button type="button" data-tags="${escapeHTML(JSON.stringify(hidden))}" aria-label="Afficher ${hidden.length} technologie${hidden.length > 1 ? "s" : ""} de plus : ${escapeHTML(hidden.join(", "))}">+${hidden.length}</button></li>`;
+    return `${visible}<li class="project__more"><button type="button" data-tags="${escapeHTML(JSON.stringify(hidden))}" aria-label="${escapeHTML(T(`Afficher ${hidden.length} technologie${hidden.length > 1 ? "s" : ""} de plus : `, `Show ${hidden.length} more technolog${hidden.length > 1 ? "ies" : "y"}: `) + hidden.join(", "))}">+${hidden.length}</button></li>`;
   }
 
   function projectCard(project) {
@@ -61,32 +68,32 @@
     const repoURL = project.repo ? `https://github.com/${project.repo}` : null;
     const demoURL = safeURL(project.demo);
     const image = typeof project.image === "string" && !/^\s*javascript:/i.test(project.image) ? project.image : null;
-    const tags = Array.isArray(project.tags) ? project.tags : [];
+    const tags = Array.isArray(pick(project, "tags")) ? pick(project, "tags") : [];
 
     const links = [];
     if (repoURL) {
-      links.push(`<a href="${escapeHTML(repoURL)}" target="_blank" rel="noopener noreferrer">${GITHUB_ICON}Voir le code</a>`);
+      links.push(`<a href="${escapeHTML(repoURL)}" target="_blank" rel="noopener noreferrer">${GITHUB_ICON}${T("Voir le code", "View code")}</a>`);
     }
     if (demoURL) {
-      links.push(`<a href="${escapeHTML(demoURL)}" target="_blank" rel="noopener noreferrer">${EXTERNAL_ICON}Démo en ligne</a>`);
+      links.push(`<a href="${escapeHTML(demoURL)}" target="_blank" rel="noopener noreferrer">${EXTERNAL_ICON}${T("Démo en ligne", "Live demo")}</a>`);
     }
 
     return `
       <article class="project${project.featured ? " project--featured" : ""}${image ? " project--media" : ""}" style="--c: ${color}">
-        ${image ? `<figure class="project__media"><img src="${escapeHTML(image)}" alt="${escapeHTML(project.imageAlt || project.title)}" loading="lazy" decoding="async"></figure>` : ""}
+        ${image ? `<figure class="project__media"><img src="${escapeHTML(image)}" alt="${escapeHTML(pick(project, "imageAlt") || pick(project, "title"))}" loading="lazy" decoding="async"></figure>` : ""}
         <div class="project__body">
           <div class="project__head">
             <span class="project__icon">${svg(project.icon)}</span>
             <div class="project__titles">
-              ${project.category ? `<p class="project__category">${escapeHTML(project.category)}</p>` : ""}
+              ${project.category ? `<p class="project__category">${escapeHTML(isEN() ? CATEGORY_EN[project.category] || project.category : project.category)}</p>` : ""}
               <div class="project__titleRow">
-                <h3 class="project__title">${escapeHTML(project.title)}</h3>
-                ${project.year ? `<span class="project__year mono">${escapeHTML(project.year)}</span>` : ""}
+                <h3 class="project__title">${escapeHTML(pick(project, "title"))}</h3>
+                ${project.year ? `<span class="project__year mono">${escapeHTML(pick(project, "year"))}</span>` : ""}
               </div>
               ${project.repo ? `<span class="project__repo">${escapeHTML(project.repo)}</span>` : ""}
             </div>
           </div>
-          <p class="project__desc">${escapeHTML(project.description)}</p>
+          <p class="project__desc">${escapeHTML(pick(project, "description"))}</p>
           ${tags.length ? `<ul class="project__tags">${tagList(tags)}</ul>` : ""}
         </div>
         ${links.length ? `<div class="project__links">${links.join("")}</div>` : ""}
@@ -99,7 +106,9 @@
     const projects = Array.isArray(window.PROJECTS) ? window.PROJECTS.filter((p) => p && p.title) : [];
     if (!list) return;
 
+    let current = "";
     const render = (category) => {
+      current = category;
       const visible = category ? projects.filter((p) => p.category === category) : projects;
       list.innerHTML = visible.map(projectCard).join("");
       list.querySelectorAll(".project").forEach((card, i) => {
@@ -109,14 +118,17 @@
 
     // Filtres générés automatiquement à partir des catégories
     const categories = [...new Set(projects.map((p) => p.category).filter(Boolean))];
-    if (filtersEl && categories.length > 1) {
+    const drawFilters = () => {
       const count = (c) => projects.filter((p) => p.category === c).length;
-      const button = (label, value, n, pressed) =>
-        `<button type="button" class="filter" data-filter="${escapeHTML(value)}" aria-pressed="${pressed}">${escapeHTML(label)}<span class="count">${n}</span></button>`;
-
+      const button = (label, value, n) =>
+        `<button type="button" class="filter" data-filter="${escapeHTML(value)}" aria-pressed="${value === current}">${escapeHTML(label)}<span class="count">${n}</span></button>`;
+      const label = (c) => (isEN() ? CATEGORY_EN[c] || c : c).toLowerCase();
       filtersEl.innerHTML =
-        button("tous", "", projects.length, true) +
-        categories.map((c) => button(c.toLowerCase(), c, count(c), false)).join("");
+        button(T("tous", "all"), "", projects.length) +
+        categories.map((c) => button(label(c), c, count(c))).join("");
+    };
+    if (filtersEl && categories.length > 1) {
+      drawFilters();
 
       filtersEl.addEventListener("click", (event) => {
         const target = event.target.closest(".filter");
@@ -140,6 +152,11 @@
     });
 
     render("");
+    // Changement de langue : on redessine les cartes et les filtres en gardant le filtre actif
+    onLang(() => {
+      if (filtersEl && filtersEl.isConnected) drawFilters();
+      render(current);
+    });
   }
 
   /* ---------- Navigation ---------- */
@@ -159,7 +176,7 @@
     if (toggle) {
       const setOpen = (open) => {
         toggle.setAttribute("aria-expanded", String(open));
-        toggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+        toggle.setAttribute("aria-label", open ? T("Fermer le menu", "Close menu") : T("Ouvrir le menu", "Open menu"));
         menu.classList.toggle("is-open", open);
         nav.classList.toggle("menu-open", open);
       };
@@ -188,7 +205,9 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
 
     // Lien actif + chemin du prompt (firas@infra:~/projets$) selon la section visible
+    let activeId = "top";
     const setActive = (id) => {
+      activeId = id;
       let current = "~";
       links.forEach((a) => {
         const on = a.getAttribute("href") === `#${id}`;
@@ -196,7 +215,7 @@
         if (on) {
           activeLink = a;
           a.setAttribute("aria-current", "true");
-          current = a.dataset.path || current;
+          current = (isEN() && a.dataset.pathEn) || a.dataset.path || current;
         } else {
           a.removeAttribute("aria-current");
         }
@@ -214,6 +233,11 @@
       sections.forEach((section) => spy.observe(section));
     }
     setActive("top");
+    // Langue : libellés et largeur des liens changent → on recale le chemin et la pastille
+    onLang(() => {
+      setActive(activeId);
+      if (toggle) toggle.setAttribute("aria-label", toggle.getAttribute("aria-expanded") === "true" ? T("Fermer le menu", "Close menu") : T("Ouvrir le menu", "Open menu"));
+    });
   }
 
   /* ---------- Thème clair / sombre ---------- */
@@ -235,6 +259,20 @@
     return toggleTheme;
   }
 
+  /* ---------- Langue FR / EN ---------- */
+  function setupLang() {
+    const button = document.getElementById("lang-toggle");
+    if (!button || !window.i18n) {
+      if (button) button.hidden = true;
+      return;
+    }
+    // Le libellé du bouton est dans l'autre langue : on l'indique aux lecteurs d'écran
+    const sync = () => button.setAttribute("lang", isEN() ? "fr" : "en");
+    button.addEventListener("click", () => window.i18n.toggle());
+    onLang(sync);
+    sync();
+  }
+
   /* ---------- Notifications ---------- */
   let toastTimer;
   function notify(message) {
@@ -249,7 +287,7 @@
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(EMAIL);
-      notify(`✓ ${EMAIL} copié`);
+      notify(T(`✓ ${EMAIL} copié`, `✓ ${EMAIL} copied`));
     } catch {
       window.location.href = `mailto:${EMAIL}`;
     }
@@ -270,26 +308,29 @@
     const ICON_LINK = '<path d="M7 17L17 7M9 7h8v8"/>';
     const ICON_HASH = '<path d="M5 9h14M5 15h14M10 4l-2 16M16 4l-2 16"/>';
 
-    const commands = [
-      { group: "Sections", label: "Accueil", icon: ICON_HASH, run: goTo("top") },
-      { group: "Sections", label: "Profil", icon: ICON_HASH, run: goTo("about") },
-      { group: "Sections", label: "Compétences", icon: ICON_HASH, run: goTo("skills") },
-      { group: "Sections", label: "Projets", icon: ICON_HASH, run: goTo("projects") },
-      { group: "Sections", label: "Parcours", icon: ICON_HASH, run: goTo("journey") },
+    // Liste reconstruite à chaque ouverture : elle suit la langue active
+    const buildCommands = () => [
+      { group: "Sections", label: T("Accueil", "Home"), icon: ICON_HASH, run: goTo("top") },
+      { group: "Sections", label: T("Profil", "Profile"), icon: ICON_HASH, run: goTo("about") },
+      { group: "Sections", label: T("Compétences", "Skills"), icon: ICON_HASH, run: goTo("skills") },
+      { group: "Sections", label: T("Projets", "Projects"), icon: ICON_HASH, run: goTo("projects") },
+      { group: "Sections", label: T("Parcours", "Journey"), icon: ICON_HASH, run: goTo("journey") },
       { group: "Sections", label: "Contact", icon: ICON_HASH, run: goTo("contact") },
       ...(window.PROJECTS || []).filter((p) => p && p.title).map((p) => ({
-        group: "Projets",
-        label: p.title,
-        hint: (p.tags || []).slice(0, 3).join(" · "),
+        group: T("Projets", "Projects"),
+        label: pick(p, "title"),
+        hint: (pick(p, "tags") || []).slice(0, 3).join(" · "),
         icon: ICONS[p.icon] || ICONS.code,
         run: p.repo ? open(`https://github.com/${p.repo}`) : goTo("projects"),
       })),
-      { group: "Actions", label: "Copier mon adresse e-mail", hint: EMAIL, icon: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>', run: copyEmail },
-      { group: "Actions", label: "M'écrire un e-mail", icon: '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>', run: () => { window.location.href = `mailto:${EMAIL}`; } },
-      { group: "Actions", label: "Changer de thème", hint: "clair / sombre", icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2"/>', run: toggleTheme },
-      { group: "Liens", label: "LinkedIn", hint: "in/firas-bouricha", icon: ICON_LINK, run: open("https://www.linkedin.com/in/firas-bouricha/") },
-      { group: "Liens", label: "GitHub", hint: "firas-bouricha", icon: ICON_LINK, run: open("https://github.com/firas-bouricha") },
+      { group: "Actions", label: T("Copier mon adresse e-mail", "Copy my email address"), hint: EMAIL, icon: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>', run: copyEmail },
+      { group: "Actions", label: T("M'écrire un e-mail", "Send me an email"), icon: '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>', run: () => { window.location.href = `mailto:${EMAIL}`; } },
+      { group: "Actions", label: T("Changer de thème", "Switch theme"), hint: T("clair / sombre", "light / dark"), icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2"/>', run: toggleTheme },
+      { group: "Actions", label: T("Read in English", "Lire en français"), hint: T("EN", "FR"), icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>', run: () => window.i18n && window.i18n.toggle() },
+      { group: T("Liens", "Links"), label: "LinkedIn", hint: "in/firas-bouricha", icon: ICON_LINK, run: open("https://www.linkedin.com/in/firas-bouricha/") },
+      { group: T("Liens", "Links"), label: "GitHub", hint: "firas-bouricha", icon: ICON_LINK, run: open("https://github.com/firas-bouricha") },
     ];
+    let commands = buildCommands();
 
     const normalize = (text) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     let results = commands;
@@ -297,7 +338,7 @@
 
     const render = () => {
       if (!results.length) {
-        list.innerHTML = '<li class="cmdk__empty">Aucun résultat.</li>';
+        list.innerHTML = `<li class="cmdk__empty">${T("Aucun résultat.", "No results.")}</li>`;
         return;
       }
       let html = "";
@@ -326,6 +367,7 @@
     };
 
     const openPalette = () => {
+      commands = buildCommands();
       if (dialog.open) return;
       input.value = "";
       filter();
@@ -504,9 +546,13 @@
     const API = `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(user)}?y=last`;
     const CACHE_KEY = `gh-activity:${user}`;
     const CACHE_MS = 6 * 60 * 60 * 1000;
-    const MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
-    const dateFmt = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-    const numFmt = new Intl.NumberFormat("fr-FR");
+    const MONTHS_FR = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+    const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const locale = () => (isEN() ? "en-GB" : "fr-FR");
+    const dateFmt = () => new Intl.DateTimeFormat(locale(), { day: "numeric", month: "long", year: "numeric" });
+    const numFmt = () => new Intl.NumberFormat(locale());
+    let loaded = null; // jours reçus (pour redessiner au changement de langue)
+    let failed = false;
 
     // Grille de chargement (53 semaines vides)
     const skeleton = () => {
@@ -516,6 +562,8 @@
     };
 
     const render = (days) => {
+      loaded = days;
+      const MONTHS = isEN() ? MONTHS_EN : MONTHS_FR;
       // Semaines commençant le lundi
       const first = new Date(`${days[0].date}T00:00:00`);
       const offset = (first.getDay() + 6) % 7;
@@ -540,20 +588,22 @@
         .map((m) => `<span style="grid-column:${m.w + 1}">${m.label}</span>`).join("");
       graph.innerHTML = `
         <div class="activity__months" style="grid-template-columns:repeat(${weeks}, var(--cell))">${monthRow}</div>
-        <div class="activity__days"><span></span><span>lun.</span><span></span><span>mer.</span><span></span><span>ven.</span><span></span></div>
+        <div class="activity__days"><span></span><span>${T("lun.", "Mon")}</span><span></span><span>${T("mer.", "Wed")}</span><span></span><span>${T("ven.", "Fri")}</span><span></span></div>
         <div class="activity__cells">${cells}</div>`;
       graph.classList.remove("is-loading");
       graph.classList.add("is-ready");
       const sum = days.reduce((n, d) => n + d.count, 0);
-      total.innerHTML = `<strong>${numFmt.format(sum)}</strong> contributions sur les 12 derniers mois`;
-      graph.setAttribute("aria-label", `${sum} contributions GitHub sur les 12 derniers mois`);
+      total.innerHTML = `<strong>${numFmt().format(sum)}</strong> ${T("contributions sur les 12 derniers mois", "contributions in the last 12 months")}`;
+      graph.setAttribute("aria-label", T(`${sum} contributions GitHub sur les 12 derniers mois`, `${sum} GitHub contributions in the last 12 months`));
       scroller.scrollLeft = scroller.scrollWidth; // mobile : afficher d'abord les semaines récentes
     };
 
     const fail = () => {
+      failed = true;
+      note.removeAttribute("data-i18n"); // le message de repli remplace la phrase traduite
       graph.classList.remove("is-loading");
-      total.textContent = "Activité momentanément indisponible";
-      note.innerHTML = `Retrouvez mes contributions directement sur <a href="https://github.com/${encodeURIComponent(user)}" target="_blank" rel="noopener noreferrer">GitHub</a>.`;
+      total.textContent = T("Activité momentanément indisponible", "Activity temporarily unavailable");
+      note.innerHTML = `${T("Retrouvez mes contributions directement sur", "See my contributions directly on")} <a href="https://github.com/${encodeURIComponent(user)}" target="_blank" rel="noopener noreferrer">GitHub</a>.`;
     };
 
     // Ne garde que des données au format attendu (dates et nombres)
@@ -591,8 +641,8 @@
     const showTip = (cell) => {
       if (!cell.dataset.date) return;
       const n = Number(cell.dataset.count);
-      const when = dateFmt.format(new Date(`${cell.dataset.date}T00:00:00`));
-      tip.textContent = n ? `${n} contribution${n > 1 ? "s" : ""} · ${when}` : `Aucune contribution · ${when}`;
+      const when = dateFmt().format(new Date(`${cell.dataset.date}T00:00:00`));
+      tip.textContent = n ? `${n} contribution${n > 1 ? "s" : ""} · ${when}` : `${T("Aucune contribution", "No contributions")} · ${when}`;
       const box = root.getBoundingClientRect();
       const c = cell.getBoundingClientRect();
       tip.style.left = `${c.left - box.left + c.width / 2}px`;
@@ -604,6 +654,12 @@
     scroller.addEventListener("scroll", () => { tip.hidden = true; }, { passive: true });
 
     skeleton();
+    total.textContent = T("12 derniers mois", "Last 12 months");
+    onLang(() => {
+      if (loaded) render(loaded);
+      else if (failed) fail();
+      else total.textContent = T("12 derniers mois", "Last 12 months");
+    });
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver((entries) => {
         if (entries.some((e) => e.isIntersecting)) { io.disconnect(); load(); }
@@ -636,8 +692,9 @@
       });
       const front = cards[order[0]];
       if (count) count.textContent = `${order[0] + 1}/${cards.length}`;
-      if (text) text.textContent = front.dataset.caption || "";
+      if (text) text.textContent = (isEN() && front.dataset.captionEn) || front.dataset.caption || "";
     };
+    onLang(() => layout());
 
     const next = () => {
       if (busy) return;
@@ -723,6 +780,7 @@
     if (year) year.textContent = new Date().getFullYear();
 
     const toggleTheme = safely("thème", setupTheme) || (() => {});
+    safely("langue", setupLang);
     safely("projets", setupProjects);
     safely("navigation", setupNav);
     safely("photos", setupDeck);

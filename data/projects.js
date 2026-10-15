@@ -22,6 +22,8 @@
  *                              ex. "Infrastructure", "DevSecOps", "Dev", "Pédagogie"
  *    year         (optionnel)  Année ou période affichée sur la carte, ex. "2026" ou "En cours"
  *    featured     (optionnel)  true pour mettre le projet en avant (carte large)
+ *    en           (optionnel)  Version anglaise : { title, description, imageAlt, year, tags }
+ *                              (les champs absents reprennent la version française)
  *
  *  L'ordre de la liste est l'ordre d'affichage sur le site.
  * ============================================================
@@ -38,6 +40,10 @@ window.PROJECTS = [
     color: "cyan",
     category: "Infrastructure",
     featured: true,
+    en: {
+      description:
+        "A GLPI request triggers Ansible (via Semaphore), then Terraform, which clones a Proxmox VM from a template and reports back its ID and IP. Zero manual intervention.",
+    },
   },
   {
     title: "Pipeline DevSecOps",
@@ -52,6 +58,12 @@ window.PROJECTS = [
     color: "emerald",
     category: "DevSecOps",
     featured: true,
+    en: {
+      title: "DevSecOps pipeline",
+      description:
+        "Hardened CI/CD chain around a Node.js API: branch protection, Gitleaks hooks, secrets encrypted with SOPS + age, Docker image scanned by Trivy (SBOM), CodeQL and conditional deployment.",
+      imageAlt: "Successful CI/CD pipeline run: tests, Gitleaks, CodeQL, image scan, publish and deployments",
+    },
   },
   {
     title: "Home Lab",
@@ -66,6 +78,13 @@ window.PROJECTS = [
     color: "violet",
     category: "Infrastructure",
     featured: true,
+    en: {
+      year: "Ongoing",
+      description:
+        "My self-hosted infrastructure: a Dell PowerEdge server running Proxmox, iDRAC and a Cisco SG300 switch. Architecture, inventory and technical documentation.",
+      imageAlt: "The home lab: Dell PowerEdge T130 server, Dell OptiPlex and Cisco SG300 switch",
+      tags: ["Proxmox", "Linux", "Networking", "Cisco"],
+    },
   },
   {
     title: "IaC Multi-VMs",
@@ -77,6 +96,10 @@ window.PROJECTS = [
     icon: "layers",
     color: "amber",
     category: "Infrastructure",
+    en: {
+      description:
+        "Provisioning of a complete infrastructure (bastion, web, database, Zabbix) with OpenTofu and Cloud-Init, then SSH hardening, nftables firewall and monitoring with Ansible.",
+    },
   },
   {
     title: "Ytasty Crousty",
@@ -88,6 +111,10 @@ window.PROJECTS = [
     icon: "database",
     color: "pink",
     category: "Dev",
+    en: {
+      description:
+        "Containerised full-stack application, from customer ordering to management dashboards. Jira project management, data modelling and a Docker Compose environment.",
+    },
   },
   {
     title: "CyberCrise",
@@ -100,6 +127,10 @@ window.PROJECTS = [
     icon: "game",
     color: "red",
     category: "Dev",
+    en: {
+      description:
+        "A web-based revision game for my Master's: arcade quiz, timed mock exam and 2D adventure mode. 160 questions on IS maintenance management.",
+    },
   },
   {
     title: "Git avancé",
@@ -111,5 +142,11 @@ window.PROJECTS = [
     icon: "git",
     color: "blue",
     category: "Pédagogie",
+    en: {
+      title: "Advanced Git",
+      description:
+        "Courses, guided labs and a final project in Go that I designed to support first-year Bachelor students at Ynov Sophia Antipolis.",
+      tags: ["Git", "Go", "Teaching"],
+    },
   },
 ];
