@@ -1,8 +1,8 @@
 // Performance : budget de poids, polices locales, haut de page affiché sans attendre le JavaScript.
 const { test, expect } = require("@playwright/test");
-const { preparePage, openSite, scrollThrough } = require("./helpers");
+const { PAGES, preparePage, openSite, scrollThrough } = require("./helpers");
 
-test("budget : moins de 900 Ko et aucune ressource externe", async ({ page }) => {
+for (const { file, id } of PAGES) test(`budget ${id} : moins de 700 Ko et aucune ressource externe`, async ({ page }) => {
   await preparePage(page);
   let bytes = 0;
   const external = [];
@@ -11,11 +11,11 @@ test("budget : moins de 900 Ko et aucune ressource externe", async ({ page }) =>
     if (!url.startsWith("http://127.0.0.1")) { if (!/jogruber/.test(url)) external.push(url); return; }
     try { bytes += (await r.body()).length; } catch { /* redirection */ }
   });
-  await openSite(page);
+  await openSite(page, file);
   await scrollThrough(page);
   await page.waitForLoadState("networkidle");
   expect(external, "ressources chargées hors du site").toEqual([]);
-  expect(bytes / 1024, "poids total en Ko").toBeLessThan(900);
+  expect(bytes / 1024, "poids total en Ko").toBeLessThan(700);
 });
 
 test("polices hébergées sur le site et chargées", async ({ page }) => {
@@ -38,8 +38,10 @@ test("sans JavaScript : contenu lisible, about.md à la place du terminal", asyn
   const page = await context.newPage();
   await page.goto("./");
   await expect(page.locator("h1")).toContainText("Firas Bouricha");
+  await page.goto("./profil.html");
   await expect(page.locator("#pane-about")).toBeVisible();
   await expect(page.locator("#pane-term")).toBeHidden();
+  await page.goto("./projets.html");
   await expect(page.getByRole("link", { name: "github.com/firas-bouricha" })).toBeVisible();
   await context.close();
 });

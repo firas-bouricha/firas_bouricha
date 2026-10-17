@@ -4,7 +4,7 @@
  */
 (function (Site) {
   "use strict";
-  const { EMAIL, T, pick, ICONS, escapeHTML, copyEmail, scrollToSection } = Site;
+  const { EMAIL, T, pick, ICONS, escapeHTML, copyEmail, goTo: go } = Site;
 
   /* ---------- Palette de commandes (Ctrl/⌘ + K) ---------- */
   function setupCommandPalette(toggleTheme) {
@@ -16,7 +16,7 @@
       return;
     }
 
-    const goTo = (id) => () => scrollToSection(id);
+    const goTo = (id) => () => go(id);
     const open = (url) => () => window.open(url, "_blank", "noopener");
     const ICON_LINK = '<path d="M7 17L17 7M9 7h8v8"/>';
     const ICON_HASH = '<path d="M5 9h14M5 15h14M10 4l-2 16M16 4l-2 16"/>';

@@ -4,22 +4,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Politique de sécurité du contenu : seuls les fichiers du site et les deux scripts ci-dessous (empreintes SHA-256)
-       peuvent s'exécuter. Si un script intégré change, mettre à jour son empreinte (le test « csp » l'indique). -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-UvsP+XGJ0QKJ8ywgXlFKlkhKHfEUmAmMeAkdhilDAcE=' 'sha256-9WHRPZGCCzv999+bm6BZp4BvuxB/wg2q4ggp0QCyIWs='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://github-contributions-api.jogruber.de; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <title>Firas Bouricha · Ingénieur Cloud & Infrastructure</title>
   <meta name="description"
     content="Firas Bouricha, ingénieur Cloud & Infrastructure basé à Sophia Antipolis. Virtualisation, automatisation (Terraform, Ansible), DevSecOps et sécurité. Ouvert aux opportunités.">
+  <link rel="canonical" href="https://firas-bouricha.github.io/firas_bouricha/">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Firas Bouricha · Ingénieur Cloud &amp; Infrastructure">
+  <meta property="og:description" content="Je conçois, automatise et sécurise des infrastructures.">
+  <meta property="og:url" content="https://firas-bouricha.github.io/firas_bouricha/">
+  <meta name="twitter:title" content="Firas Bouricha · Ingénieur Cloud &amp; Infrastructure">
+  <meta name="twitter:description" content="Je conçois, automatise et sécurise des infrastructures.">
+  <!-- Versions linguistiques : le français par défaut, l'anglais via ?lang=en -->
+  <link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/">
+  <link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/">
+
+  <!-- layout:meta — bloc commun aux 4 pages : modifier index.html puis lancer « npm run sync » -->
+  <!-- Politique de sécurité du contenu : seuls les fichiers du site et les deux scripts ci-dessous (empreintes SHA-256)
+       peuvent s'exécuter. Si un script intégré change, mettre à jour son empreinte (le test « csp » l'indique). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-UvsP+XGJ0QKJ8ywgXlFKlkhKHfEUmAmMeAkdhilDAcE=' 'sha256-9WHRPZGCCzv999+bm6BZp4BvuxB/wg2q4ggp0QCyIWs='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://github-contributions-api.jogruber.de; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <meta name="author" content="Firas Bouricha">
   <meta name="theme-color" content="#111117">
-  <meta name="site-version" content="20261017-0858">
-  <link rel="canonical" href="https://firas-bouricha.github.io/firas_bouricha/">
+  <meta name="site-version" content="20261017-0947">
 
-  <meta property="og:type" content="profile">
-  <meta property="og:title" content="Firas Bouricha · Ingénieur Cloud & Infrastructure">
-  <meta property="og:description"
-    content="Je conçois, automatise et sécurise des infrastructures.">
-  <meta property="og:url" content="https://firas-bouricha.github.io/firas_bouricha/">
   <meta property="og:site_name" content="Firas Bouricha">
   <meta property="og:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/og-image.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -28,16 +35,8 @@
   <meta property="og:image:alt" content="Firas Bouricha, ingénieur Cloud &amp; Infrastructure : portrait et terminal aux couleurs du site">
   <meta property="og:locale" content="fr_FR">
   <meta property="og:locale:alternate" content="en_GB">
-
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Firas Bouricha · Ingénieur Cloud &amp; Infrastructure">
-  <meta name="twitter:description" content="Je conçois, automatise et sécurise des infrastructures.">
   <meta name="twitter:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/og-image.jpg">
-
-  <!-- Versions linguistiques : le français par défaut, l'anglais via ?lang=en -->
-  <link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/">
-  <link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/?lang=en">
-  <link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/">
 
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
@@ -46,7 +45,7 @@
 
   <!-- Polices hébergées sur le site (aucune requête vers Google). Volontairement sans « preload » : mesuré sur mobile
        lent, le préchargement ralentissait le CSS et retardait l'affichage d'environ 0,8 s (font-display: swap suffit). -->
-  <link rel="stylesheet" href="css/style.css?v=20261017-0858">
+  <link rel="stylesheet" href="css/style.css?v=20261017-0947">
   <noscript>
     <!-- Sans JavaScript : on montre about.md au lieu du terminal et on masque ce qui ne peut pas fonctionner -->
     <style>
@@ -85,7 +84,7 @@
       setTimeout(function () { if (!d.hasAttribute("data-ready")) d.classList.remove("js"); }, 2500);
     })();
   </script>
-
+  <!-- /layout:meta -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -101,24 +100,24 @@
   </script>
 </head>
 
-<body>
+<body data-page="accueil">
+  <!-- layout:header -->
   <a class="skip-link" href="#main" data-i18n="nav.skip">Aller au contenu</a>
 
   <!-- ======================= NAVIGATION ======================= -->
   <header class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#top" class="prompt mono" aria-label="Firas Bouricha, retour en haut de page" data-i18n-attr="aria-label:nav.home.aria">
+      <a href="index.html" class="prompt mono" aria-label="Firas Bouricha, accueil" data-i18n-attr="aria-label:nav.home.aria">
         <span class="prompt__arrow" aria-hidden="true">➜</span><span class="prompt__id"><span class="prompt__user">firas</span>@Portfolio</span><span class="muted">:</span><span class="prompt__path" id="prompt-path">~</span><span class="muted">$</span><span class="cursor" aria-hidden="true"></span>
       </a>
 
       <nav class="nav__pill" id="nav-links" aria-label="Navigation principale" data-i18n-attr="aria-label:nav.aria">
         <span class="nav__indicator" aria-hidden="true"></span>
-        <a href="#top" data-path="~" data-i18n="nav.home">Accueil</a>
-        <a href="#about" data-path="~/profil" data-path-en="~/profile" data-i18n="nav.about">Profil</a>
-        <a href="#skills" data-path="~/stack" data-i18n="nav.skills">Compétences</a>
-        <a href="#projects" data-path="~/projets" data-path-en="~/projects" data-i18n="nav.projects">Projets</a>
-        <a href="#journey" data-path="~/parcours" data-path-en="~/journey" data-i18n="nav.journey">Parcours</a>
-        <a href="#contact" data-path="~/contact" data-i18n="nav.contact">Contact</a>
+        <a href="index.html" data-page="accueil" data-path="~" data-i18n="nav.home">Accueil</a>
+        <a href="profil.html" data-page="profil" data-path="~/profil" data-path-en="~/profile" data-i18n="nav.about">Profil</a>
+        <a href="projets.html" data-page="projets" data-path="~/projets" data-path-en="~/projects" data-i18n="nav.projects">Projets</a>
+        <a href="parcours.html" data-page="parcours" data-path="~/parcours" data-path-en="~/journey" data-i18n="nav.journey">Parcours</a>
+        <a href="parcours.html#contact" data-page="parcours" data-section="contact" data-path="~/contact" data-i18n="nav.contact">Contact</a>
       </nav>
 
       <div class="nav__tools">
@@ -146,6 +145,7 @@
       </div>
     </div>
   </header>
+  <!-- /layout:header -->
 
   <main id="main">
     <!-- ======================= HERO ======================= -->
@@ -177,11 +177,11 @@
           </ul>
 
           <div class="hero__cta reveal">
-            <a href="#projects" class="btn btn--primary">
+            <a href="projets.html" class="btn btn--primary">
               <span data-i18n="hero.cta.projects">Voir mes projets</span>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
-            <a href="#contact" class="btn btn--ghost" data-i18n="hero.cta.contact">Me contacter</a>
+            <a href="parcours.html#contact" class="btn btn--ghost" data-i18n="hero.cta.contact">Me contacter</a>
             <div class="hero__socials">
               <a href="https://www.linkedin.com/in/firas-bouricha/" target="_blank" rel="noopener noreferrer"
                 class="icon-btn" aria-label="LinkedIn de Firas Bouricha" data-i18n-attr="aria-label:hero.linkedin.aria">
@@ -229,392 +229,38 @@
       </div>
     </section>
 
-    <!-- ======================= PROFIL ======================= -->
-    <section class="section" id="about">
+    <!-- ======================= EXPLORER ======================= -->
+    <section class="section explore" id="explore" aria-labelledby="explore-title">
       <div class="container">
         <header class="section__head reveal">
-          <p class="section__kicker mono"><span class="section__num">01</span><span data-i18n="about.kicker">profil</span></p>
-          <h2 class="section__title" data-i18n="about.title">Qui je suis</h2>
+          <p class="section__kicker mono"><span class="section__num">~</span><span data-i18n="explore.kicker">explorer</span></p>
+          <h2 class="section__title" id="explore-title" data-i18n="explore.title">Par où commencer&nbsp;?</h2>
         </header>
-
-        <div class="about">
-          <div class="about__text reveal">
-            <p data-i18n="about.p1">
-              Étudiant en <strong>Mastère Expert Cloud, Sécurité &amp; Infrastructure</strong> à Ynov Sophia Antipolis,
-              j'ai construit mon profil sur une conviction simple&nbsp;: une infrastructure fiable est une
-              infrastructure <strong>documentée, automatisée et sécurisée dès sa conception</strong>.
-            </p>
-            <p data-i18n="about.p2">
-              Concrètement, je déploie des VM à partir d'une simple demande GLPI, je décris des environnements
-              complets en code avec Terraform, OpenTofu et Ansible, et je mets en place des pipelines CI/CD qui
-              bloquent les secrets exposés et les images vulnérables avant la mise en production.
-            </p>
-            <p data-i18n="about.p3">
-              En parallèle, j'accompagne les étudiants en informatique d'Ynov en tant que <strong>mentor IT</strong>.
-              Expliquer clairement un sujet technique, rédiger des procédures et transmettre mes connaissances fait
-              partie de ma façon de travailler.
-            </p>
-          </div>
-
-          <div class="editor reveal" id="editor">
-            <div class="editor__bar">
-              <span class="editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-              <div class="editor__tabs" role="tablist" aria-label="Fichiers" data-i18n-attr="aria-label:editor.aria">
-                <button type="button" role="tab" id="tab-term" class="editor__tab--term" aria-controls="pane-term" aria-selected="true"><span aria-hidden="true">&gt;_ </span>terminal</button>
-                <button type="button" role="tab" id="tab-about" aria-controls="pane-about" aria-selected="false" tabindex="-1">about.md</button>
-                <button type="button" role="tab" id="tab-tf" aria-controls="pane-tf" aria-selected="false" tabindex="-1">main.tf</button>
-                <button type="button" role="tab" id="tab-ci" aria-controls="pane-ci" aria-selected="false" tabindex="-1">ci-cd.yml</button>
-              </div>
-            </div>
-
-            <div class="editor__pane term" role="tabpanel" id="pane-term" aria-labelledby="tab-term">
-              <div class="term__out" id="term-out" data-lenis-prevent></div>
-              <form class="term__line" id="term-form" autocomplete="off">
-                <div class="term__ps1" id="term-ps1" aria-hidden="true"></div>
-                <div class="term__cmdline">
-                  <span class="t-chev" aria-hidden="true">»</span>
-                  <div class="term__field">
-                    <input class="term__input" id="term-input" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="send"
-                      aria-label="Commande (tapez help)" data-i18n-attr="aria-label:term.input">
-                    <span class="term__mirror" id="term-mirror" aria-hidden="true"></span>
-                  </div>
-                </div>
-              </form>
-            </div>
-
-            <div class="editor__pane" role="tabpanel" id="pane-about" aria-labelledby="tab-about" hidden>
-              <dl class="kv mono">
-                <div><dt data-i18n="kv.role">rôle</dt><dd data-i18n="kv.role.v">Ingénieur Cloud &amp; Infrastructure</dd></div>
-                <div><dt data-i18n="kv.seek">recherche</dt><dd data-i18n="kv.seek.v">poste <span class="muted">Cloud · Infra · DevOps</span></dd></div>
-                <div><dt data-i18n="kv.school">école</dt><dd data-i18n="kv.school.v">Mastère Ynov <span class="muted">2025 – 2027</span></dd></div>
-                <div><dt>mentor</dt><dd data-i18n="kv.mentor.v">Étudiants IT @Ynov Sophia</dd></div>
-                <div><dt>focus</dt><dd data-i18n="kv.focus.v">concevoir · automatiser · sécuriser</dd></div>
-                <div><dt data-i18n="kv.place">lieu</dt><dd>Sophia Antipolis (06)</dd></div>
-              </dl>
-            </div>
-
-            <div class="editor__pane" role="tabpanel" id="pane-tf" aria-labelledby="tab-tf" hidden>
-<pre class="code" data-lang="hcl"><code># VM as a Service: clone a Proxmox VM
-resource "proxmox_virtual_environment_vm" "vm" {
-  name      = var.vm_name
-  node_name = var.proxmox_node
-
-  clone {
-    vm_id = var.template_id
-  }
-
-  cpu    { cores = var.vm_cpu }
-  memory { dedicated = var.vm_ram }
-  network_device { bridge = var.vm_bridge }
-
-  agent { enabled = true }  # reports the IP
-}
-
-output "vm_ipv4" {
-  value = proxmox_virtual_environment_vm.vm.ipv4_addresses
-}</code></pre>
-            </div>
-
-            <div class="editor__pane" role="tabpanel" id="pane-ci" aria-labelledby="tab-ci" hidden>
-<pre class="code" data-lang="yaml"><code># DevSecOps pipeline (excerpt)
-jobs:
-  gitleaks-ci:   # exposed secret = blocked
-  codeql:        # critical flaw = blocked
-  test:
-  scan-image:
-    needs: [test]
-    uses: ./.github/actions/trivy-scan   # SBOM + CVE
-  publish:
-    needs: [scan-image, gitleaks-ci, codeql]
-  deploy-backend:
-    needs: [publish]
-    environment: production</code></pre>
-            </div>
-          </div>
-        </div>
-
-        <dl class="principles">
-          <div class="principle reveal">
-            <dt data-i18n="pr.design"><span class="mono">01</span>Concevoir</dt>
-            <dd data-i18n="pr.design.t">Architectures virtualisées et cloud, segmentation réseau, documentation claire et à jour.</dd>
-          </div>
-          <div class="principle reveal">
-            <dt data-i18n="pr.automate"><span class="mono">02</span>Automatiser</dt>
-            <dd data-i18n="pr.automate.t">Infrastructure as Code, playbooks Ansible et pipelines reproductibles plutôt que des clics manuels.</dd>
-          </div>
-          <div class="principle reveal">
-            <dt data-i18n="pr.secure"><span class="mono">03</span>Sécuriser</dt>
-            <dd data-i18n="pr.secure.t">Durcissement SSH et pare-feu, gestion chiffrée des secrets, scans de vulnérabilités en continu.</dd>
-          </div>
-        </dl>
-      </div>
-    </section>
-
-    <!-- ======================= COMPÉTENCES ======================= -->
-    <section class="section section--alt" id="skills">
-      <div class="container">
-        <header class="section__head reveal">
-          <p class="section__kicker mono"><span class="section__num">02</span><span data-i18n="skills.kicker">compétences</span></p>
-          <h2 class="section__title" data-i18n="skills.title">Les outils que j'utilise</h2>
-          <p class="section__sub" data-i18n="skills.sub">Classés par domaine, tels que je les utilise dans mes projets et dans mon home lab.</p>
-        </header>
-
-        <div class="skills">
-          <article class="skill reveal">
-            <h3 class="mono" data-i18n="skills.systems">systèmes</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/linux.png" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Linux</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/debian.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Debian</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/ubuntu.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Ubuntu</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/windows.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Windows</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/bash.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Bash</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/powershell.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">PowerShell</span></li>
-            </ul>
-          </article>
-          <article class="skill reveal">
-            <h3 class="mono">virtualisation</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/proxmox.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Proxmox VE</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/vsphere.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">vSphere</span></li>
-            </ul>
-          </article>
-          <article class="skill reveal">
-            <h3 class="mono">cloud</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img class="only-light" src="assets/icons/aws.svg" alt="" width="34" height="34" loading="lazy"><img class="only-dark" src="assets/icons/aws-dark.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">AWS</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/azure.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Azure</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/digitalocean.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">DigitalOcean</span></li>
-            </ul>
-          </article>
-          <article class="skill reveal">
-            <h3 class="mono" data-i18n="skills.iac">iac · automatisation</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/terraform.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Terraform</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/opentofu.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">OpenTofu</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/ansible.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Ansible</span></li>
-              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#E95420" aria-hidden="true">ci</span><span class="tech__name">Cloud-Init</span></li>
-            </ul>
-          </article>
-          <article class="skill reveal">
-            <h3 class="mono" data-i18n="skills.containers">conteneurs · ci/cd</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/docker.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Docker</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/podman.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Podman</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/githubactions.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">GitHub Actions</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/git.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Git</span></li>
-            </ul>
-          </article>
-          <article class="skill reveal">
-            <h3 class="mono" data-i18n="skills.security">sécurité · réseau</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img class="only-light" src="assets/icons/pfsense.svg" alt="" width="34" height="34" loading="lazy"><img class="only-dark" src="assets/icons/pfsense-dark.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">pfSense</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/trivy.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Trivy</span></li>
-              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#F472B6" aria-hidden="true">GL</span><span class="tech__name">Gitleaks</span></li>
-              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#8B5CF6" aria-hidden="true">QL</span><span class="tech__name">CodeQL</span></li>
-              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#34D399" aria-hidden="true">S</span><span class="tech__name">SOPS</span></li>
-            </ul>
-          </article>
-          <article class="skill reveal">
-            <h3 class="mono" data-i18n="skills.monitoring">supervision · itsm</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/prometheus.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Prometheus</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/grafana.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Grafana</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/zabbix.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Zabbix</span></li>
-              <li class="tech"><span class="tech__icon tech__icon--mono mono" style="--brand:#F59E0B" aria-hidden="true">G</span><span class="tech__name">GLPI</span></li>
-            </ul>
-          </article>
-          <article class="skill reveal">
-            <h3 class="mono" data-i18n="skills.languages">langages · data</h3>
-            <ul class="techs">
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/go.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Go</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/python.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">Python</span></li>
-              <li class="tech"><span class="tech__icon" aria-hidden="true"><img src="assets/icons/postgresql.svg" alt="" width="34" height="34" loading="lazy"></span><span class="tech__name">PostgreSQL</span></li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================= PROJETS ======================= -->
-    <section class="section" id="projects">
-      <div class="container">
-        <header class="section__head section__head--split reveal">
-          <div>
-            <p class="section__kicker mono"><span class="section__num">03</span><span data-i18n="projects.kicker">projets</span></p>
-          <h2 class="section__title" data-i18n="projects.title">Ce que j'ai construit</h2>
-            <p class="section__sub" data-i18n="projects.sub">Des projets concrets, documentés et versionnés sur GitHub.</p>
-          </div>
-          <a href="https://github.com/firas-bouricha?tab=repositories" target="_blank" rel="noopener noreferrer"
-            class="link-arrow"><span data-i18n="projects.all">Tous mes dépôts</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </header>
-
-        <div class="filters" id="project-filters" role="toolbar" aria-label="Filtrer les projets" data-i18n-attr="aria-label:projects.filters"></div>
-        <div class="projects" id="project-list" aria-live="polite"></div>
-
-        <noscript>
-          <p class="section__sub">Activez JavaScript pour afficher les projets, ou consultez-les directement sur
-            <a href="https://github.com/firas-bouricha">github.com/firas-bouricha</a>.</p>
-        </noscript>
-
-        <!-- Activité GitHub des 12 derniers mois (données publiques, chargées au défilement) -->
-        <div class="activity reveal" id="activity" data-user="firas-bouricha">
-          <div class="activity__head">
-            <div>
-              <h3 class="activity__title" data-i18n="activity.title">Activité GitHub</h3>
-              <p class="activity__total mono" id="activity-total">12 derniers mois</p>
-            </div>
-            <a href="https://github.com/firas-bouricha" target="_blank" rel="noopener noreferrer" class="link-arrow"><span data-i18n="activity.profile">Mon profil GitHub</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          </div>
-          <div class="activity__scroll" id="activity-scroll" tabindex="0" role="region" aria-label="Calendrier des contributions (défilable)" data-i18n-attr="aria-label:activity.scroll">
-            <div class="activity__graph is-loading" id="activity-graph" role="img" aria-label="Calendrier des contributions GitHub des 12 derniers mois"></div>
-          </div>
-          <div class="activity__foot">
-            <p class="activity__note muted" id="activity-note" data-i18n="activity.note">Chaque case représente un jour de travail versionné sur GitHub.</p>
-            <p class="activity__legend mono" aria-hidden="true"><span data-i18n="activity.less">moins</span> <i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i> <span data-i18n="activity.more">plus</span></p>
-          </div>
-          <div class="activity__tip mono" id="activity-tip" role="status" hidden></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================= PARCOURS ======================= -->
-    <section class="section section--alt" id="journey">
-      <div class="container">
-        <header class="section__head reveal">
-          <p class="section__kicker mono"><span class="section__num">04</span><span data-i18n="journey.kicker">parcours</span></p>
-          <h2 class="section__title" data-i18n="journey.title">Mon parcours</h2>
-          <p class="section__sub" data-i18n="journey.sub">De Gabès à Sophia Antipolis, en passant par l'Allemagne&nbsp;: treize ans d'informatique, de langues et de terrain.</p>
-        </header>
-      </div>
-
-      <div class="journey" id="journey-timeline">
-        <div class="journey__sticky">
-          <div class="journey__viewport" tabindex="0" role="region" aria-label="Frise du parcours, de 2013 à aujourd'hui" data-i18n-attr="aria-label:journey.aria">
-            <div class="journey__track">
-              <span class="journey__rail" aria-hidden="true"><span class="journey__fill"></span></span>
-              <ol class="journey__list">
-                <li class="journey__item">
-                  <p class="journey__year">2013</p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono" data-i18n="j1.place">Gabès, Tunisie</p>
-                    <h3 class="journey__title" data-i18n="j1.title">Baccalauréat et entrée en études supérieures d'informatique</h3>
-                    <p class="journey__text" data-i18n="j1.text">Baccalauréat en poche, je commence mes études supérieures en informatique avec une Licence MIAGE à l'Institut Supérieur de Gestion de Gabès.</p>
-                  </div>
-                </li>
-                <li class="journey__item">
-                  <p class="journey__year">2016</p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono" data-i18n="j2.place">Gabès, Tunisie</p>
-                    <h3 class="journey__title" data-i18n="j2.title">Licence MIAGE — Institut Supérieur de Gestion de Gabès</h3>
-                    <p class="journey__text" data-i18n="j2.text">Diplôme obtenu en méthodes informatiques appliquées à la gestion des entreprises : développement, bases de données et systèmes d'information.</p>
-                  </div>
-                </li>
-                <li class="journey__item">
-                  <p class="journey__year">2017</p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono" data-i18n="j3.place">Allemagne</p>
-                    <h3 class="journey__title" data-i18n="j3.title">Formation intensive en langue allemande</h3>
-                    <p class="journey__text" data-i18n="j3.text">Je m'installe en Allemagne et je consacre une année entière à l'apprentissage de l'allemand.</p>
-                  </div>
-                </li>
-                <li class="journey__item">
-                  <p class="journey__year">2018</p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono" data-i18n="j4.place">Coblence, Allemagne</p>
-                    <h3 class="journey__title" data-i18n="j4.title">Bachelor en informatique — Universität Koblenz</h3>
-                    <p class="journey__text" data-i18n="j4.text">J'intègre l'Université de Coblence pour poursuivre mes études d'informatique dans un environnement international et exigeant.</p>
-                  </div>
-                </li>
-                <li class="journey__item">
-                  <p class="journey__year">2021</p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono">France</p>
-                    <h3 class="journey__title" data-i18n="j5.title">Installation en France et cursus à l'École 42</h3>
-                    <p class="journey__text" data-i18n="j5.text">Je déménage en France. Fin 2021, je rejoins l'École 42 et sa pédagogie par projets, fondée sur l'autonomie et l'apprentissage entre pairs.</p>
-                  </div>
-                </li>
-                <li class="journey__item">
-                  <p class="journey__year">2022</p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono">Nice</p>
-                    <h3 class="journey__title">Retail Sales Specialist — IKEA</h3>
-                    <p class="journey__text" data-i18n="j6.text">Optimisation des ventes et de la gestion informatique des stocks, analyse des performances et accompagnement des nouvelles recrues.</p>
-                  </div>
-                </li>
-                <li class="journey__item">
-                  <p class="journey__year">2024</p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono" data-i18n="j7.place">Montreuil · Octobre 2024</p>
-                    <h3 class="journey__title" data-i18n="j7.title">Immersion professionnelle Cloud &amp; DevOps — KLESIA</h3>
-                    <p class="journey__text" data-i18n="j7.text">Une semaine au cœur d'une équipe cloud : déploiement d'une container app sur Microsoft Azure, prise en main d'Azure CLI, de Docker et de WSL, et découverte des workflows DevOps.</p>
-                  </div>
-                </li>
-                <li class="journey__item journey__item--now">
-                  <p class="journey__year">2025<span class="journey__now" data-i18n="j8.now">aujourd'hui</span></p>
-                  <span class="journey__dot" aria-hidden="true"></span>
-                  <div class="journey__body">
-                    <p class="journey__place mono">Sophia Antipolis</p>
-                    <h3 class="journey__title" data-i18n="j8.title">Mastère Expert Cloud, Sécurité &amp; Infrastructure — Mentor IT en alternance, Ynov Campus</h3>
-                    <p class="journey__text" data-i18n="j8.text">À Ynov Campus, je me spécialise dans l'automatisation et la démarche DevSecOps. En alternance,
-                      j'accompagne plus de 20 étudiants en mentorat (taux de complétion des livrables en hausse de 20&nbsp;%) et j'anime
-                      des ateliers hebdomadaires sur Git, les bases de données, le réseau et l'infrastructure.</p>
-                  </div>
-                </li>
-              </ol>
-            </div>
-          </div>
-          <p class="journey__hint mono" aria-hidden="true"><span class="journey__hint-text" data-i18n="journey.hint">défiler</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================= CONTACT ======================= -->
-    <section class="section" id="contact">
-      <div class="container">
-        <div class="contact reveal">
-          <p class="section__kicker mono"><span class="section__num">05</span>contact</p>
-          <h2 class="contact__title" data-i18n="contact.title">Vous recrutez&nbsp;? <span class="accent">Parlons-en.</span></h2>
-          <p class="contact__lead" data-i18n="contact.lead">
-            Je suis à la recherche d'un poste d'ingénieur Cloud, Infrastructure ou DevOps.
-            Le plus simple pour me joindre&nbsp;: un e&#8209;mail ou un message sur LinkedIn.
-          </p>
-
-          <div class="contact__actions">
-            <a href="mailto:firas.bouricha@outlook.fr" class="btn btn--primary btn--lg">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg>
-              firas.bouricha@outlook.fr
-            </a>
-            <button type="button" class="btn btn--ghost btn--lg" id="copy-email"
-              data-email="firas.bouricha@outlook.fr">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-              <span data-i18n="contact.copy">Copier l'adresse</span>
-            </button>
-          </div>
-
-          <div class="contact__links">
-            <a href="https://www.linkedin.com/in/firas-bouricha/" target="_blank" rel="noopener noreferrer"
-              class="contact-link">
-              <svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.21c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.341-1.248-.822 0-1.358.54-1.358 1.248 0 .694.521 1.248 1.326 1.248h.015zm4.908 8.21V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.633v3.866h2.4V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 01.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
-              <span><strong>LinkedIn</strong><span class="mono muted">in/firas-bouricha</span></span>
-            </a>
-            <a href="https://github.com/firas-bouricha" target="_blank" rel="noopener noreferrer" class="contact-link">
-              <svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-              <span><strong>GitHub</strong><span class="mono muted">firas-bouricha</span></span>
-            </a>
-          </div>
+        <div class="explore__grid">
+          <a class="explore__card reveal" href="profil.html">
+            <span class="explore__cmd mono" aria-hidden="true">$ cd ~/profil</span>
+            <h3 class="explore__title" data-i18n="explore.profile.title">Profil &amp; compétences</h3>
+            <p class="explore__text" data-i18n="explore.profile.text">Qui je suis, mon terminal interactif et les outils que j'utilise au quotidien.</p>
+            <span class="explore__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="explore__card reveal" href="projets.html">
+            <span class="explore__cmd mono" aria-hidden="true">$ cd ~/projets</span>
+            <h3 class="explore__title" data-i18n="explore.projects.title">Projets</h3>
+            <p class="explore__text" data-i18n="explore.projects.text">VM as a Service, pipeline DevSecOps, home lab… et mon activité GitHub.</p>
+            <span class="explore__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="explore__card reveal" href="parcours.html">
+            <span class="explore__cmd mono" aria-hidden="true">$ cd ~/parcours</span>
+            <h3 class="explore__title" data-i18n="explore.journey.title">Parcours &amp; contact</h3>
+            <p class="explore__text" data-i18n="explore.journey.text">De Gabès à Sophia Antipolis en passant par l'Allemagne, et comment me joindre.</p>
+            <span class="explore__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- layout:footer -->
   <!-- ======================= FOOTER ======================= -->
   <footer class="footer">
     <div class="container">
@@ -647,20 +293,21 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/vendor/lenis.min.js?v=20261017-0858"></script>
-  <script src="data/projects.js?v=20261017-0858"></script>
-  <script src="data/terminal.js?v=20261017-0858"></script>
-  <script src="js/i18n.js?v=20261017-0858"></script>
-  <script src="js/core.js?v=20261017-0858"></script>
-  <script src="js/modules/ui.js?v=20261017-0858"></script>
-  <script src="js/modules/projects.js?v=20261017-0858"></script>
-  <script src="js/modules/deck.js?v=20261017-0858"></script>
-  <script src="js/modules/activity.js?v=20261017-0858"></script>
-  <script src="js/modules/editor.js?v=20261017-0858"></script>
-  <script src="js/modules/terminal.js?v=20261017-0858"></script>
-  <script src="js/modules/journey.js?v=20261017-0858"></script>
-  <script src="js/modules/palette.js?v=20261017-0858"></script>
-  <script src="js/main.js?v=20261017-0858"></script>
+  <script src="js/vendor/lenis.min.js?v=20261017-0947"></script>
+  <script src="data/projects.js?v=20261017-0947"></script>
+  <script src="data/terminal.js?v=20261017-0947"></script>
+  <script src="js/i18n.js?v=20261017-0947"></script>
+  <script src="js/core.js?v=20261017-0947"></script>
+  <script src="js/modules/ui.js?v=20261017-0947"></script>
+  <script src="js/modules/projects.js?v=20261017-0947"></script>
+  <script src="js/modules/deck.js?v=20261017-0947"></script>
+  <script src="js/modules/activity.js?v=20261017-0947"></script>
+  <script src="js/modules/editor.js?v=20261017-0947"></script>
+  <script src="js/modules/terminal.js?v=20261017-0947"></script>
+  <script src="js/modules/journey.js?v=20261017-0947"></script>
+  <script src="js/modules/palette.js?v=20261017-0947"></script>
+  <script src="js/main.js?v=20261017-0947"></script>
+  <!-- /layout:footer -->
 </body>
 
 </html>

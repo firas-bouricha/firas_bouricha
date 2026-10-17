@@ -17,10 +17,17 @@
     // Méta
     "meta.title": "Firas Bouricha · Cloud & Infrastructure Engineer",
     "meta.desc": "Firas Bouricha, Cloud & Infrastructure engineer based in Sophia Antipolis. Virtualisation, automation (Terraform, Ansible), DevSecOps and security. Open to opportunities.",
+    // Titre et description de chaque page (attribut data-page de <body>)
+    "meta.title.profil": "Profile & skills · Firas Bouricha",
+    "meta.desc.profil": "Who Firas Bouricha is, Cloud & Infrastructure engineer in Sophia Antipolis: profile, interactive terminal and skills (Proxmox, Terraform, Ansible, Docker, DevSecOps).",
+    "meta.title.projets": "Projects · Firas Bouricha",
+    "meta.desc.projets": "Infrastructure and DevSecOps projects by Firas Bouricha: VM as a Service (GLPI, Ansible, Terraform, Proxmox), hardened CI/CD pipeline, home lab, multi-VM IaC.",
+    "meta.title.parcours": "Journey & contact · Firas Bouricha",
+    "meta.desc.parcours": "Firas Bouricha's journey, from Gabès to Sophia Antipolis by way of Germany, and how to reach him for a Cloud, Infrastructure or DevOps role.",
 
     // Navigation
     "nav.skip": "Skip to content",
-    "nav.home.aria": "Firas Bouricha, back to top",
+    "nav.home.aria": "Firas Bouricha, home",
     "nav.aria": "Main navigation",
     "nav.home": "Home",
     "nav.about": "Profile",
@@ -49,6 +56,16 @@
     "deck.alt.mentoring": "Firas helping a student at his computer",
     "deck.alt.ydays": "Firas and his team in front of the “11 Ydays projects hosted” screen",
     "deck.alt.event": "Firas at an event, phone in hand",
+
+    // Accueil : cartes « Par où commencer ? »
+    "explore.kicker": "explore",
+    "explore.title": "Where to start?",
+    "explore.profile.title": "Profile &amp; skills",
+    "explore.profile.text": "Who I am, my interactive terminal and the tools I use every day.",
+    "explore.projects.title": "Projects",
+    "explore.projects.text": "VM as a Service, DevSecOps pipeline, home lab… and my GitHub activity.",
+    "explore.journey.title": "Journey &amp; contact",
+    "explore.journey.text": "From Gabès to Sophia Antipolis by way of Germany, and how to reach me.",
 
     // Profil
     "about.kicker": "profile",
@@ -171,6 +188,9 @@
     title: document.title,
     desc: document.querySelector('meta[name="description"]')?.getAttribute("content") || "",
   };
+  // Clés propres à la page affichée (meta.title.profil…), sinon celles de l'accueil
+  const page = document.body ? document.body.dataset.page : "";
+  const metaKey = (name) => (EN[`${name}.${page}`] ? `${name}.${page}` : name);
 
   function apply(next) {
     lang = next === "en" ? "en" : "fr";
@@ -188,8 +208,8 @@
       });
     });
     root.lang = lang;
-    document.title = lang === "en" ? EN["meta.title"] : meta.title;
-    document.querySelector('meta[name="description"]')?.setAttribute("content", lang === "en" ? EN["meta.desc"] : meta.desc);
+    document.title = lang === "en" ? EN[metaKey("meta.title")] : meta.title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", lang === "en" ? EN[metaKey("meta.desc")] : meta.desc);
     document.dispatchEvent(new CustomEvent("langchange", { detail: { lang } }));
   }
 

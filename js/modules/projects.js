@@ -54,7 +54,7 @@
             <div class="project__titles">
               ${project.category ? `<p class="project__category">${escapeHTML(isEN() ? CATEGORY_EN[project.category] || project.category : project.category)}</p>` : ""}
               <div class="project__titleRow">
-                <h3 class="project__title">${escapeHTML(pick(project, "title"))}</h3>
+                <h2 class="project__title">${escapeHTML(pick(project, "title"))}</h2>
                 ${project.year ? `<span class="project__year mono">${escapeHTML(pick(project, "year"))}</span>` : ""}
               </div>
               ${project.repo ? `<span class="project__repo">${escapeHTML(project.repo)}</span>` : ""}
