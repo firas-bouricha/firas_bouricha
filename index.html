@@ -4,12 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Politique de sécurité du contenu : seuls les fichiers du site et les deux scripts ci-dessous (empreintes SHA-256)
+       peuvent s'exécuter. Si un script intégré change, mettre à jour son empreinte (le test « csp » l'indique). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-UvsP+XGJ0QKJ8ywgXlFKlkhKHfEUmAmMeAkdhilDAcE=' 'sha256-9WHRPZGCCzv999+bm6BZp4BvuxB/wg2q4ggp0QCyIWs='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://github-contributions-api.jogruber.de; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <title>Firas Bouricha · Ingénieur Cloud & Infrastructure</title>
   <meta name="description"
     content="Firas Bouricha, ingénieur Cloud & Infrastructure basé à Sophia Antipolis. Virtualisation, automatisation (Terraform, Ansible), DevSecOps et sécurité. Ouvert aux opportunités.">
   <meta name="author" content="Firas Bouricha">
   <meta name="theme-color" content="#111117">
-  <meta name="site-version" content="20261015-1558">
+  <meta name="site-version" content="20261017-0858">
   <link rel="canonical" href="https://firas-bouricha.github.io/firas_bouricha/">
 
   <meta property="og:type" content="profile">
@@ -17,18 +20,42 @@
   <meta property="og:description"
     content="Je conçois, automatise et sécurise des infrastructures.">
   <meta property="og:url" content="https://firas-bouricha.github.io/firas_bouricha/">
-  <meta property="og:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/photos/portrait.jpg">
+  <meta property="og:site_name" content="Firas Bouricha">
+  <meta property="og:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Firas Bouricha, ingénieur Cloud &amp; Infrastructure : portrait et terminal aux couleurs du site">
   <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale:alternate" content="en_GB">
 
-  <link rel="icon"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E0E13'/%3E%3Ctext x='12' y='43' font-family='monospace' font-size='30' font-weight='700' fill='%23A78BFA'%3E%3E_%3C/text%3E%3C/svg%3E">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Firas Bouricha · Ingénieur Cloud &amp; Infrastructure">
+  <meta name="twitter:description" content="Je conçois, automatise et sécurise des infrastructures.">
+  <meta name="twitter:image" content="https://firas-bouricha.github.io/firas_bouricha/assets/og-image.jpg">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261015-1558">
+  <!-- Versions linguistiques : le français par défaut, l'anglais via ?lang=en -->
+  <link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/">
+  <link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Polices hébergées sur le site (aucune requête vers Google). Volontairement sans « preload » : mesuré sur mobile
+       lent, le préchargement ralentissait le CSS et retardait l'affichage d'environ 0,8 s (font-display: swap suffit). -->
+  <link rel="stylesheet" href="css/style.css?v=20261017-0858">
+  <noscript>
+    <!-- Sans JavaScript : on montre about.md au lieu du terminal et on masque ce qui ne peut pas fonctionner -->
+    <style>
+      #tab-term, #tab-tf, #tab-ci, #pane-term, .activity, .deck__btn, .nav__toggle,
+      #cmdk-open, #lang-toggle, #theme-toggle, [data-open-cmdk], [data-open-term] { display: none !important; }
+      #pane-about[hidden] { display: block; }
+      .editor__tabs #tab-about { color: #fff; background: #000; }
+    </style>
+  </noscript>
   <script>
     // Mise à jour automatique : GitHub Pages laisse le navigateur garder la page en cache ~10 min.
     // On compare la version de cette page à version.json (jamais mis en cache) ; si une version
@@ -66,6 +93,7 @@
     "name": "Firas Bouricha",
     "jobTitle": "Ingénieur Cloud & Infrastructure",
     "url": "https://firas-bouricha.github.io/firas_bouricha/",
+    "image": "https://firas-bouricha.github.io/firas_bouricha/assets/photos/portrait.webp",
     "email": "mailto:firas.bouricha@outlook.fr",
     "address": { "@type": "PostalAddress", "addressLocality": "Sophia Antipolis", "addressCountry": "FR" },
     "sameAs": ["https://www.linkedin.com/in/firas-bouricha/", "https://github.com/firas-bouricha"]
@@ -171,20 +199,20 @@
           <div class="deck" id="deck" role="region" aria-roledescription="carrousel" aria-label="Photos de Firas Bouricha" data-i18n-attr="aria-label:deck.aria">
             <div class="deck__stage">
               <figure class="deck__card" data-pos="0" data-caption="Portrait professionnel" data-caption-en="Professional portrait">
-                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/portrait.jpg</span></div>
-                <img src="assets/photos/portrait.jpg" alt="Portrait de Firas Bouricha" data-i18n-attr="alt:deck.alt.portrait" width="640" height="800">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/portrait.webp</span></div>
+                <img src="assets/photos/portrait.webp" alt="Portrait de Firas Bouricha" data-i18n-attr="alt:deck.alt.portrait" width="640" height="800">
               </figure>
               <figure class="deck__card" data-pos="1" data-caption="Mentorat : j'accompagne un étudiant sur son projet à Ynov" data-caption-en="Mentoring: helping a student with his project at Ynov">
-                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/mentorat.jpg</span></div>
-                <img src="assets/photos/mentorat.jpg" alt="Firas accompagne un étudiant devant son ordinateur" data-i18n-attr="alt:deck.alt.mentoring" width="640" height="800">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/mentorat.webp</span></div>
+                <img src="assets/photos/mentorat.webp" alt="Firas accompagne un étudiant devant son ordinateur" data-i18n-attr="alt:deck.alt.mentoring" width="640" height="800">
               </figure>
               <figure class="deck__card" data-pos="2" data-caption="Ydays : 11 projets étudiants hébergés sur notre infrastructure" data-caption-en="Ydays: 11 student projects hosted on our infrastructure">
-                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/ydays.jpg</span></div>
-                <img src="assets/photos/ydays.jpg" alt="Firas et son équipe devant l'écran « 11 projets Ydays hébergés »" data-i18n-attr="alt:deck.alt.ydays" width="640" height="800">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/ydays.webp</span></div>
+                <img src="assets/photos/ydays.webp" alt="Firas et son équipe devant l'écran « 11 projets Ydays hébergés »" data-i18n-attr="alt:deck.alt.ydays" width="640" height="800">
               </figure>
               <figure class="deck__card" data-pos="3" data-caption="Sur le terrain, lors d'un événement" data-caption-en="In the field, at an event">
-                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/evenement.jpg</span></div>
-                <img src="assets/photos/evenement.jpg" alt="Firas lors d'un événement, téléphone en main" data-i18n-attr="alt:deck.alt.event" width="640" height="800">
+                <div class="deck__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/photos/evenement.webp</span></div>
+                <img src="assets/photos/evenement.webp" alt="Firas lors d'un événement, téléphone en main" data-i18n-attr="alt:deck.alt.event" width="640" height="800">
               </figure>
             </div>
             <div class="deck__controls">
@@ -438,7 +466,7 @@ jobs:
             <a href="https://github.com/firas-bouricha" target="_blank" rel="noopener noreferrer" class="link-arrow"><span data-i18n="activity.profile">Mon profil GitHub</span>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
-          <div class="activity__scroll" id="activity-scroll">
+          <div class="activity__scroll" id="activity-scroll" tabindex="0" role="region" aria-label="Calendrier des contributions (défilable)" data-i18n-attr="aria-label:activity.scroll">
             <div class="activity__graph is-loading" id="activity-graph" role="img" aria-label="Calendrier des contributions GitHub des 12 derniers mois"></div>
           </div>
           <div class="activity__foot">
@@ -619,11 +647,20 @@ jobs:
 
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/vendor/lenis.min.js?v=20261015-1558"></script>
-  <script src="data/projects.js?v=20261015-1558"></script>
-  <script src="data/terminal.js?v=20261015-1558"></script>
-  <script src="js/i18n.js?v=20261015-1558"></script>
-  <script src="js/main.js?v=20261015-1558"></script>
+  <script src="js/vendor/lenis.min.js?v=20261017-0858"></script>
+  <script src="data/projects.js?v=20261017-0858"></script>
+  <script src="data/terminal.js?v=20261017-0858"></script>
+  <script src="js/i18n.js?v=20261017-0858"></script>
+  <script src="js/core.js?v=20261017-0858"></script>
+  <script src="js/modules/ui.js?v=20261017-0858"></script>
+  <script src="js/modules/projects.js?v=20261017-0858"></script>
+  <script src="js/modules/deck.js?v=20261017-0858"></script>
+  <script src="js/modules/activity.js?v=20261017-0858"></script>
+  <script src="js/modules/editor.js?v=20261017-0858"></script>
+  <script src="js/modules/terminal.js?v=20261017-0858"></script>
+  <script src="js/modules/journey.js?v=20261017-0858"></script>
+  <script src="js/modules/palette.js?v=20261017-0858"></script>
+  <script src="js/main.js?v=20261017-0858"></script>
 </body>
 
 </html>

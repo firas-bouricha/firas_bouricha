@@ -91,6 +91,7 @@
     "projects.all": "All my repositories",
     "projects.filters": "Filter projects",
     "activity.title": "GitHub activity",
+    "activity.scroll": "Contributions calendar (scrollable)",
     "activity.profile": "My GitHub profile",
     "activity.note": "Each square is a day of work versioned on GitHub.",
     "activity.less": "less",

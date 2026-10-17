@@ -1,0 +1,17 @@
+{
+  "name": "firas-bouricha-portfolio",
+  "private": true,
+  "description": "Portfolio de Firas Bouricha : tests automatiques (le site lui-même n'a besoin d'aucune installation).",
+  "scripts": {
+    "serve": "node tests/server.js",
+    "lint": "eslint js/core.js js/main.js js/i18n.js js/modules data tests",
+    "test": "playwright test",
+    "og-image": "node scripts/og-image/render.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "axe-core": "4.10.2",
+    "eslint": "9.39.5",
+    "globals": "17.13.0"
+  }
+}

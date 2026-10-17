@@ -14,29 +14,38 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 ```
 .
 ├── index.html          # Toute la page (profil, compétences, parcours, contact)
+├── 404.html            # Page « introuvable » façon terminal
 ├── version.json        # Numéro de version en ligne (mise à jour automatique des visiteurs)
-├── scripts/
-│   └── bump-version.sh # Change le numéro de version avant une publication
+├── sitemap.xml         # Plan du site pour Google (FR + EN)
+├── robots.txt, site.webmanifest
 ├── data/
 │   ├── projects.js     # ⭐ La liste des projets : c'est ici qu'on en ajoute
 │   └── terminal.js     # Textes du terminal (fichier caché .mystere, whoami)
 ├── css/
-│   └── style.css       # Le design (couleurs, mise en page, responsive)
+│   └── style.css       # Le design (polices, couleurs, mise en page, responsive)
 ├── js/
 │   ├── i18n.js         # Traductions anglaises (bouton FR / EN)
-│   ├── vendor/lenis.min.js  # Défilement doux (Lenis, licence MIT)
-│   └── main.js         # Cartes projets, filtres, menu, thème, palette ⌘K, animations
-└── assets/
-    ├── icons/          # Logos des technologies (devicon MIT, Simple Icons CC0)
-    ├── photos/         # Photos du haut de page (visionneuse cliquable)
-    └── projects/       # Images des projets (photos, captures d'écran)
+│   ├── core.js         # Outils partagés par les modules (window.Site)
+│   ├── modules/        # Un fichier par fonctionnalité : ui, projects, terminal, palette…
+│   ├── main.js         # Démarrage : lance chaque module indépendamment
+│   └── vendor/lenis.min.js  # Défilement doux (Lenis, licence MIT)
+├── assets/
+│   ├── fonts/          # Space Grotesk et JetBrains Mono (woff2, licence OFL)
+│   ├── icons/          # Logos des technologies + favicon et icônes du site
+│   ├── photos/         # Photos du haut de page (WebP)
+│   ├── projects/       # Images des projets (WebP)
+│   └── og-image.jpg    # Aperçu affiché quand le lien est partagé (LinkedIn, Slack…)
+├── scripts/
+│   ├── bump-version.sh # Change le numéro de version avant une publication
+│   └── og-image/       # Modèle et script de l'image de partage
+└── tests/              # Tests automatiques (Playwright), lancés sur chaque PR
 ```
 
 Fonctionnalités : site bilingue FR / EN (français par défaut), défilement doux avec inertie, thème clair / sombre (mémorisé), palette de commandes (`Ctrl` + `K` ou `⌘` + `K`),
 filtres de projets, parcours interactif façon `git log`, éditeur de code à onglets et vrai terminal dans la section Profil.
 
-Le site est 100 % statique : aucun framework, aucune étape de build. Il suffit de pousser sur la branche publiée
-par GitHub Pages pour le mettre à jour.
+Le site est 100 % statique : aucun framework, aucune étape de build, aucune ressource externe (polices comprises).
+Il suffit de pousser sur la branche publiée par GitHub Pages pour le mettre à jour. Node.js ne sert qu'aux tests.
 
 ---
 
@@ -73,8 +82,9 @@ par GitHub Pages pour le mettre à jour.
 
 **Ajouter une image**
 
-1. Déposer la photo ou la capture d'écran dans `assets/projects/` (format `.jpg` ou `.png`, idéalement moins de
-   200 Ko et environ 900 à 1500 px de large).
+1. Déposer la photo ou la capture d'écran dans `assets/projects/`, de préférence au format **WebP** (environ 2 fois
+   plus léger que le JPEG ; conversion gratuite sur [squoosh.app](https://squoosh.app)). Viser moins de 150 Ko et
+   900 à 1500 px de large. Les formats `.jpg` et `.png` fonctionnent aussi.
 2. Renseigner `image` (le chemin du fichier) et `imageAlt` (une phrase qui décrit l'image).
 
 Sur une carte mise en avant (`featured: true`), l'image s'affiche à gauche du texte ; sur une carte normale, en haut.
@@ -138,7 +148,7 @@ bascule la langue et mémorise le choix. Un lien direct vers la version anglaise
 
 ## Changer les photos du haut de page
 
-Les photos sont dans `assets/photos/` (format portrait 4:5, idéalement 640 × 800 px). Pour en ajouter une,
+Les photos sont dans `assets/photos/` (WebP, format portrait 4:5, idéalement 640 × 800 px). Pour en ajouter une,
 copier un bloc `<figure class="deck__card">` dans `index.html`, puis modifier le nom du fichier, la légende
 (`data-caption`) et le texte alternatif (`alt`). Le compteur et la navigation s'adaptent automatiquement.
 
@@ -157,6 +167,57 @@ Elle change le numéro de version partout (`index.html` et `version.json`). Rés
 - les fichiers CSS et JavaScript sont retéléchargés (leur adresse contient le numéro de version) ;
 - la page elle-même vérifie à chaque visite `version.json` : si une version plus récente est en ligne,
   elle se recharge automatiquement une fois. Plus besoin de vider le cache ni de faire Ctrl + Maj + R.
+
+---
+
+## Image de partage et référencement
+
+- **Image de partage** (`assets/og-image.jpg`, 1200 × 630) : c'est l'aperçu affiché sur LinkedIn, Slack, WhatsApp…
+  Pour la modifier : changer `scripts/og-image/og.html`, puis `npm install` et `npm run og-image`
+  (régénère aussi les icônes). Vérifier l'aperçu avec le
+  [Post Inspector de LinkedIn](https://www.linkedin.com/post-inspector/).
+- **Google** : déclarer `https://firas-bouricha.github.io/firas_bouricha/sitemap.xml` dans
+  [Google Search Console](https://search.google.com/search-console). Le `robots.txt` n'est lu qu'à la racine d'un
+  domaine : il ne servira qu'avec un nom de domaine personnel.
+
+---
+
+## Sécurité (CSP)
+
+`index.html` et `404.html` contiennent une politique de sécurité du contenu (balise `Content-Security-Policy`) :
+seuls les fichiers du site peuvent s'exécuter. Les petits scripts écrits directement dans `<head>` sont autorisés
+par leur empreinte SHA-256. **Si l'un d'eux est modifié**, le test `CSP` échoue et indique qu'il faut recalculer son
+empreinte :
+
+```bash
+node -e "const c=require('crypto'),s=require('fs').readFileSync('index.html','utf8');for(const m of s.matchAll(/<script>([\s\S]*?)<\/script>/g))console.log(\"'sha256-\"+c.createHash('sha256').update(m[1]).digest('base64')+\"'\")"
+```
+
+---
+
+## Tests automatiques
+
+Chaque PR est vérifiée par GitHub Actions (`.github/workflows/ci.yml`). Pour lancer les mêmes vérifications en local
+(Node.js 22 requis) :
+
+```bash
+npm install
+npx playwright install chromium   # une seule fois
+npm run lint                       # JavaScript : variables non définies, code mort
+npm test                           # 39 tests
+```
+
+| Fichier | Ce qui est vérifié |
+|---------|--------------------|
+| `smoke.spec.js` | 6 largeurs × 2 thèmes : aucune erreur, aucun débordement, menu dans l'écran |
+| `a11y.spec.js` | Accessibilité WCAG 2.1 AA (axe-core) en thème sombre et clair, ordinateur et mobile |
+| `terminal.spec.js` | Commandes, complétion, historique, langue, thème, sécurité de l'affichage |
+| `features.spec.js` | Palette ⌘K, thème, filtres, photos, frise, menu mobile, copie de l'e-mail |
+| `i18n.spec.js` | Toutes les traductions présentes, bouton FR / EN, lien `?lang=en` |
+| `seo-securite.spec.js` | CSP, version, fichiers référencés, partage, sitemap, liens externes, page 404 |
+| `perf.spec.js` | Poids < 900 Ko, aucune ressource externe, polices locales, affichage sans JavaScript |
+
+`npm run serve` sert le site comme GitHub Pages : http://127.0.0.1:4173/firas_bouricha/
 
 ---
 
