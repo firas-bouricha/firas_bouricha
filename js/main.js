@@ -36,5 +36,17 @@
     // Si les animations ne démarrent pas, on affiche directement tout le contenu
     if (safely("animations", () => M.reveal()) !== true) document.documentElement.classList.remove("js");
     document.documentElement.setAttribute("data-ready", "");
+
+    // Arrivée avec une ancre (ex. parcours.html#contact) : la page s'est construite après le saut
+    // du navigateur (frise, cartes de projets…), on recale donc la position, sans animation
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (id && document.getElementById(id) && Site) {
+      const settle = () => Site.scrollToSection(id, { instant: true });
+      requestAnimationFrame(settle);
+      window.addEventListener("load", settle, { once: true });
+    } else if (id && Site) {
+      // Ancien lien de la version « une seule page » (ex. …/#projects) : ouverture de la bonne page
+      Site.goTo(id);
+    }
   });
 })(window.Site);

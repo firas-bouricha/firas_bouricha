@@ -579,6 +579,31 @@ svg.fill { fill: currentColor; stroke: none; }
 .principle dt span { font-size: 12.5px; font-weight: 400; color: var(--violet-soft); }
 .principle dd { margin: 10px 0 0; color: var(--muted); font-size: 15.5px; }
 
+/* ---------- Accueil : cartes « Par où commencer ? » ---------- */
+.explore { padding-top: 24px; }
+.explore__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.explore__card {
+  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; gap: 10px;
+  padding: 26px 24px 22px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); transition: border-color .25s, transform .3s var(--ease), box-shadow .3s;
+}
+/* Lueur violette qui s'allume au survol, depuis le coin de la commande */
+.explore__card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .35s;
+  background: radial-gradient(ellipse 85% 75% at 0% 0%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 70%);
+}
+.explore__card:hover, .explore__card:focus-visible { border-color: color-mix(in srgb, var(--violet-soft) 55%, transparent); transform: translateY(-3px); box-shadow: 0 24px 50px -28px var(--shadow); }
+.explore__card:hover::before, .explore__card:focus-visible::before { opacity: 1; }
+.explore__cmd { font-size: 13px; color: var(--cyan); }
+.explore__title { font-size: 22px; font-weight: 600; letter-spacing: -.015em; line-height: 1.25; }
+.explore__text { color: var(--muted); font-size: 15.5px; line-height: 1.6; }
+.explore__go { margin-top: auto; padding-top: 8px; font-size: 20px; color: var(--violet-soft); }
+.explore__go svg { transition: transform .3s var(--ease); }
+.explore__card:hover .explore__go svg, .explore__card:focus-visible .explore__go svg { transform: translateX(5px); }
+
+/* Ancres (parcours.html#contact…) : arrivée juste sous le menu fixe */
+section[id], #editor { scroll-margin-top: calc(var(--nav-h) + 12px); }
+
 /* ---------- Compétences ---------- */
 .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .skill {
@@ -930,6 +955,9 @@ kbd {
 .js .hero .hero__meta { animation-delay: 210ms; }
 .js .hero .hero__cta { animation-delay: 280ms; }
 @keyframes heroIn { from { opacity: 0; transform: translateY(12px); } }
+/* Même principe pour la première section de chaque page (Profil, Projets, Parcours) */
+.js main > section:first-of-type .reveal { opacity: 1; transform: none; transition: none; animation: heroIn .8s var(--ease) both; }
+.js main > section:first-of-type .reveal + .reveal { animation-delay: 90ms; }
 .js .reveal.is-visible { opacity: 1; transform: none; }
 
 /* ---------- Responsive ---------- */
@@ -1033,7 +1061,7 @@ kbd {
   .container { padding: 0 16px; }
   .section { padding: 84px 0; }
   .section__head { margin-bottom: 40px; }
-  .projects, .skills { grid-template-columns: 1fr; }
+  .projects, .skills, .explore__grid { grid-template-columns: 1fr; }
   .project--featured { grid-column: auto; }
   .project { padding: 24px 22px; }
   .project__media,

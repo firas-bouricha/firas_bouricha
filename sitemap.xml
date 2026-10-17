@@ -15,4 +15,46 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/"/>
     <lastmod>2026-10-17</lastmod>
   </url>
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/profil.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/profil.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/profil.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/profil.html"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/profil.html?lang=en</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/profil.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/profil.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/profil.html"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/projets.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/projets.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/projets.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/projets.html"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/projets.html?lang=en</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/projets.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/projets.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/projets.html"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/parcours.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/parcours.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/parcours.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/parcours.html"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/parcours.html?lang=en</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/parcours.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/parcours.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/parcours.html"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
 </urlset>

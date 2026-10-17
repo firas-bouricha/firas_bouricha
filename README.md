@@ -13,7 +13,10 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 
 ```
 .
-├── index.html          # Toute la page (profil, compétences, parcours, contact)
+├── index.html          # Accueil : présentation, photos, « Par où commencer ? »
+├── profil.html         # Profil, terminal interactif, compétences
+├── projets.html        # Projets (filtres) et activité GitHub
+├── parcours.html       # Parcours (frise) et contact
 ├── 404.html            # Page « introuvable » façon terminal
 ├── version.json        # Numéro de version en ligne (mise à jour automatique des visiteurs)
 ├── sitemap.xml         # Plan du site pour Google (FR + EN)
@@ -37,6 +40,7 @@ typographies Space Grotesk et JetBrains Mono, et clins d'œil au terminal (`$ ca
 │   └── og-image.jpg    # Aperçu affiché quand le lien est partagé (LinkedIn, Slack…)
 ├── scripts/
 │   ├── bump-version.sh # Change le numéro de version avant une publication
+│   ├── sync-layout.js  # Recopie le menu, le pied de page et le <head> commun dans toutes les pages
 │   └── og-image/       # Modèle et script de l'image de partage
 └── tests/              # Tests automatiques (Playwright), lancés sur chaque PR
 ```
@@ -46,6 +50,25 @@ filtres de projets, parcours interactif façon `git log`, éditeur de code à on
 
 Le site est 100 % statique : aucun framework, aucune étape de build, aucune ressource externe (polices comprises).
 Il suffit de pousser sur la branche publiée par GitHub Pages pour le mettre à jour. Node.js ne sert qu'aux tests.
+
+---
+
+## Les pages et leurs blocs communs
+
+Le site compte 4 pages. Le menu, le pied de page et le début du `<head>` sont **identiques sur toutes les pages** ;
+dans chaque fichier, ils sont encadrés par des commentaires :
+
+```html
+<!-- layout:meta … -->   …   <!-- /layout:meta -->     balises communes du <head>
+<!-- layout:header -->   …   <!-- /layout:header -->   menu
+<!-- layout:footer -->   …   <!-- /layout:footer -->   pied de page, palette ⌘K, scripts
+```
+
+**Pour les modifier** : changer le bloc dans `index.html` uniquement, puis lancer `npm run sync` (ou
+`node scripts/sync-layout.js`) qui le recopie dans les autres pages. Un test vérifie que les pages restent identiques.
+
+Le titre, la description et les balises de partage de chaque page sont au début de son `<head>`, en dehors des blocs
+communs (version anglaise dans `js/i18n.js` : clés `meta.title.profil`, `meta.desc.profil`…).
 
 ---
 
@@ -100,7 +123,7 @@ Sur une carte mise en avant (`featured: true`), l'image s'affiche à gauche du t
 
 ## Ajouter une compétence
 
-Dans `index.html`, section « Compétences », copier une ligne `<li class="tech">` dans la bonne catégorie et changer
+Dans `profil.html`, section « Compétences », copier une ligne `<li class="tech">` dans la bonne catégorie et changer
 le logo (`assets/icons/…`) et le nom. Les logos officiels en couleur se trouvent sur
 [devicon.dev](https://devicon.dev) (fichier `*-original.svg`).
 
@@ -108,7 +131,7 @@ le logo (`assets/icons/…`) et le nom. Les logos officiels en couleur se trouve
 
 ## Le terminal (`firas@Portfolio`)
 
-L'onglet **`>_ terminal`** de la section Profil, ouvert par défaut, est un petit shell simulé façon zsh +
+L'onglet **`>_ terminal`** de la page Profil (`profil.html`), ouvert par défaut, est un petit shell simulé façon zsh +
 oh-my-zsh : au chargement, il affiche `neofetch` avec le logo ASCII « FB ». On l'ouvre aussi depuis la palette
 (`Ctrl` + `K` → « Ouvrir le terminal ») ou en cliquant sur `firas@Portfolio` dans la barre d'état du bas.
 
@@ -133,12 +156,12 @@ Commandes cachées : `sudo hire-me` (ouvre un e-mail), `rm -rf /`, `pwd`, `date`
 
 ## Version anglaise (FR / EN)
 
-Le français est la langue par défaut : il est écrit directement dans `index.html`. Le bouton **FR / EN** du menu
+Le français est la langue par défaut : il est écrit directement dans les pages HTML. Le bouton **FR / EN** du menu
 bascule la langue et mémorise le choix. Un lien direct vers la version anglaise :
 `https://firas-bouricha.github.io/firas_bouricha/?lang=en` (pratique pour une candidature en anglais).
 
 - **Modifier une traduction** : changer la phrase anglaise dans `js/i18n.js`.
-- **Traduire un nouveau texte** : ajouter `data-i18n="ma.cle"` sur l'élément dans `index.html`
+- **Traduire un nouveau texte** : ajouter `data-i18n="ma.cle"` sur l'élément dans la page HTML
   (ou `data-i18n-attr="aria-label:ma.cle"` pour un attribut), puis `"ma.cle": "English text"` dans `js/i18n.js`.
 - **Projets** : ajouter un bloc `en: { description: "…" }` au projet dans `data/projects.js`
   (champs possibles : `title`, `description`, `imageAlt`, `year`, `tags`).
@@ -162,7 +185,7 @@ Après chaque modification, lancer **une seule commande** avant le commit :
 ./scripts/bump-version.sh
 ```
 
-Elle change le numéro de version partout (`index.html` et `version.json`). Résultat :
+Elle change le numéro de version partout (les 4 pages et `version.json`). Résultat :
 
 - les fichiers CSS et JavaScript sont retéléchargés (leur adresse contient le numéro de version) ;
 - la page elle-même vérifie à chaque visite `version.json` : si une version plus récente est en ligne,
@@ -184,7 +207,7 @@ Elle change le numéro de version partout (`index.html` et `version.json`). Rés
 
 ## Sécurité (CSP)
 
-`index.html` et `404.html` contiennent une politique de sécurité du contenu (balise `Content-Security-Policy`) :
+Toutes les pages (et `404.html`) contiennent une politique de sécurité du contenu (balise `Content-Security-Policy`) :
 seuls les fichiers du site peuvent s'exécuter. Les petits scripts écrits directement dans `<head>` sont autorisés
 par leur empreinte SHA-256. **Si l'un d'eux est modifié**, le test `CSP` échoue et indique qu'il faut recalculer son
 empreinte :
@@ -204,17 +227,17 @@ Chaque PR est vérifiée par GitHub Actions (`.github/workflows/ci.yml`). Pour l
 npm install
 npx playwright install chromium   # une seule fois
 npm run lint                       # JavaScript : variables non définies, code mort
-npm test                           # 39 tests
+npm test                           # 95 tests (4 pages)
 ```
 
 | Fichier | Ce qui est vérifié |
 |---------|--------------------|
-| `smoke.spec.js` | 6 largeurs × 2 thèmes : aucune erreur, aucun débordement, menu dans l'écran |
+| `smoke.spec.js` | 4 pages × 6 largeurs × 2 thèmes : aucune erreur, aucun débordement, menu dans l'écran, un seul titre `h1` |
 | `a11y.spec.js` | Accessibilité WCAG 2.1 AA (axe-core) en thème sombre et clair, ordinateur et mobile |
 | `terminal.spec.js` | Commandes, complétion, historique, langue, thème, sécurité de l'affichage |
-| `features.spec.js` | Palette ⌘K, thème, filtres, photos, frise, menu mobile, copie de l'e-mail |
+| `features.spec.js` | Menu et liens entre pages, palette ⌘K, thème, filtres, photos, frise, menu mobile, copie de l'e-mail |
 | `i18n.spec.js` | Toutes les traductions présentes, bouton FR / EN, lien `?lang=en` |
-| `seo-securite.spec.js` | CSP, version, fichiers référencés, partage, sitemap, liens externes, page 404 |
+| `seo-securite.spec.js` | CSP, blocs communs synchronisés, version, fichiers référencés, titres et partage de chaque page, sitemap, page 404 |
 | `perf.spec.js` | Poids < 900 Ko, aucune ressource externe, polices locales, affichage sans JavaScript |
 
 `npm run serve` sert le site comme GitHub Pages : http://127.0.0.1:4173/firas_bouricha/
@@ -223,7 +246,7 @@ npm test                           # 39 tests
 
 ## Tester en local
 
-Ouvrir directement `index.html` dans un navigateur suffit. Pour un rendu identique à GitHub Pages :
+Ouvrir directement `index.html` dans un navigateur suffit pour un aperçu. Pour un rendu identique à GitHub Pages :
 
 ```bash
 python3 -m http.server 8000

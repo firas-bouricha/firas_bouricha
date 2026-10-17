@@ -65,18 +65,38 @@
     }
   }
 
-  // Défilement vers une section (utilisé par la palette de commandes)
-  function scrollToSection(id) {
+  // Défilement vers une section de la page courante ({ instant: true } : sans animation)
+  function scrollToSection(id, { instant = false } = {}) {
     const target = document.getElementById(id);
-    if (!target) return;
+    if (!target) return false;
+    // Position absolue calculée à partir du défilement réel : reste juste même si
+    // la page a bougé sans Lenis (saut d'ancre, clavier, défilement du navigateur)
+    const y = Math.max(0, target.getBoundingClientRect().top + window.scrollY + navOffset());
     if (lenis) {
-      // Position absolue calculée à partir du défilement réel : reste juste même si
-      // la page a bougé sans Lenis (saut d'ancre, clavier, défilement du navigateur)
-      const y = target.getBoundingClientRect().top + window.scrollY + navOffset();
       lenis.start();
-      lenis.scrollTo(Math.max(0, y), { force: true });
+      lenis.resize(); // la page a pu grandir depuis (frise épinglée, cartes) : sinon Lenis bloque à l'ancienne hauteur
+      lenis.scrollTo(y, { force: true, immediate: instant });
+    } else {
+      window.scrollTo({ top: y, behavior: instant ? "auto" : "smooth" });
     }
-    else target.scrollIntoView({ behavior: "smooth" });
+    return true;
+  }
+
+  /* ---------- Pages du site ----------
+     Chaque section appartient à une page. goTo() fait défiler si la section est sur la page
+     affichée, sinon ouvre la bonne page (à son début, ou à l'ancre de la section). */
+  const PAGES = {
+    top: "index.html", explore: "index.html",
+    about: "profil.html", editor: "profil.html", skills: "profil.html",
+    projects: "projets.html", activity: "projets.html",
+    journey: "parcours.html", contact: "parcours.html",
+  };
+  const FIRST = new Set(["top", "about", "projects", "journey"]); // sections en tête de leur page
+
+  function goTo(id) {
+    if (scrollToSection(id)) return;
+    const page = PAGES[id];
+    if (page) window.location.href = FIRST.has(id) ? page : `${page}#${id}`;
   }
   /* ---------- Notifications ---------- */
   let toastTimer;
@@ -99,7 +119,7 @@
   }
 
   window.Site = {
-    EMAIL, T, onLang, isEN, pick, CATEGORY_EN, ICONS, escapeHTML, safeURL, svg, notify, copyEmail, scrollToSection,
+    EMAIL, T, onLang, isEN, pick, CATEGORY_EN, ICONS, escapeHTML, safeURL, svg, notify, copyEmail, scrollToSection, goTo,
     // Fournis par les modules terminal et éditeur (fonctions vides tant qu'ils ne sont pas démarrés)
     openTerminal: () => {},
     selectEditorTab: () => {},

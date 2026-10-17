@@ -31,9 +31,17 @@ async function preparePage(page, { theme = "dark", lang } = {}) {
   return problems;
 }
 
-/** Ouvre le site et attend la fin du démarrage des modules. */
-async function openSite(page, query = "") {
-  await page.goto(`./${query}`);
+/** Les pages du site (fichier, attribut data-page de <body>). */
+const PAGES = [
+  { file: "index.html", id: "accueil" },
+  { file: "profil.html", id: "profil" },
+  { file: "projets.html", id: "projets" },
+  { file: "parcours.html", id: "parcours" },
+];
+
+/** Ouvre une page du site (« index.html », « projets.html?lang=en »…) et attend la fin du démarrage. */
+async function openSite(page, target = "index.html") {
+  await page.goto(`./${target}`);
   await page.waitForSelector("html[data-ready]");
 }
 
@@ -53,4 +61,4 @@ async function allProblems(page, problems) {
   return [...problems, ...csp.map((v) => `CSP : ${v}`)];
 }
 
-module.exports = { ROOT, read, preparePage, openSite, scrollThrough, allProblems };
+module.exports = { ROOT, PAGES, read, preparePage, openSite, scrollThrough, allProblems };

@@ -4,7 +4,7 @@
  */
 (function (Site) {
   "use strict";
-  const { T, onLang, isEN, copyEmail } = Site;
+  const { T, onLang, isEN, copyEmail, scrollToSection } = Site;
 
   /* ---------- Navigation ---------- */
   function setupNav() {
@@ -13,7 +13,8 @@
     const menu = document.getElementById("nav-links");
     const path = document.getElementById("prompt-path");
     if (!nav || !menu) return;
-    const links = [...menu.querySelectorAll('a[href^="#"]')];
+    const links = [...menu.querySelectorAll("a[data-page]")];
+    const page = document.body.dataset.page || "accueil";
 
     const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 12);
     onScroll();
@@ -51,38 +52,50 @@
     window.addEventListener("resize", moveIndicator);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
 
-    // Lien actif + chemin du prompt (firas@Portfolio:~/projets$) selon la section visible
-    let activeId = "top";
-    const setActive = (id) => {
-      activeId = id;
-      let current = "~";
+    // Lien actif + chemin du prompt (firas@Portfolio:~/projets$) : la page affichée,
+    // ou une section de cette page (ex. Contact sur la page Parcours) quand elle est à l'écran
+    const pageLinks = links.filter((a) => a.dataset.page === page);
+    const mainLink = pageLinks.find((a) => !a.dataset.section) || pageLinks[0];
+    const sectionLinks = pageLinks.filter((a) => a.dataset.section && document.getElementById(a.dataset.section));
+    let current = mainLink;
+    const setActive = (link) => {
+      current = link;
       links.forEach((a) => {
-        const on = a.getAttribute("href") === `#${id}`;
+        const on = a === link;
         a.classList.toggle("is-active", on);
-        if (on) {
-          activeLink = a;
-          a.setAttribute("aria-current", "true");
-          current = (isEN() && a.dataset.pathEn) || a.dataset.path || current;
-        } else {
-          a.removeAttribute("aria-current");
-        }
+        if (on) a.setAttribute("aria-current", a.dataset.section ? "location" : "page");
+        else a.removeAttribute("aria-current");
       });
-      if (path) path.textContent = current;
+      activeLink = link || null;
+      if (path) path.textContent = (link && ((isEN() && link.dataset.pathEn) || link.dataset.path)) || "~";
       moveIndicator();
     };
+    const spy = () => {
+      // Une section compte comme « affichée » quand son haut a passé 45 % de la hauteur de l'écran
+      const reached = sectionLinks.filter((a) => document.getElementById(a.dataset.section).getBoundingClientRect().top < window.innerHeight * 0.45);
+      const link = reached.length ? reached[reached.length - 1] : mainLink;
+      if (link !== current) setActive(link);
+    };
+    if (sectionLinks.length) window.addEventListener("scroll", spy, { passive: true });
 
-    const sections = [...new Set(links.map((a) => document.querySelector(a.getAttribute("href"))))].filter(Boolean);
-    if ("IntersectionObserver" in window && sections.length) {
-      const spy = new IntersectionObserver(
-        (entries) => entries.forEach((entry) => { if (entry.isIntersecting) setActive(entry.target.id); }),
-        { rootMargin: "-40% 0px -55% 0px" }
-      );
-      sections.forEach((section) => spy.observe(section));
-    }
-    setActive("top");
+    // Lien vers la page affichée : défilement doux au lieu d'un rechargement
+    pageLinks.forEach((a) => a.addEventListener("click", (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      e.preventDefault();
+      if (a.dataset.section) {
+        scrollToSection(a.dataset.section);
+        history.replaceState(null, "", `#${a.dataset.section}`);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    }));
+
+    setActive(mainLink);
+    spy();
     // Langue : libellés et largeur des liens changent → on recale le chemin et la pastille
     onLang(() => {
-      setActive(activeId);
+      setActive(current);
       if (toggle) toggle.setAttribute("aria-label", toggle.getAttribute("aria-expanded") === "true" ? T("Fermer le menu", "Close menu") : T("Ouvrir le menu", "Open menu"));
     });
   }

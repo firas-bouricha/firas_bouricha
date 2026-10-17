@@ -4,7 +4,7 @@
  */
 (function (Site) {
   "use strict";
-  const { EMAIL, T, onLang, isEN, pick, escapeHTML, scrollToSection } = Site;
+  const { EMAIL, T, onLang, isEN, pick, escapeHTML, scrollToSection, goTo } = Site;
 
   /* ---------- Terminal (onglet ">_ terminal" de la section Profil) ----------
      Un petit shell simulé, façon zsh + oh-my-zsh : help, ls, cat, whoami, neofetch,
@@ -17,7 +17,12 @@
     const input = document.getElementById("term-input");
     const ps1Live = document.getElementById("term-ps1");
     const mirror = document.getElementById("term-mirror");
-    if (!tab || !pane || !out || !form || !input || !ps1Live || !mirror) return;
+    if (!tab || !pane || !out || !form || !input || !ps1Live || !mirror) {
+      // Le terminal est sur la page Profil : depuis les autres pages, on y va
+      Site.openTerminal = () => { window.location.href = "profil.html#editor"; };
+      document.querySelectorAll("[data-open-term]").forEach((b) => b.addEventListener("click", () => Site.openTerminal()));
+      return;
+    }
 
     const DATA = window.TERMINAL || {};
     const say = (entry) => (entry ? (isEN() ? entry.en : entry.fr) || "" : "");
@@ -302,7 +307,7 @@
         const id = SECTIONS[where];
         if (!id) return err(T(`cd : ${args[0]} : aucun dossier de ce nom (essayez \`cd projets\`)`, `cd: ${args[0]}: no such directory (try \`cd projects\`)`));
         cwd = id === "top" ? "~" : `~/${where}`;
-        setTimeout(() => scrollToSection(id), 250);
+        setTimeout(() => goTo(id), 250);
       }],
       contact: ["", "mes coordonnées", "my contact details", () => {
         grid([["mail", escapeHTML(EMAIL)], ["linkedin", "in/firas-bouricha"], ["github", "firas-bouricha"]], "t-key");

@@ -9,7 +9,7 @@ for (const mobile of [false, true]) {
     test("commandes du terminal", async ({ page, context }) => {
       await context.route("https://github.com/**", (route) => route.fulfill({ status: 200, body: "ok" }));
       const problems = await preparePage(page);
-      await openSite(page);
+      await openSite(page, "profil.html");
       const out = page.locator("#term-out");
       const input = page.locator("#term-input");
       const run = async (command) => { await input.fill(command); await input.press("Enter"); };
@@ -71,9 +71,9 @@ for (const mobile of [false, true]) {
       await run("open 1");
       expect((await popup).url()).toContain("github.com/firas-bouricha/");
 
-      // cd : défilement jusqu'à la section
-      await run("cd contact");
-      await expect.poll(() => page.evaluate(() => document.getElementById("contact").getBoundingClientRect().top), { timeout: 5000 })
+      // cd vers une section de la page : défilement
+      await run("cd competences");
+      await expect.poll(() => page.evaluate(() => document.getElementById("skills").getBoundingClientRect().top), { timeout: 5000 })
         .toBeLessThan(200);
 
       // exit puis réouverture depuis la barre d'état
@@ -83,8 +83,24 @@ for (const mobile of [false, true]) {
       await expect(page.locator("#pane-term")).toBeVisible();
       await expect.poll(() => page.evaluate(() => document.getElementById("editor").getBoundingClientRect().top), { timeout: 5000 })
         .toBeLessThan(300);
-
       expect(await allProblems(page, problems)).toEqual([]);
+
+      // cd vers une section d'une autre page : la page s'ouvre à la bonne section
+      await run("cd contact");
+      await page.waitForURL(/parcours\.html#contact$/);
+      await page.waitForSelector("html[data-ready]");
+      await expect.poll(() => page.evaluate(() => document.getElementById("contact").getBoundingClientRect().top), { timeout: 5000 })
+        .toBeLessThan(200);
     });
   });
 }
+
+test("depuis une autre page, « ouvrir le terminal » mène à la page Profil", async ({ page }) => {
+  await preparePage(page);
+  await openSite(page, "projets.html");
+  await page.click("[data-open-term]");
+  await page.waitForURL(/profil\.html#editor$/);
+  await page.waitForSelector("html[data-ready]");
+  await expect(page.locator("#pane-term")).toBeVisible();
+  await expect(page.locator("#term-out")).toContainText("Portfolio OS");
+});
