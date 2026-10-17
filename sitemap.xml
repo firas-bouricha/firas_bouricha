@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Plan du site pour les moteurs de recherche (à déclarer dans Google Search Console). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://firas-bouricha.github.io/firas_bouricha/?lang=en</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://firas-bouricha.github.io/firas_bouricha/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://firas-bouricha.github.io/firas_bouricha/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://firas-bouricha.github.io/firas_bouricha/"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+</urlset>

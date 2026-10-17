@@ -1,0 +1,7 @@
+# Les robots ne lisent ce fichier qu'à la racine du domaine.
+# Sur firas-bouricha.github.io/firas_bouricha/, il ne sera pris en compte qu'avec un nom de domaine
+# personnel ; en attendant, déclarer le sitemap dans Google Search Console.
+User-agent: *
+Allow: /
+
+Sitemap: https://firas-bouricha.github.io/firas_bouricha/sitemap.xml

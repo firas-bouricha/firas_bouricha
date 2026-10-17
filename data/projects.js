@@ -13,7 +13,7 @@
  *    repo         (optionnel)  Dépôt GitHub au format "utilisateur/depot"
  *    demo         (optionnel)  Lien vers une démo en ligne
  *    image        (optionnel)  Photo ou capture d'écran, à déposer dans
- *                              assets/projects/ (ex. "assets/projects/homelab.jpg")
+ *                              assets/projects/ (ex. "assets/projects/homelab.webp")
  *    imageAlt     (optionnel)  Description courte de l'image (accessibilité)
  *    icon         (optionnel)  home | server | shield | layers | code | git
  *                              | cloud | database | game | terminal | network
@@ -52,7 +52,7 @@ window.PROJECTS = [
       "Chaîne CI/CD durcie autour d'une API Node.js : protection de branche, hooks Gitleaks, secrets chiffrés SOPS + age, image Docker scannée par Trivy (SBOM), CodeQL et déploiement conditionnel.",
     tags: ["GitHub Actions", "Docker", "Trivy", "CodeQL", "SOPS"],
     repo: "firas-bouricha/Projet-_final_DevSecOps",
-    image: "assets/projects/devsecops-pipeline.png",
+    image: "assets/projects/devsecops-pipeline.webp",
     imageAlt: "Exécution réussie du pipeline CI/CD : tests, Gitleaks, CodeQL, scan d'image, publication et déploiements",
     icon: "shield",
     color: "emerald",
@@ -72,7 +72,7 @@ window.PROJECTS = [
       "Mon infrastructure auto-hébergée : serveur Dell PowerEdge sous Proxmox, iDRAC, switch Cisco SG300. Architecture, inventaire et documentation technique.",
     tags: ["Proxmox", "Linux", "Réseau", "Cisco"],
     repo: "firas-bouricha/Home_Lab",
-    image: "assets/projects/homelab.jpg",
+    image: "assets/projects/homelab.webp",
     imageAlt: "Le home lab : serveur Dell PowerEdge T130, Dell OptiPlex et switch Cisco SG300",
     icon: "home",
     color: "violet",
